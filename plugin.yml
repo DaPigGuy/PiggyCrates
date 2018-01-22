@@ -1,0 +1,31 @@
+name: PiggyCrates
+main: PiggyCrates\Main
+version: 1.0.0
+api: 3.0.0-ALPHA10
+load: POSTWORLD
+author: DaPigGuy
+permissions:
+  piggycrates:
+    default: false
+    description: "Use everything in PiggyCrates"
+    children:
+      piggycrates.crates:
+        default: op
+        description: "Manage/use crates"
+        children:
+          piggycrates.crates.use:
+            default: true
+            description: "Use crates"
+          piggycrates.crates.create:
+            default: op
+            description: "Create a crate"
+          piggycrates.crates.destroy:
+            default: op
+            description: "Destroy a crate"
+      piggycrates.command:
+        default: op
+        description: "Use all PiggyCrates commands"
+        children:
+          piggycrates.command.key:
+            default: op
+            description: "Use /key"

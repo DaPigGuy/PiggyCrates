@@ -1,0 +1,111 @@
+#,-.----.
+#\    /  \                                           ,----..                         ___
+#|   :    \   ,--,                                  /   /   \                      ,--.'|_
+#|   |  .\ :,--.'|                                 |   :     :  __  ,-.            |  | :,'
+#.   :  |: ||  |,     ,----._,.  ,----._,.         .   |  ;. /,' ,'/ /|            :  : ' :             .--.--.
+#|   |   \ :`--'_    /   /  ' / /   /  ' /     .--,.   ; /--` '  | |' | ,--.--.  .;__,'  /     ,---.   /  /    '
+#|   : .   /,' ,'|  |   :     ||   :     |   /_ ./|;   | ;    |  |   ,'/       \ |  |   |     /     \ |  :  /`./
+#;   | |`-' '  | |  |   | .\  .|   | .\  ., ' , ' :|   : |    '  :  / .--.  .-. |:__,'| :    /    /  ||  :  ;_
+#|   | ;    |  | :  .   ; ';  |.   ; ';  /___/ \: |.   | '___ |  | '   \__\/: . .  '  : |__ .    ' / | \  \    `.
+#:   ' |    '  : |__'   .   . |'   .   . |.  \  ' |'   ; : .'|;  : |   ," .--.; |  |  | '.'|'   ;   /|  `----.   \
+#:   : :    |  | '.'|`---`-'| | `---`-'| | \  ;   :'   | '/  :|  , ;  /  /  ,.  |  ;  :    ;'   |  / | /  /`--'  /
+#|   | :    ;  :    ;.'__/\_: | .'__/\_: |  \  \  ;|   :    /  ---'  ;  :   .'   \ |  ,   / |   :    |'--'.     /
+#`---'.|    |  ,   / |   :    : |   :    :   :  \  \\   \ .'         |  ,     .-./  ---`-'   \   \  /   `--'---'
+#  `---`     ---`-'   \   \  /   \   \  /     \  ' ; `---`            `--`---'                `----'
+#                      `--`-'     `--`-'       `--`
+
+# Id & dmg value of keys
+key: "131:0"
+# Crate types
+crates:
+  #example: (crate type)
+    #drops: (drops)
+      #1: (id of a drop)
+        #name: "Example Item" (name of a drop)
+        #meta: 0 (meta/dmg value of a drop)
+        #amount: 10 (amount of a drop)
+        #enchantments: (enchantments)
+          #Deathbringer: (enchantment name)
+            #level: 1 (enchantment level)
+    #amount: 1 (amount of drops dropped)
+    #block: "173:0" (id:meta; the block under chest to determine crate type)
+  common:
+    drops:
+      17:
+        name: "Oak Wood"
+        meta: 0
+        amount: 16
+      1:
+        name: "Stone"
+        meta: 0
+        amount: 16
+      364:
+        name: "Cooked Beef"
+        meta: 0
+        amount: 5
+    amount: 1
+    block: "173:0"
+  uncommon:
+    drops:
+      263:
+        name: "Coal"
+        meta: 0
+        amount: 10
+      50:
+        name: "Torch"
+        meta: 0
+        amount: 16
+      366:
+        name: "Cooked Chicken"
+        meta: 0
+        amount: 16
+    amount: 1
+    block: "42:0"
+  vote:
+    drops:
+      265:
+        name: "Iron Ingot"
+        meta: 0
+        amount: 10
+      266:
+        name: "Gold Ingot"
+        meta: 0
+        amount: 10
+      17:
+        name: "Oak Wood"
+        meta: 0
+        amount: 64
+    amount: 1
+    block: "41:0"
+  mythic:
+    drops:
+      264:
+        name: "Diamond"
+        meta: 0
+        amount: 16
+      388:
+        name: "Emerald"
+        meta: 0
+        amount: 16
+      322:
+        name: "Golden Apple"
+        meta: 0
+        amount: 16
+    amount: 1
+    block: "57:0"
+  legendary:
+    drops:
+      49:
+        name: "Obsidian"
+        meta: 0
+        amount: 32
+      466:
+        name: "Enchanted Apple"
+        meta: 0
+        amount: 16
+      7:
+        name: "Bedrock"
+        meta: 0
+        amount: 5
+    amount: 1
+    block: "133:0"
