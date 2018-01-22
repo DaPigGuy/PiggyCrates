@@ -28,7 +28,6 @@ class Main extends PluginBase
         $this->saveDefaultConfig();
         $this->key = $this->getConfig()->getNested("key");
         foreach ($this->getConfig()->getNested("crates") as $type => $values) {
-            var_dump($values);
             $this->crates[$type] = $values;
             $this->crateDrops[$type] = $values["drops"];
             $this->crateBlocks[$values["block"]] = $type;
