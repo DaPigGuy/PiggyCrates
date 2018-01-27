@@ -1,6 +1,6 @@
 name: PiggyCrates
 main: PiggyCrates\Main
-version: 1.0.0
+version: 1.0.1
 api: 3.0.0-ALPHA10
 load: POSTWORLD
 author: DaPigGuy

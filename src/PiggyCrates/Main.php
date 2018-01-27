@@ -10,6 +10,7 @@ use pocketmine\nbt\tag\NamedTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 /**
@@ -19,22 +20,41 @@ use pocketmine\utils\TextFormat;
 class Main extends PluginBase
 {
     private $key;
+    private $allowCrateChanges;
     private $crates;
     private $crateDrops;
     private $crateBlocks;
 
     public function onEnable()
     {
+        $this->initCrates();
         $this->saveDefaultConfig();
         $this->key = $this->getConfig()->getNested("key");
-        foreach ($this->getConfig()->getNested("crates") as $type => $values) {
+        $this->allowCrateChanges = $this->getConfig()->getNested("allow-crate-changes");
+        $this->getServer()->getCommandMap()->register("key", new KeyCommand("key", $this), "key");
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+        $this->getLogger()->info(TextFormat::GREEN . "Enabled.");
+    }
+
+    public function initCrates()
+    {
+        $this->saveResource("crates.yml");
+        $file = new Config($this->getDataFolder() . "crates.yml");
+        foreach ($file->getNested("crates") as $type => $values) {
             $this->crates[$type] = $values;
             $this->crateDrops[$type] = $values["drops"];
             $this->crateBlocks[$values["block"]] = $type;
         }
-        $this->getServer()->getCommandMap()->register("key", new KeyCommand("key", $this), "key");
-        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
-        $this->getLogger()->info(TextFormat::GREEN . "Enabled.");
+    }
+
+    /**
+     * Returns true if allow-crate-changes is enabled.
+     *
+     * @return bool
+     */
+    public function canChangeCrates()
+    {
+        return $this->allowCrateChanges;
     }
 
     /**
@@ -75,7 +95,8 @@ class Main extends PluginBase
      * @param string $type
      * @return int
      */
-    public function getCrateDropAmount(string $type){
+    public function getCrateDropAmount(string $type)
+    {
         return !$this->getCrateType($type) ? 0 : $this->crates[$type]["amount"];
     }
 

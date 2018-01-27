@@ -40,19 +40,21 @@ class EventListener implements Listener
     {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        if ($this->plugin->isCrateBlock($block->getId(), $block->getDamage())) {
-            if ($block->getLevel()->getBlock($block->add(0, 1))->getId() == Block::CHEST) {
-                if (!$player->hasPermission("piggycrates.crates.destroy")) {
-                    $player->sendMessage(TextFormat::RED . "You do not have permission to destroy a crate.");
-                    $event->setCancelled();
+        if (!$this->plugin->canChangeCrates()) {
+            if ($this->plugin->isCrateBlock($block->getId(), $block->getDamage())) {
+                if ($block->getLevel()->getBlock($block->add(0, 1))->getId() == Block::CHEST) {
+                    if (!$player->hasPermission("piggycrates.crates.destroy")) {
+                        $player->sendMessage(TextFormat::RED . "You do not have permission to destroy a crate.");
+                        $event->setCancelled();
+                    }
                 }
-            }
-        } elseif ($block->getId() == Block::CHEST) {
-            $b = $block->getLevel()->getBlock($block->subtract(0, 1));
-            if ($this->plugin->isCrateBlock($b->getId(), $b->getDamage())) {
-                if (!$player->hasPermission("piggycrates.crates.destroy")) {
-                    $player->sendMessage(TextFormat::RED . "You do not have permission to destroy a crate.");
-                    $event->setCancelled();
+            } elseif ($block->getId() == Block::CHEST) {
+                $b = $block->getLevel()->getBlock($block->subtract(0, 1));
+                if ($this->plugin->isCrateBlock($b->getId(), $b->getDamage())) {
+                    if (!$player->hasPermission("piggycrates.crates.destroy")) {
+                        $player->sendMessage(TextFormat::RED . "You do not have permission to destroy a crate.");
+                        $event->setCancelled();
+                    }
                 }
             }
         }
@@ -68,19 +70,21 @@ class EventListener implements Listener
     {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        if ($this->plugin->isCrateBlock($block->getId(), $block->getDamage())) {
-            if ($block->getLevel()->getBlock($block->add(0, 1))->getId() == Block::CHEST) {
-                if (!$player->hasPermission("piggycrates.crates.create")) {
-                    $player->sendMessage(TextFormat::RED . "You do not have permission to create a crate.");
-                    $event->setCancelled();
+        if (!$this->plugin->canChangeCrates()) {
+            if ($this->plugin->isCrateBlock($block->getId(), $block->getDamage())) {
+                if ($block->getLevel()->getBlock($block->add(0, 1))->getId() == Block::CHEST) {
+                    if (!$player->hasPermission("piggycrates.crates.create")) {
+                        $player->sendMessage(TextFormat::RED . "You do not have permission to create a crate.");
+                        $event->setCancelled();
+                    }
                 }
-            }
-        } elseif ($block->getId() == Block::CHEST) {
-            $b = $block->getLevel()->getBlock($block->subtract(0, 1));
-            if ($this->plugin->isCrateBlock($b->getId(), $b->getDamage())) {
-                if (!$player->hasPermission("piggycrates.crates.create")) {
-                    $player->sendMessage(TextFormat::RED . "You do not have permission to create a crate.");
-                    $event->setCancelled();
+            } elseif ($block->getId() == Block::CHEST) {
+                $b = $block->getLevel()->getBlock($block->subtract(0, 1));
+                if ($this->plugin->isCrateBlock($b->getId(), $b->getDamage())) {
+                    if (!$player->hasPermission("piggycrates.crates.create")) {
+                        $player->sendMessage(TextFormat::RED . "You do not have permission to create a crate.");
+                        $event->setCancelled();
+                    }
                 }
             }
         }
