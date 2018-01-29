@@ -119,8 +119,8 @@ class EventListener implements Listener
                         $list[] = $values["amount"] . " " . $values["name"];
                         $i = Item::get($drop, $values["meta"], $values["amount"]);
                         if (isset($values["enchantments"])) {
-                            foreach ($values["enchantments"] as $enchantment => $values) {
-                                $level = $values["level"];
+                            foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
+                                $level = $enchantmentinfo["level"];
                                 if (!is_null($ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) && !is_null($enchant = \PiggyCustomEnchants\CustomEnchants\CustomEnchants::getEnchantmentByName($enchantment))) {
                                     $i = $ce->addEnchantment($i, $enchantment, $level);
                                 } else {
