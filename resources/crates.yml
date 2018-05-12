@@ -15,80 +15,80 @@ crates:
 # Still confused? Refer to our example configuration: https://github.com/DaPigGuy/PiggyCrates/wiki/Example-Configuration
   common:
     drops:
-      17:
-        name: "Oak Wood"
+      - name: "Oak Wood"
+        id: 17
         meta: 0
         amount: 16
-      1:
-        name: "Stone"
+      - name: "Stone"
+        id: 1
         meta: 0
         amount: 16
-      364:
-        name: "Cooked Beef"
+      - name: "Cooked Beef"
+        id: 364
         meta: 0
         amount: 5
     amount: 1
     block: "173:0"
   uncommon:
     drops:
-      263:
-        name: "Coal"
+      - name: "Coal"
+        id: 263
         meta: 0
         amount: 10
-      50:
-        name: "Torch"
+      - name: "Torch"
+        id: 50
         meta: 0
         amount: 16
-      366:
-        name: "Cooked Chicken"
+      - name: "Cooked Chicken"
+        id: 366
         meta: 0
         amount: 16
     amount: 1
     block: "42:0"
   vote:
     drops:
-      265:
-        name: "Iron Ingot"
+      - name: "Iron Ingot"
+        id: 265
         meta: 0
         amount: 10
-      266:
-        name: "Gold Ingot"
+      - name: "Gold Ingot"
+        id: 266
         meta: 0
         amount: 10
-      17:
-        name: "Oak Wood"
+      - name: "Oak Wood"
+        id: 17
         meta: 0
         amount: 64
     amount: 1
     block: "41:0"
   mythic:
     drops:
-      264:
-        name: "Diamond"
+      - name: "Diamond"
+        id: 264
         meta: 0
         amount: 16
-      388:
-        name: "Emerald"
+      - name: "Emerald"
+        id: 388
         meta: 0
         amount: 16
-      322:
-        name: "Golden Apple"
+      - name: "Golden Apple"
+        id: 322
         meta: 0
         amount: 16
     amount: 1
     block: "57:0"
   legendary:
     drops:
-      49:
-        name: "Obsidian"
+      - name: "Obsidian"
+        id: 49
         meta: 0
         amount: 32
-      466:
-        name: "Enchanted Apple"
+      - name: "Enchanted Apple"
+        id: 466
         meta: 0
         amount: 16
-      7:
-        name: "Bedrock"
+      - name: "Bedrock"
+        id: 7
         meta: 0
         amount: 5
     amount: 1

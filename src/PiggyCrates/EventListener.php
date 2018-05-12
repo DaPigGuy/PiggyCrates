@@ -117,7 +117,7 @@ class EventListener implements Listener
                     foreach ($drops as $drop) {
                         $values = $this->plugin->getCrateDrops($type)[$drop];
                         $list[] = $values["amount"] . " " . $values["name"];
-                        $i = Item::get($drop, $values["meta"], $values["amount"]);
+                        $i = Item::get($values["id"], $values["meta"], $values["amount"]);
                         if (isset($values["enchantments"])) {
                             foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                                 $level = $enchantmentinfo["level"];
