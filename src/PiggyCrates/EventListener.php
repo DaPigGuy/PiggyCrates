@@ -114,10 +114,12 @@ class EventListener implements Listener
                         $drops = [$drops];
                     }
                     $list = [];
+                    $items = [];
+                    $dropsReceivable = [];
                     foreach ($drops as $drop) {
                         $values = $this->plugin->getCrateDrops($type)[$drop];
                         $list[] = $values["amount"] . " " . $values["name"];
-                        $i = Item::get($drop, $values["meta"], $values["amount"]);
+                        $i = Item::get($values["id"], $values["meta"], $values["amount"]);
                         if (isset($values["enchantments"])) {
                             foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                                 $level = $enchantmentinfo["level"];
@@ -131,10 +133,16 @@ class EventListener implements Listener
                             }
                         }
                         $i->setCustomName($values["name"]);
-                        $player->getInventory()->addItem($i);
+                        $dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
+                        $items[] = $i;
                     }
-                    $player->getInventory()->removeItem($item->setCount(1));
-                    $player->sendTip(TextFormat::GREEN . "You have received " . implode(", ", $list));
+                    if(array_search(false, $dropsReceivable) === false){
+                        $player->getInventory()->removeItem($item->setCount(1));
+                        $player->getInventory()->addItem(...$items);
+                        $player->sendTip(TextFormat::GREEN . "You have received " . implode(", ", $list));
+                    }else{
+                        $player->sendTip(TextFormat::RED ."Please clear your inventory.");
+                    }
                 }
             }
             $event->setCancelled();
