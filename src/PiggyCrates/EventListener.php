@@ -120,6 +120,7 @@ class EventListener implements Listener
                         $values = $this->plugin->getCrateDrops($type)[$drop];
                         $list[] = $values["amount"] . " " . $values["name"];
                         $i = Item::get($values["id"], $values["meta"], $values["amount"]);
+                        $i->setCustomName($values["name"]);
                         if (isset($values["enchantments"])) {
                             foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                                 $level = $enchantmentinfo["level"];
@@ -132,7 +133,6 @@ class EventListener implements Listener
                                 }
                             }
                         }
-                        $i->setCustomName($values["name"]);
                         $dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
                         $items[] = $i;
                     }
