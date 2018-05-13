@@ -2,8 +2,10 @@
 
 namespace PiggyCrates;
 
-
+use PiggyCustomEnchants\CustomEnchants\CustomEnchants;
+use PiggyCustomEnchants\Main as CE;
 use pocketmine\block\Block;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Listener;
@@ -11,6 +13,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 /**
@@ -120,11 +123,13 @@ class EventListener implements Listener
                         $values = $this->plugin->getCrateDrops($type)[$drop];
                         $list[] = $values["amount"] . " " . $values["name"];
                         $i = Item::get($values["id"], $values["meta"], $values["amount"]);
-                        $i->setCustomName($values["name"]);
+						$i->setCustomName($values["name"]);
                         if (isset($values["enchantments"])) {
                             foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                                 $level = $enchantmentinfo["level"];
-                                if (!is_null($ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) && !is_null($enchant = \PiggyCustomEnchants\CustomEnchants\CustomEnchants::getEnchantmentByName($enchantment))) {
+                                /** @var CE $ce */
+								$ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants");
+                                if (!is_null($ce) && !is_null($enchant = CustomEnchants::getEnchantmentByName($enchantment))) {
                                     $i = $ce->addEnchantment($i, $enchantment, $level);
                                 } else {
                                     if (!is_null($enchant = Enchantment::getEnchantmentByName($enchantment))) {
@@ -133,7 +138,13 @@ class EventListener implements Listener
                                 }
                             }
                         }
-                        $dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
+						if (isset($values["command"])) {
+							$cmd = $values["command"];
+							$cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
+							Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+						}
+
+						$dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
                         $items[] = $i;
                     }
                     if(array_search(false, $dropsReceivable) === false){
