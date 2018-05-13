@@ -10,23 +10,21 @@ crates:
             #level: 1
           #enchantment2:
             #level: 1
+        #command: say THIS IS AWESOME. (Note: You can use %PLAYER% if you want to add the name of the player.)
     #amount: 1 (amount of drops that can be received from opening crate)
     #block: "173:0" (id:meta; the block under chest to determine crate type)
 # Still confused? Refer to our example configuration: https://github.com/DaPigGuy/PiggyCrates/wiki/Example-Configuration
   common:
     drops:
-      - name: "Oak Wood"
-        id: 17
-        meta: 0
-        amount: 16
-      - name: "Stone"
+      - name: "Command"
         id: 1
         meta: 0
-        amount: 16
-      - name: "Cooked Beef"
-        id: 364
+        amount: 0
+        command: say ALOHA %PLAYER%.
+      - name: "Coal"
+        id: 263
         meta: 0
-        amount: 5
+        amount: 10
     amount: 1
     block: "173:0"
   uncommon:
