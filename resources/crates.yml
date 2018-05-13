@@ -1,8 +1,8 @@
 crates:
   #example: (crate type - name of the crate)
     #drops: (items that can be received from the crate)
-      #1: (id of drop)
-        #name: "Example Item" (name of item)
+      #- name: "Example Item" (name of item)
+        #id: (id of drop)
         #meta: 0 (meta/dmg value of item)
         #amount: 10 (amount of items that are received from this drop)
         #enchantments:
