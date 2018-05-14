@@ -123,12 +123,12 @@ class EventListener implements Listener
                         $values = $this->plugin->getCrateDrops($type)[$drop];
                         $list[] = $values["amount"] . " " . $values["name"];
                         $i = Item::get($values["id"], $values["meta"], $values["amount"]);
-						$i->setCustomName($values["name"]);
+                        $i->setCustomName($values["name"]);
                         if (isset($values["enchantments"])) {
                             foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                                 $level = $enchantmentinfo["level"];
                                 /** @var CE $ce */
-								$ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants");
+                                $ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants");
                                 if (!is_null($ce) && !is_null($enchant = CustomEnchants::getEnchantmentByName($enchantment))) {
                                     $i = $ce->addEnchantment($i, $enchantment, $level);
                                 } else {
@@ -138,21 +138,20 @@ class EventListener implements Listener
                                 }
                             }
                         }
-						if (isset($values["command"])) {
-							$cmd = $values["command"];
-							$cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
-							Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $cmd);
-						}
-
-						$dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
+                        if (isset($values["command"])) {
+                            $cmd = $values["command"];
+                            $cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
+                            Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+                        }
+                        $dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
                         $items[] = $i;
                     }
-                    if(array_search(false, $dropsReceivable) === false){
+                    if (array_search(false, $dropsReceivable) === false) {
                         $player->getInventory()->removeItem($item->setCount(1));
                         $player->getInventory()->addItem(...$items);
                         $player->sendTip(TextFormat::GREEN . "You have received " . implode(", ", $list));
-                    }else{
-                        $player->sendTip(TextFormat::RED ."Please clear your inventory.");
+                    } else {
+                        $player->sendTip(TextFormat::RED . "Please clear your inventory.");
                     }
                 }
             }

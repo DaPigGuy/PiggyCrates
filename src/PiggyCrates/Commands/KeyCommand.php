@@ -2,7 +2,6 @@
 
 namespace PiggyCrates\Commands;
 
-
 use PiggyCrates\Main;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
@@ -18,7 +17,7 @@ class KeyCommand extends PluginCommand
     /**
      * KeyCommand constructor.
      * @param string $name
-     * @param Main $plugin
+     * @param Main   $plugin
      */
     public function __construct(string $name, Main $plugin)
     {
@@ -30,8 +29,8 @@ class KeyCommand extends PluginCommand
 
     /**
      * @param CommandSender $sender
-     * @param string $commandLabel
-     * @param array $args
+     * @param string        $commandLabel
+     * @param array         $args
      * @return bool|mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args)
