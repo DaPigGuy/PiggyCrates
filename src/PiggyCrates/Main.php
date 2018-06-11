@@ -139,15 +139,16 @@ class Main extends PluginBase
      * Gives player a key of a certain crate type. Returns false if crate type does not exist.
      *
      * @param Player $player
+     * @param int $amount
      * @param string $type
      * @return bool
      */
-    public function giveKey(Player $player, string $type)
+    public function giveKey(Player $player, int $amount, string $type)
     {
         if (is_null($this->getCrateDrops($type))) {
             return false;
         }
-        $key = Item::get(Item::TRIPWIRE_HOOK);
+        $key = Item::get(Item::TRIPWIRE_HOOK, 0, $amount);
         $key->addEnchantment(new EnchantmentInstance(new Enchantment(255, "", Enchantment::RARITY_COMMON, Enchantment::SLOT_ALL, Enchantment::SLOT_ALL, 1))); //Glowing key effect
         $key->setCustomName(ucfirst($type . " Key"));
         $key->setNamedTagEntry(new StringTag("KeyType", $type));
