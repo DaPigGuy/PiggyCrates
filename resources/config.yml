@@ -16,5 +16,9 @@
 
 # Id & dmg value of keys
 key: "131:0"
+
+# Add a little description to the key
+keyLore: "Use this key to get rewards."
+
 # Allow the creation & destruction of crates by those without the piggycrates.crates permission node
 allow-crate-changes: false
