@@ -17,7 +17,7 @@ class KeyCommand extends PluginCommand
     /**
      * KeyCommand constructor.
      * @param string $name
-     * @param Main   $plugin
+     * @param Main $plugin
      */
     public function __construct(string $name, Main $plugin)
     {
@@ -29,8 +29,8 @@ class KeyCommand extends PluginCommand
 
     /**
      * @param CommandSender $sender
-     * @param string        $commandLabel
-     * @param array         $args
+     * @param string $commandLabel
+     * @param array $args
      * @return bool|mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args)
@@ -56,10 +56,10 @@ class KeyCommand extends PluginCommand
                     return false;
                 }
             }
-            if(isset($args[1])){
-                if(is_numeric($args[1])){
+            if (isset($args[1])) {
+                if (is_numeric($args[1])) {
                     $amount = $args[1];
-                }else{
+                } else {
                     $sender->sendMessage(TextFormat::RED . "Amount must be numeric.");
                     return false;
                 }
