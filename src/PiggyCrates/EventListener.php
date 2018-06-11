@@ -13,7 +13,6 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
-use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 /**
@@ -141,7 +140,7 @@ class EventListener implements Listener
                         if (isset($values["command"])) {
                             $cmd = $values["command"];
                             $cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
-                            Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+                            $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
                         }
                         $dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
                         $items[] = $i;
