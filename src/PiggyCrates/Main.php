@@ -155,6 +155,4 @@ class Main extends PluginBase
         $player->getInventory()->addItem($key);
         return true;
     }
-
-
 }
