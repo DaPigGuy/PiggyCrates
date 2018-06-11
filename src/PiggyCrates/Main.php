@@ -149,6 +149,7 @@ class Main extends PluginBase
             return false;
         }
         $key = Item::get(Item::TRIPWIRE_HOOK, 0, $amount);
+        $key->setLore([$this->getConfig()->get("keyLore")]);
         $key->addEnchantment(new EnchantmentInstance(new Enchantment(255, "", Enchantment::RARITY_COMMON, Enchantment::SLOT_ALL, Enchantment::SLOT_ALL, 1))); //Glowing key effect
         $key->setCustomName(ucfirst($type . " Key"));
         $key->setNamedTagEntry(new StringTag("KeyType", $type));
