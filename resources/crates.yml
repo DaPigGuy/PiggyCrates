@@ -20,11 +20,13 @@ crates:
         id: 1
         meta: 0
         amount: 0
+        chance: 25
         command: tell %player% You opened the Common Crate and got Stone!
       - name: "Coal"
         id: 263
         meta: 0
         amount: 10
+        chance: 75
     amount: 1
     block: "173:0"
   uncommon:
@@ -33,14 +35,17 @@ crates:
         id: 263
         meta: 0
         amount: 10
+        chance: 75
       - name: "Torch"
         id: 50
         meta: 0
         amount: 16
+        chance: 15
       - name: "Cooked Chicken"
         id: 366
         meta: 0
         amount: 16
+        chance: 10
     amount: 1
     block: "42:0"
   vote:
@@ -49,14 +54,17 @@ crates:
         id: 265
         meta: 0
         amount: 10
+        chance: 35
       - name: "Gold Ingot"
         id: 266
         meta: 0
         amount: 10
+        chance: 15
       - name: "Oak Wood"
         id: 17
         meta: 0
         amount: 64
+        chance: 50
     amount: 1
     block: "41:0"
   mythic:
@@ -65,14 +73,17 @@ crates:
         id: 264
         meta: 0
         amount: 16
+        chance: 35
       - name: "Emerald"
         id: 388
         meta: 0
         amount: 16
+        chance: 15
       - name: "Golden Apple"
         id: 322
         meta: 0
         amount: 16
+        chance: 50
     amount: 1
     block: "57:0"
   legendary:
@@ -81,13 +92,16 @@ crates:
         id: 49
         meta: 0
         amount: 32
+        chance: 15
       - name: "Enchanted Apple"
         id: 466
         meta: 0
         amount: 16
+        chance: 80
       - name: "Bedrock"
         id: 7
         meta: 0
         amount: 5
+        chance: 5
     amount: 1
     block: "133:0"

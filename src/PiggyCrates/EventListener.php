@@ -111,15 +111,22 @@ class EventListener implements Listener
                 if (!($keytype = $this->plugin->isCrateKey($item)) || $keytype !== $type) {
                     $player->sendMessage(TextFormat::RED . "You require a " . ucfirst($type) . " key to open this crate.");
                 } else {
-                    $drops = array_rand($this->plugin->getCrateDrops($type), $this->plugin->getCrateDropAmount($type));
-                    if (!is_array($drops)) {
-                        $drops = [$drops];
+                    $possibleDrops = $this->plugin->getCrateDrops($type);
+                    $drops = [];
+                    foreach ($possibleDrops as $possibleDrop => $values) {
+                        $chance = 10;
+                        if(isset($values["chance"])) $chance = $values["chance"];
+                        $drops = array_merge($drops, array_fill(0, $chance, $values));
+                    }
+                    $pickedDrops = array_rand($drops, $this->plugin->getCrateDropAmount($type));
+                    if (!is_array($pickedDrops)) {
+                        $pickedDrops = [$pickedDrops];
                     }
                     $list = [];
                     $items = [];
                     $dropsReceivable = [];
-                    foreach ($drops as $drop) {
-                        $values = $this->plugin->getCrateDrops($type)[$drop];
+                    foreach ($pickedDrops as $pickedDrop) {
+                        $values = $drops[$pickedDrop];
                         $list[] = $values["amount"] . " " . $values["name"];
                         $i = Item::get($values["id"], $values["meta"], $values["amount"]);
                         $i->setCustomName($values["name"]);
@@ -142,7 +149,7 @@ class EventListener implements Listener
                             $cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
                             $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
                         }
-                        $dropsReceivable[$drop] = $player->getInventory()->canAddItem($i);
+                        $dropsReceivable[$pickedDrop] = $player->getInventory()->canAddItem($i);
                         $items[] = $i;
                     }
                     if (array_search(false, $dropsReceivable) === false) {
