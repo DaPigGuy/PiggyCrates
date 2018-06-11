@@ -20,6 +20,7 @@ use pocketmine\utils\TextFormat;
 class Main extends PluginBase
 {
     private $key;
+    private $keyLore;
     private $allowCrateChanges;
     private $crates;
     private $crateDrops;
@@ -30,6 +31,7 @@ class Main extends PluginBase
         $this->initCrates();
         $this->saveDefaultConfig();
         $this->key = $this->getConfig()->getNested("key");
+        $this->keyLore = $this->getConfig()->getNested("key-lore");
         $this->allowCrateChanges = $this->getConfig()->getNested("allow-crate-changes");
         $this->getServer()->getCommandMap()->register("key", new KeyCommand("key", $this), "key");
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
@@ -132,7 +134,7 @@ class Main extends PluginBase
     public function isCrateKey(Item $item)
     {
         $values = explode(":", $this->key);
-        return ($values[0] == $item->getId() && $values[1] == $item->getDamage() && !is_null($keytype = $item->getNamedTagEntry("KeyType"))) ? $keytype->getValue() : false;
+        return (isset($values[0]) && isset($values[1]) && $values[0] == $item->getId() && $values[1] == $item->getDamage() && !is_null($keytype = $item->getNamedTagEntry("KeyType"))) ? $keytype->getValue() : false;
     }
 
     /**
@@ -148,10 +150,14 @@ class Main extends PluginBase
         if (is_null($this->getCrateDrops($type))) {
             return false;
         }
-        $key = Item::get(Item::TRIPWIRE_HOOK, 0, $amount);
-        $key->setLore([$this->getConfig()->get("keyLore")]);
+        $values = explode(":", $this->key);
+        if (!isset($values[0]) || !isset($values[1])) {
+            return false;
+        }
+        $key = Item::get($values[0], $values[1], $amount);
         $key->addEnchantment(new EnchantmentInstance(new Enchantment(255, "", Enchantment::RARITY_COMMON, Enchantment::SLOT_ALL, Enchantment::SLOT_ALL, 1))); //Glowing key effect
         $key->setCustomName(ucfirst($type . " Key"));
+        $key->setLore([$this->keyLore]);
         $key->setNamedTagEntry(new StringTag("KeyType", $type));
         $player->getInventory()->addItem($key);
         return true;
