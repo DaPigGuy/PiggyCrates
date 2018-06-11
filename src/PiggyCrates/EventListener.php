@@ -115,7 +115,7 @@ class EventListener implements Listener
                     $drops = [];
                     foreach ($possibleDrops as $possibleDrop => $values) {
                         $chance = 10;
-                        if(isset($values["chance"])) $chance = $values["chance"];
+                        if (isset($values["chance"])) $chance = $values["chance"];
                         $drops = array_merge($drops, array_fill(0, $chance, $values));
                     }
                     $pickedDrops = array_rand($drops, $this->plugin->getCrateDropAmount($type));
