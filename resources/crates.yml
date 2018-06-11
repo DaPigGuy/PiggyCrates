@@ -5,13 +5,14 @@ crates:
         #id: (id of drop)
         #meta: 0 (meta/dmg value of item)
         #amount: 10 (amount of items that are received from this drop)
+        #chance: 100 (chance of item to drop)
         #enchantments:
           #enchantment1:
             #level: 1
           #enchantment2:
             #level: 1
+        #lore: Add a description to the item. Use \n for a new line.
         #command: tell %player% You opened the Common Crate! (You can use %PLAYER% if you want to add the name of the player.)
-        #lore: add lore to the item. use \n for next line
     #amount: 1 (amount of drops that can be received from opening crate)
     #block: "173:0" (id:meta; the block under chest to determine crate type)
 # Still confused? Refer to our example configuration: https://github.com/DaPigGuy/PiggyCrates/wiki/Example-Configuration
@@ -20,10 +21,8 @@ crates:
       - name: "Stone"
         id: 1
         meta: 0
-        amount: 0
+        amount: 16
         chance: 25
-        lore: "This is a stone."
-        command: tell %player% You opened the Common Crate and got Stone!
       - name: "Coal"
         id: 263
         meta: 0
