@@ -149,6 +149,9 @@ class EventListener implements Listener
                             $cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
                             $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
                         }
+                        if (isset($values["lore"])) {
+                            $i->setLore([$values["lore]);
+                        }
                         $dropsReceivable[$pickedDrop] = $player->getInventory()->canAddItem($i);
                         $items[] = $i;
                     }
