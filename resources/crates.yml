@@ -12,8 +12,10 @@ crates:
           #enchantment2:
             #level: 1
         #lore: Add a description to the item. Use \n for a new line.
-        #command: tell %player% You opened the Common Crate! (You can use %PLAYER% if you want to add the name of the player.)
+        #command: tell %PLAYER% You opened the Common Crate! (You can use %PLAYER% if you want to add the name of the player.)
     #amount: 1 (amount of drops that can be received from opening crate)
+    #particle: lava (particle spawned for each drop)
+    #delay: 0.25 (delay between each drop)
     #block: "173:0" (id:meta; the block under chest to determine crate type)
 # Still confused? Refer to our example configuration: https://github.com/DaPigGuy/PiggyCrates/wiki/Example-Configuration
   common:
@@ -29,6 +31,8 @@ crates:
         amount: 10
         chance: 75
     amount: 1
+    particle: lava
+    delay: 0.25
     block: "173:0"
   uncommon:
     drops:
@@ -48,6 +52,8 @@ crates:
         amount: 16
         chance: 10
     amount: 1
+    particle: lava
+    delay: 0.25
     block: "42:0"
   vote:
     drops:
@@ -67,6 +73,8 @@ crates:
         amount: 64
         chance: 50
     amount: 1
+    particle: lava
+    delay: 0.25
     block: "41:0"
   mythic:
     drops:
@@ -86,6 +94,8 @@ crates:
         amount: 16
         chance: 50
     amount: 1
+    particle: lava
+    delay: 0.25
     block: "57:0"
   legendary:
     drops:
@@ -105,4 +115,6 @@ crates:
         amount: 5
         chance: 5
     amount: 1
+    particle: lava
+    delay: 0.25
     block: "133:0"

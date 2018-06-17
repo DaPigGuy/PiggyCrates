@@ -103,6 +103,28 @@ class Main extends PluginBase
     }
 
     /**
+     * Get the delay between crate drops
+     *
+     * @param string $type
+     * @return int
+     */
+    public function getCrateDropDelay(string $type)
+    {
+        return !$this->getCrateType($type) ? 0 : (isset($this->crates[$type]["delay"]) ? $this->crates[$type]["delay"] : 0);
+    }
+
+    /**
+     * Get the particles on crate drops
+     *
+     * @param string $type
+     * @return int
+     */
+    public function getCrateDropParticle(string $type)
+    {
+        return !$this->getCrateType($type) ? 0 : (isset($this->crates[$type]["particle"]) ? $this->crates[$type]["particle"] : "none");
+    }
+
+    /**
      * Returns string of block id & meta. Returns null if crate type does not exist.
      *
      * @param string $type

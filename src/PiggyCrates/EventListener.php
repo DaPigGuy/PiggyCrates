@@ -2,6 +2,7 @@
 
 namespace PiggyCrates;
 
+use PiggyCrates\Tasks\DropsTask;
 use PiggyCustomEnchants\CustomEnchants\CustomEnchants;
 use PiggyCustomEnchants\Main as CE;
 use pocketmine\block\Block;
@@ -122,12 +123,10 @@ class EventListener implements Listener
                     if (!is_array($pickedDrops)) {
                         $pickedDrops = [$pickedDrops];
                     }
-                    $list = [];
-                    $items = [];
+
                     $dropsReceivable = [];
                     foreach ($pickedDrops as $pickedDrop) {
                         $values = $drops[$pickedDrop];
-                        $list[] = $values["amount"] . " " . $values["name"];
                         $i = Item::get($values["id"], $values["meta"], $values["amount"]);
                         $i->setCustomName($values["name"]);
                         if (isset($values["enchantments"])) {
@@ -147,20 +146,55 @@ class EventListener implements Listener
                         if (isset($values["lore"])) {
                             $i->setLore([$values["lore"]]);
                         }
-                        if (isset($values["command"])) {
-                            $cmd = $values["command"];
-                            $cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
-                            $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
-                        }
                         $dropsReceivable[$pickedDrop] = $player->getInventory()->canAddItem($i);
-                        $items[] = $i;
                     }
-                    if (array_search(false, $dropsReceivable) === false) {
-                        $player->getInventory()->removeItem($item->setCount(1));
-                        $player->getInventory()->addItem(...$items);
-                        $player->sendTip(TextFormat::GREEN . "You have received " . implode(", ", $list));
-                    } else {
+                    if (array_search(false, $dropsReceivable)) {
                         $player->sendTip(TextFormat::RED . "Please clear your inventory.");
+                    } else {
+                        if ($this->plugin->getCrateDropDelay($type) <= 0) {
+                            $list = [];
+                            $items = [];
+                            foreach ($pickedDrops as $pickedDrop) {
+                                $values = $drops[$pickedDrop];
+                                $list[] = $values["amount"] . " " . $values["name"];
+                                $i = Item::get($values["id"], $values["meta"], $values["amount"]);
+                                $i->setCustomName($values["name"]);
+                                if (isset($values["enchantments"])) {
+                                    foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
+                                        $level = $enchantmentinfo["level"];
+                                        /** @var CE $ce */
+                                        $ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants");
+                                        if (!is_null($ce) && !is_null($enchant = CustomEnchants::getEnchantmentByName($enchantment))) {
+                                            $i = $ce->addEnchantment($i, $enchantment, $level);
+                                        } else {
+                                            if (!is_null($enchant = Enchantment::getEnchantmentByName($enchantment))) {
+                                                $i->addEnchantment(new EnchantmentInstance($enchant, $level));
+                                            }
+                                        }
+                                    }
+                                }
+                                if (isset($values["lore"])) {
+                                    $i->setLore([$values["lore"]]);
+                                }
+                                if (isset($values["command"])) {
+                                    $cmd = $values["command"];
+                                    $cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
+                                    $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+                                }
+                                $items[] = $i;
+                                $particles = "pocketmine\\level\\particle\\" . ucfirst($this->plugin->getCrateDropParticle($type)) . "Particle";
+                                if (class_exists($particles)) {
+                                    $block->getLevel()->addParticle(new $particles($block->add(0, 2)));
+                                }
+                            }
+                            $player->getInventory()->removeItem($item->setCount(1));
+                            $player->getInventory()->addItem(...$items);
+                            $player->sendTip(TextFormat::GREEN . "You have received " . implode(", ", $list));
+                        } else {
+                            $task = new DropsTask($this->plugin, $player, $block, $type, $drops, $pickedDrops);
+                            $handler = $this->plugin->getScheduler()->scheduleRepeatingTask($task, 20);
+                            $task->setHandler($handler);
+                        }
                     }
                 }
             }
