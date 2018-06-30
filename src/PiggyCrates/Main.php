@@ -19,11 +19,17 @@ use pocketmine\utils\TextFormat;
  */
 class Main extends PluginBase
 {
+    /** @var string */
     private $key;
+    /** @var string */
     private $keyLore;
+    /** @var bool */
     private $allowCrateChanges;
+    /** @var array */
     private $crates;
+    /** @var array */
     private $crateDrops;
+    /** @var array */
     private $crateBlocks;
 
     public function onEnable()

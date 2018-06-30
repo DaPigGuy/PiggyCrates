@@ -18,19 +18,29 @@ use pocketmine\scheduler\Task;
  */
 class DropsTask extends Task
 {
+    /** @var Main */
     private $plugin;
+    /** @var Player */
     private $player;
+    /** @var Block */
     private $block;
+    /** @var string */
     private $type;
+    /** @var bool */
     private $startingTitleComplete = false;
+    /** @var array */
     private $drops;
+    /** @var array */
     private $pickedDrops;
+    /** @var array */
     private $items;
 
     /**
      * DropsTask constructor.
      * @param Main $plugin
      * @param Player $player
+     * @param Block $block
+     * @param string $type
      * @param array $drops
      * @param array $pickedDrops
      */
