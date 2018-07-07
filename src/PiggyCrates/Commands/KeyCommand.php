@@ -35,6 +35,9 @@ class KeyCommand extends PluginCommand
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
+        if (!$this->testPermission($sender)) {
+            return false;
+        }
         $plugin = $this->getPlugin();
         if ($plugin instanceof Main) {
             if (!isset($args[0])) {
