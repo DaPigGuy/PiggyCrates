@@ -66,8 +66,8 @@ class DropsTask extends Task
     {
         $player = $this->player;
         $item = $this->key;
-        $player->getInventory()->removeItem($item->setCount(1));
         if (!$this->startingTitleComplete) {
+            $player->getInventory()->removeItem($item->setCount(1));
             $player->addTitle("You Have Received");
             $this->startingTitleComplete = true;
             return false;
