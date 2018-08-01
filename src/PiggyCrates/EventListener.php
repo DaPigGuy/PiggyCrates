@@ -192,7 +192,7 @@ class EventListener implements Listener
                             $player->getInventory()->addItem(...$items);
                             $player->sendTip(TextFormat::GREEN . "You have received " . implode(", ", $list));
                         } else {
-                            $task = new DropsTask($this->plugin, $player, $block, $type, $drops, $pickedDrops);
+                            $task = new DropsTask($this->plugin, $player, $block, $item, $type, $drops, $pickedDrops);
                             $handler = $this->plugin->getScheduler()->scheduleRepeatingTask($task, 20);
                             $task->setHandler($handler);
                         }

@@ -24,6 +24,8 @@ class DropsTask extends Task
     private $player;
     /** @var Block */
     private $block;
+    /** @var Item */
+    private $key;
     /** @var string */
     private $type;
     /** @var bool */
@@ -40,15 +42,17 @@ class DropsTask extends Task
      * @param Main $plugin
      * @param Player $player
      * @param Block $block
+     * @param Item $key
      * @param string $type
      * @param array $drops
      * @param array $pickedDrops
      */
-    public function __construct(Main $plugin, Player $player, Block $block, string $type, array $drops, array $pickedDrops)
+    public function __construct(Main $plugin, Player $player, Block $block, Item $key, string $type, array $drops, array $pickedDrops)
     {
         $this->plugin = $plugin;
         $this->player = $player;
         $this->block = $block;
+        $this->key = $key;
         $this->type = $type;
         $this->drops = $drops;
         $this->pickedDrops = $pickedDrops;
@@ -61,7 +65,8 @@ class DropsTask extends Task
     public function onRun(int $currentTick)
     {
         $player = $this->player;
-        $item = $player->getInventory()->getItemInHand();
+        $item = $this->key;
+        $player->getInventory()->removeItem($item->setCount(1));
         if (!$this->startingTitleComplete) {
             $player->addTitle("You Have Received");
             $this->startingTitleComplete = true;
@@ -102,7 +107,6 @@ class DropsTask extends Task
         }
         array_shift($this->pickedDrops);
         if (count($this->pickedDrops) <= 0) {
-            $player->getInventory()->removeItem($item->setCount(1));
             $player->getInventory()->addItem(...$this->items);
             $this->plugin->getScheduler()->cancelTask($this->getHandler()->getTaskId());
         }
