@@ -31,18 +31,15 @@ class KeyCommand extends PluginCommand
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param array $args
-     * @return bool|mixed
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
-        if (!$this->testPermission($sender)) {
-            return false;
-        }
+        if (!$this->testPermission($sender)) return;
         $plugin = $this->getPlugin();
         if ($plugin instanceof Main) {
             if (!isset($args[0])) {
                 $sender->sendMessage("Usage: /key <type> [amount] [player]");
-                return false;
+                return;
             }
             $target = $sender;
             $amount = 1;
@@ -51,12 +48,12 @@ class KeyCommand extends PluginCommand
                 $target = $plugin->getServer()->getPlayer($args[2]);
                 if (!$target instanceof Player) {
                     $sender->sendMessage(TextFormat::RED . "Invalid player.");
-                    return false;
+                    return;
                 }
             } else {
                 if (!$target instanceof Player) {
                     $sender->sendMessage(TextFormat::RED . "Please specify a player.");
-                    return false;
+                    return;
                 }
             }
             if (isset($args[1])) {
@@ -64,17 +61,15 @@ class KeyCommand extends PluginCommand
                     $amount = $args[1];
                 } else {
                     $sender->sendMessage(TextFormat::RED . "Amount must be numeric.");
-                    return false;
+                    return;
                 }
             }
             if (!$plugin->getCrateType($args[0])) {
                 $sender->sendMessage(TextFormat::RED . "Invalid crate type.");
-                return false;
+                return;
             }
             $plugin->giveKey($target, $amount, $args[0]);
             $sender->sendMessage(TextFormat::GREEN . ucfirst($args[0]) . " key has been given.");
-            return true;
         }
-        return false;
     }
 }

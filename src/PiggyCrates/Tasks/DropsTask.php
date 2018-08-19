@@ -60,7 +60,6 @@ class DropsTask extends Task
 
     /**
      * @param int $currentTick
-     * @return bool
      */
     public function onRun(int $currentTick)
     {
@@ -70,7 +69,7 @@ class DropsTask extends Task
             $player->getInventory()->removeItem($item->setCount(1));
             $player->addTitle("You Have Received");
             $this->startingTitleComplete = true;
-            return false;
+            return;
         }
         $pickedDrop = reset($this->pickedDrops);
         $values = $this->drops[$pickedDrop];
@@ -110,6 +109,5 @@ class DropsTask extends Task
             $player->getInventory()->addItem(...$this->items);
             $this->plugin->getScheduler()->cancelTask($this->getHandler()->getTaskId());
         }
-        return true;
     }
 }
