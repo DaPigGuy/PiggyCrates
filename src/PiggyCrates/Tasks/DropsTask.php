@@ -92,10 +92,10 @@ class DropsTask extends Task
         if (isset($values["lore"])) {
             $i->setLore([$values["lore"]]);
         }
-        if (isset($values["command"])) {
-            foreach ($values["command"] as $commands) {
-                $commands = str_replace(["%PLAYER%"], [$player->getName()], $commands);
-                $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $commands);
+        if (isset($values["commands"])) {
+            foreach ($values["commands"] as $command) {
+                $command = str_replace(["%PLAYER%"], [$player->getName()], $command);
+                $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
             }
         }
         $this->items[] = $i;

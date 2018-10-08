@@ -12,7 +12,7 @@ crates:
           #enchantment2:
             #level: 1
         #lore: Add a description to the item. Use \n for a new line.
-        #command: (You can use %PLAYER% if you want to add the name of the player.)
+        #commands: (You can use %PLAYER% if you want to add the name of the player.)
           #- tell %PLAYER% You opened the Common Crate!
           #- say %PLAYER% opened the Common Crate!
     #amount: 1 (amount of drops that can be received from opening crate)
