@@ -178,9 +178,10 @@ class EventListener implements Listener
                                     $i->setLore([$values["lore"]]);
                                 }
                                 if (isset($values["command"])) {
-                                    $cmd = $values["command"];
-                                    $cmd = str_replace(["%PLAYER%"], [$player->getName()], $cmd);
-                                    $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+                                    foreach ($values["command"] as $commands) {
+                                        $commands = str_replace(["%PLAYER%"], [$player->getName()], $commands);
+                                        $this->plugin->getServer()->dispatchCommand(new ConsoleCommandSender(), $commands);
+                                    }
                                 }
                                 $items[] = $i;
                                 $particles = "pocketmine\\level\\particle\\" . ucfirst($this->plugin->getCrateDropParticle($type)) . "Particle";
