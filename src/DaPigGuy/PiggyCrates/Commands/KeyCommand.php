@@ -1,8 +1,8 @@
 <?php
 
-namespace PiggyCrates\Commands;
+namespace DaPigGuy\PiggyCrates\Commands;
 
-use PiggyCrates\Main;
+use DaPigGuy\PiggyCrates\Main;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\Player;
@@ -10,14 +10,14 @@ use pocketmine\utils\TextFormat;
 
 /**
  * Class KeyCommand
- * @package PiggyCrates\Commands
+ * @package DaPigGuy\PiggyCrates\Commands
  */
 class KeyCommand extends PluginCommand
 {
     /**
      * KeyCommand constructor.
      * @param string $name
-     * @param Main $plugin
+     * @param Main   $plugin
      */
     public function __construct(string $name, Main $plugin)
     {
@@ -29,8 +29,8 @@ class KeyCommand extends PluginCommand
 
     /**
      * @param CommandSender $sender
-     * @param string $commandLabel
-     * @param array $args
+     * @param string        $commandLabel
+     * @param array         $args
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {

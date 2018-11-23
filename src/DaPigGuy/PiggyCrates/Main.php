@@ -1,8 +1,8 @@
 <?php
 
-namespace PiggyCrates;
+namespace DaPigGuy\PiggyCrates;
 
-use PiggyCrates\Commands\KeyCommand;
+use DaPigGuy\PiggyCrates\Commands\KeyCommand;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
@@ -11,11 +11,10 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
-use pocketmine\utils\TextFormat;
 
 /**
  * Class Main
- * @package PiggyCrates
+ * @package DaPigGuy\PiggyCrates
  */
 class Main extends PluginBase
 {
@@ -39,9 +38,8 @@ class Main extends PluginBase
         $this->key = $this->getConfig()->getNested("key");
         $this->keyLore = $this->getConfig()->getNested("key-lore");
         $this->allowCrateChanges = $this->getConfig()->getNested("allow-crate-changes");
-        $this->getServer()->getCommandMap()->register("key", new KeyCommand("key", $this), "key");
+        $this->getServer()->getCommandMap()->register("piggycrates", new KeyCommand("key", $this), "key");
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
-        $this->getLogger()->info(TextFormat::GREEN . "Enabled.");
     }
 
     public function initCrates()
@@ -66,17 +64,6 @@ class Main extends PluginBase
     }
 
     /**
-     * Get a crate type's data. Returns false if crate type does not exist.
-     *
-     * @param string $type
-     * @return array|false
-     */
-    public function getCrateType(string $type)
-    {
-        return isset($this->crates[$type]) ? $this->crates[$type] : false;
-    }
-
-    /**
      * Returns array of all crate type names
      *
      * @return array
@@ -84,17 +71,6 @@ class Main extends PluginBase
     public function getCrateTypes()
     {
         return array_keys($this->crates);
-    }
-
-    /**
-     * Returns array of drops. Returns null if crate type does not exist.
-     *
-     * @param string $type
-     * @return null|array
-     */
-    public function getCrateDrops(string $type)
-    {
-        return !$this->getCrateType($type) ? null : $this->crateDrops[$type];
     }
 
     /**
@@ -106,6 +82,17 @@ class Main extends PluginBase
     public function getCrateDropAmount(string $type)
     {
         return !$this->getCrateType($type) ? 0 : $this->crates[$type]["amount"];
+    }
+
+    /**
+     * Get a crate type's data. Returns false if crate type does not exist.
+     *
+     * @param string $type
+     * @return array|false
+     */
+    public function getCrateType(string $type)
+    {
+        return isset($this->crates[$type]) ? $this->crates[$type] : false;
     }
 
     /**
@@ -142,6 +129,17 @@ class Main extends PluginBase
     }
 
     /**
+     * Returns array of drops. Returns null if crate type does not exist.
+     *
+     * @param string $type
+     * @return null|array
+     */
+    public function getCrateDrops(string $type)
+    {
+        return !$this->getCrateType($type) ? null : $this->crateDrops[$type];
+    }
+
+    /**
      * Check if the id & meta of a block matches that of a crate block
      *
      * @param int $id
@@ -169,7 +167,7 @@ class Main extends PluginBase
      * Gives player a key of a certain crate type. Returns false if crate type does not exist.
      *
      * @param Player $player
-     * @param int $amount
+     * @param int    $amount
      * @param string $type
      * @return bool
      */

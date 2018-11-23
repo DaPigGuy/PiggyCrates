@@ -1,10 +1,10 @@
 <?php
 
-namespace PiggyCrates;
+namespace DaPigGuy\PiggyCrates;
 
-use PiggyCrates\Tasks\DropsTask;
-use PiggyCustomEnchants\CustomEnchants\CustomEnchants;
-use PiggyCustomEnchants\Main as CE;
+use DaPigGuy\PiggyCrates\Tasks\DropsTask;
+use DaPigGuy\PiggyCustomEnchants\CustomEnchants\CustomEnchants;
+use DaPigGuy\PiggyCustomEnchants\Main as CE;
 use pocketmine\block\Block;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\event\block\BlockBreakEvent;
@@ -18,7 +18,7 @@ use pocketmine\utils\TextFormat;
 
 /**
  * Class EventListener
- * @package PiggyCrates
+ * @package DaPigGuy\PiggyCrates
  */
 class EventListener implements Listener
 {
