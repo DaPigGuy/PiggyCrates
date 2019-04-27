@@ -9,22 +9,22 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 /**
- * Class KeyCommand
+ * Class KeyAllCommand
  * @package DaPigGuy\PiggyCrates\Commands
  */
-class KeyCommand extends PluginCommand
+class KeyAllCommand extends PluginCommand
 {
     /**
-     * KeyCommand constructor.
+     * KeyAllCommand constructor.
      * @param string $name
      * @param Main   $plugin
      */
     public function __construct(string $name, Main $plugin)
     {
         parent::__construct($name, $plugin);
-        $this->setDescription("Give a crate key");
-        $this->setUsage("/key <type> [amount] [player]");
-        $this->setPermission("piggycrates.command.key");
+        $this->setDescription("Give everyone a crate key");
+        $this->setUsage("/keyall <type> [amount]");
+        $this->setPermission("piggycrates.command.keyall");
     }
 
     /**
@@ -38,24 +38,11 @@ class KeyCommand extends PluginCommand
         $plugin = $this->getPlugin();
         if ($plugin instanceof Main) {
             if (!isset($args[0])) {
-                $sender->sendMessage("Usage: /key <type> [amount] [player]");
+                $sender->sendMessage("Usage: /keyall <type> [amount]");
                 return;
             }
-            $target = $sender;
             $amount = 1;
             $args[0] = strtolower($args[0]);
-            if (isset($args[2])) {
-                $target = $plugin->getServer()->getPlayer($args[2]);
-                if (!$target instanceof Player) {
-                    $sender->sendMessage(TextFormat::RED . "Invalid player.");
-                    return;
-                }
-            } else {
-                if (!$target instanceof Player) {
-                    $sender->sendMessage(TextFormat::RED . "Please specify a player.");
-                    return;
-                }
-            }
             if (isset($args[1])) {
                 if (is_numeric($args[1])) {
                     $amount = $args[1];
@@ -68,9 +55,11 @@ class KeyCommand extends PluginCommand
                 $sender->sendMessage(TextFormat::RED . "Invalid crate type.");
                 return;
             }
-            $plugin->giveKey($target, $amount, $args[0]);
-            $target->sendMessage(TextFormat::GREEN . "You've received the " . ucfirst($args[0]) . " key.");
-            $sender->sendMessage(TextFormat::GREEN . "You've given " . $target->getName() . " the " . ucfirst($args[0]) . " key.");
+            foreach ($plugin->getServer()->getOnlinePlayers() as $target) {
+                $plugin->giveKey($target, $amount, $args[0]);
+                $target->sendMessage(TextFormat::GREEN . "You've received the " . ucfirst($args[0]) . " key!");
+            }
+            $sender->sendMessage(TextFormat::GREEN . "You've given EVERYONE the " . ucfirst($args[0]) . " key.");
         }
     }
 }

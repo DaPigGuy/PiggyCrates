@@ -2,6 +2,7 @@
 
 namespace DaPigGuy\PiggyCrates;
 
+use DaPigGuy\PiggyCrates\Commands\KeyAllCommand;
 use DaPigGuy\PiggyCrates\Commands\KeyCommand;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
@@ -39,6 +40,7 @@ class Main extends PluginBase
         $this->keyLore = $this->getConfig()->getNested("key-lore");
         $this->allowCrateChanges = $this->getConfig()->getNested("allow-crate-changes");
         $this->getServer()->getCommandMap()->register("piggycrates", new KeyCommand("key", $this), "key");
+        $this->getServer()->getCommandMap()->register("piggycrates", new KeyAllCommand("keyall", $this), "keyall");
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
     }
 
@@ -173,13 +175,9 @@ class Main extends PluginBase
      */
     public function giveKey(Player $player, int $amount, string $type)
     {
-        if (is_null($this->getCrateDrops($type))) {
-            return false;
-        }
+        if (is_null($this->getCrateDrops($type))) return false;
         $values = explode(":", $this->key);
-        if (!isset($values[0]) || !isset($values[1])) {
-            return false;
-        }
+        if (!isset($values[0]) || !isset($values[1])) return false;
         $key = Item::get($values[0], $values[1], $amount);
         $key->addEnchantment(new EnchantmentInstance(new Enchantment(255, "", Enchantment::RARITY_COMMON, Enchantment::SLOT_ALL, Enchantment::SLOT_ALL, 1))); //Glowing key effect
         $key->setCustomName(ucfirst($type . " Key"));

@@ -1,6 +1,6 @@
 name: PiggyCrates
 main: DaPigGuy\PiggyCrates\Main
-version: 1.4.0
+version: 1.5.0
 api: 3.2.0
 load: POSTWORLD
 author: DaPigGuy
@@ -29,3 +29,6 @@ permissions:
           piggycrates.command.key:
             default: op
             description: "Use /key"
+          piggycrates.command.keyall:
+            default: op
+            description: "Use /keyall"
