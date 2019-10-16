@@ -3,8 +3,7 @@
 namespace DaPigGuy\PiggyCrates;
 
 use DaPigGuy\PiggyCrates\Tasks\DropsTask;
-use DaPigGuy\PiggyCustomEnchants\CustomEnchants\CustomEnchants;
-use DaPigGuy\PiggyCustomEnchants\Main as CE;
+use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use pocketmine\block\Block;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\event\block\BlockBreakEvent;
@@ -133,10 +132,8 @@ class EventListener implements Listener
                         if (isset($values["enchantments"])) {
                             foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                                 $level = $enchantmentinfo["level"];
-                                /** @var CE $ce */
-                                $ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants");
-                                if (!is_null($ce) && !is_null($enchant = CustomEnchants::getEnchantmentByName($enchantment))) {
-                                    $i = $ce->addEnchantment($i, $enchantment, $level);
+                                if (!is_null($this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) && !is_null($enchant = CustomEnchantManager::getEnchantmentByName($enchantment))) {
+                                    $i->addEnchantment(new EnchantmentInstance($enchant, $level));
                                 } else {
                                     if (!is_null($enchant = Enchantment::getEnchantmentByName($enchantment))) {
                                         $i->addEnchantment(new EnchantmentInstance($enchant, $level));
@@ -163,10 +160,8 @@ class EventListener implements Listener
                                 if (isset($values["enchantments"])) {
                                     foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                                         $level = $enchantmentinfo["level"];
-                                        /** @var CE $ce */
-                                        $ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants");
-                                        if (!is_null($ce) && !is_null($enchant = CustomEnchants::getEnchantmentByName($enchantment))) {
-                                            $i = $ce->addEnchantment($i, $enchantment, $level);
+                                        if (!is_null($this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) && !is_null($enchant = CustomEnchantManager::getEnchantmentByName($enchantment))) {
+                                            $i->addEnchantment(new EnchantmentInstance($enchant, $level));
                                         } else {
                                             if (!is_null($enchant = Enchantment::getEnchantmentByName($enchantment))) {
                                                 $i->addEnchantment(new EnchantmentInstance($enchant, $level));

@@ -3,7 +3,7 @@
 namespace DaPigGuy\PiggyCrates\Tasks;
 
 use DaPigGuy\PiggyCrates\Main;
-use DaPigGuy\PiggyCustomEnchants\CustomEnchants\CustomEnchants;
+use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use pocketmine\block\Block;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\item\enchantment\Enchantment;
@@ -39,13 +39,13 @@ class DropsTask extends Task
 
     /**
      * DropsTask constructor.
-     * @param Main   $plugin
+     * @param Main $plugin
      * @param Player $player
-     * @param Block  $block
-     * @param Item   $key
+     * @param Block $block
+     * @param Item $key
      * @param string $type
-     * @param array  $drops
-     * @param array  $pickedDrops
+     * @param array $drops
+     * @param array $pickedDrops
      */
     public function __construct(Main $plugin, Player $player, Block $block, Item $key, string $type, array $drops, array $pickedDrops)
     {
@@ -78,10 +78,8 @@ class DropsTask extends Task
         if (isset($values["enchantments"])) {
             foreach ($values["enchantments"] as $enchantment => $enchantmentinfo) {
                 $level = $enchantmentinfo["level"];
-                /** @var \DaPigGuy\PiggyCustomEnchants\Main $ce */
-                $ce = $this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants");
-                if (!is_null($ce) && !is_null($enchant = CustomEnchants::getEnchantmentByName($enchantment))) {
-                    $i = $ce->addEnchantment($i, $enchantment, $level);
+                if (!is_null($this->plugin->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) && !is_null($enchant = CustomEnchantManager::getEnchantmentByName($enchantment))) {
+                    $i->addEnchantment(new EnchantmentInstance($enchant, $level));
                 } else {
                     if (!is_null($enchant = Enchantment::getEnchantmentByName($enchantment))) {
                         $i->addEnchantment(new EnchantmentInstance($enchant, $level));
