@@ -1,122 +1,72 @@
 crates:
-  #example: (crate type - name of the crate)
-    #drops: (items that can be received from the crate)
-      #- name: "Example Item" (name of item)
-        #id: (id of drop)
-        #meta: 0 (meta/dmg value of item)
-        #amount: 10 (amount of items that are received from this drop)
-        #chance: 100 (chance of item to drop)
-        #enchantments:
-          #enchantment1:
-            #level: 1
-          #enchantment2:
-            #level: 1
-        #lore: Add a description to the item. Use \n for a new line.
-        #commands: (You can use %PLAYER% if you want to add the name of the player.)
-          #- tell %PLAYER% You opened the Common Crate!
-          #- say %PLAYER% opened the Common Crate!
-    #amount: 1 (amount of drops that can be received from opening crate)
-    #particle: lava (particle spawned for each drop)
-    #delay: 0.25 (delay between each drop)
-    #block: "173:0" (id:meta; the block under chest to determine crate type)
-# Still confused? Refer to our example configuration: https://github.com/DaPigGuy/PiggyCrates/wiki/Example-Configuration
-  common:
+  Common:
     drops:
-      - name: "Stone"
-        id: 1
+      - id: 1
         meta: 0
         amount: 16
         chance: 25
-      - name: "Coal"
-        id: 263
+      - id: 263
         meta: 0
         amount: 10
         chance: 75
     amount: 1
-    particle: lava
-    delay: 0.25
-    block: "173:0"
-  uncommon:
+  Uncommon:
     drops:
-      - name: "Coal"
-        id: 263
+      - id: 263
         meta: 0
         amount: 10
         chance: 75
-      - name: "Torch"
-        id: 50
+      - id: 50
         meta: 0
         amount: 16
         chance: 15
-      - name: "Cooked Chicken"
-        id: 366
+      - id: 366
         meta: 0
         amount: 16
         chance: 10
     amount: 1
-    particle: lava
-    delay: 0.25
-    block: "42:0"
-  vote:
+  Vote:
     drops:
-      - name: "Iron Ingot"
-        id: 265
+      - id: 265
         meta: 0
         amount: 10
         chance: 35
-      - name: "Gold Ingot"
-        id: 266
+      - id: 266
         meta: 0
         amount: 10
         chance: 15
-      - name: "Oak Wood"
-        id: 17
+      - id: 17
         meta: 0
         amount: 64
         chance: 50
     amount: 1
-    particle: lava
-    delay: 0.25
-    block: "41:0"
-  mythic:
+  Mythic:
     drops:
-      - name: "Diamond"
-        id: 264
+      - id: 264
         meta: 0
         amount: 16
         chance: 35
-      - name: "Emerald"
-        id: 388
+      - id: 388
         meta: 0
         amount: 16
         chance: 15
-      - name: "Golden Apple"
-        id: 322
+      - id: 322
         meta: 0
         amount: 16
         chance: 50
     amount: 1
-    particle: lava
-    delay: 0.25
-    block: "57:0"
-  legendary:
+  Legendary:
     drops:
-      - name: "Obsidian"
-        id: 49
+      - id: 49
         meta: 0
         amount: 32
         chance: 15
-      - name: "Enchanted Apple"
-        id: 466
+      - id: 466
         meta: 0
         amount: 16
         chance: 80
-      - name: "Bedrock"
-        id: 7
+      - id: 7
         meta: 0
         amount: 5
         chance: 5
     amount: 1
-    particle: lava
-    delay: 0.25
-    block: "133:0"

@@ -1,10 +1,5 @@
-# PiggyCrates Configuration
-
-# ID:DMG value of keys
-key: "131:0"
-
-# Description of keys
-key-lore: "Use this key to get rewards."
-
-# Allow the creation & destruction of crates by those without the piggycrates.crates permission node
-allow-crate-changes: false
+keys:
+  id: 131
+  meta: 0
+  name: "{CRATE} Key"
+  lore: "Claim rewards from a {CRATE} Crate"
