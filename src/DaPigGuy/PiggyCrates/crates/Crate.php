@@ -98,4 +98,16 @@ class Crate
         $key->setNamedTagEntry(new StringTag("KeyType", $this->getName()));
         $player->getInventory()->addItem($key);
     }
+
+    /**
+     * @param Item $item
+     * @return bool
+     */
+    public function isValidKey(Item $item): bool
+    {
+        return $item->getId() === $this->plugin->getConfig()->getNested("key.id") &&
+            $item->getDamage() === $this->plugin->getConfig()->getNested("key.meta") &&
+            ($tag = $item->getNamedTagEntry("KeyType")) !== null &&
+            $tag->getValue() === $this->getName();
+    }
 }

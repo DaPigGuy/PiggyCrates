@@ -6,10 +6,12 @@ namespace DaPigGuy\PiggyCrates\tiles;
 
 use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\PiggyCrates;
+use pocketmine\item\Item;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\Player;
 use pocketmine\tile\Chest;
+use pocketmine\utils\TextFormat;
 
 /**
  * Class CrateTile
@@ -37,11 +39,17 @@ class CrateTile extends Chest
 
     /**
      * @param Player $player
+     * @param Item $key
      */
-    public function open(Player $player): void
+    public function open(Player $player, Item $key): void
     {
         if ($this->crateType === null) return;
-        if ($this->isOpen) return;
+        if ($this->isOpen) {
+            $player->sendTip(TextFormat::RED . "Crate is currently being opened.");
+            return;
+        }
+
+        $player->getInventory()->removeItem($key->setCount(1));
 
         $pk = new BlockEventPacket();
         $pk->x = $this->x;
