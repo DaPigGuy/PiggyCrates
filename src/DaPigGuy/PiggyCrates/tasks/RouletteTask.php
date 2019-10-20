@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DaPigGuy\PiggyCrates\tasks;
+
+use DaPigGuy\PiggyCrates\PiggyCrates;
+use DaPigGuy\PiggyCrates\tiles\CrateTile;
+use pocketmine\item\Item;
+use pocketmine\Player;
+use pocketmine\scheduler\Task;
+
+/**
+ * Class RouletteTask
+ * @package DaPigGuy\PiggyCrates\tasks
+ */
+class RouletteTask extends Task
+{
+    /** @var CrateTile */
+    private $tile;
+    /** @var int */
+    private $currentTick = 0;
+    /** @var bool */
+    private $showReward = false;
+
+    /** @var int */
+    private $itemsLeft;
+
+    /** @var Item */
+    private $lastRewards = [];
+
+    /**
+     * RouletteTask constructor.
+     * @param CrateTile $tile
+     */
+    public function __construct(CrateTile $tile)
+    {
+        $this->tile = $tile;
+        $this->itemsLeft = $tile->getCrateType()->getDropCount();
+    }
+
+    /**
+     * @param int $currentTick
+     */
+    public function onRun(int $currentTick)
+    {
+        if (!$this->tile->getCurrentPlayer() instanceof Player || !$this->tile->getCurrentPlayer()->isOnline()) {
+            $this->tile->closeCrate();
+            $this->getHandler()->cancel();
+            return;
+        }
+        $this->currentTick++;
+        $this->tile->getCurrentPlayer()->addWindow($this->tile->getInventory());
+        if ($this->currentTick >= PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration")) {
+            if (!$this->showReward) {
+                $this->showReward = true;
+            } elseif ($this->currentTick - PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration") > 20) {
+                $this->itemsLeft--;
+                $this->tile->getCurrentPlayer()->getInventory()->addItem($this->tile->getInventory()->getItem(13));
+                if ($this->itemsLeft === 0) {
+                    $this->tile->getCurrentPlayer()->removeWindow($this->tile->getInventory());
+
+                    $this->tile->closeCrate();
+                    $this->getHandler()->cancel();
+                } else {
+                    $this->currentTick = 0;
+                    $this->showReward = false;
+                }
+            }
+            return;
+        }
+        if ($this->currentTick % PiggyCrates::$instance->getConfig()->getNested("crates.roulette.speed") === 0) {
+            $lastRewards = [];
+            foreach ($this->lastRewards as $slot => $lastReward) {
+                if ($slot !== 9) {
+                    $lastRewards[$slot - 1] = $lastReward;
+                    $this->tile->getInventory()->setItem($slot - 1, $lastReward);
+                }
+            }
+            $lastRewards[17] = $this->tile->getCrateType()->getDrop(1)[0];
+            $this->tile->getInventory()->setItem(17, $lastRewards[17]);
+            $this->lastRewards = $lastRewards;
+        }
+    }
+}

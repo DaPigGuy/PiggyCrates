@@ -6,6 +6,7 @@ namespace DaPigGuy\PiggyCrates\tiles;
 
 use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\PiggyCrates;
+use DaPigGuy\PiggyCrates\tasks\RouletteTask;
 use pocketmine\item\Item;
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\nbt\tag\CompoundTag;
@@ -45,7 +46,7 @@ class CrateTile extends Chest
      * @param Player $player
      * @param Item $key
      */
-    public function open(Player $player, Item $key): void
+    public function openCrate(Player $player, Item $key): void
     {
         if ($this->crateType === null) return;
         if ($this->isOpen) {
@@ -67,23 +68,28 @@ class CrateTile extends Chest
         $pk->eventData = 1;
         $this->getLevel()->broadcastPacketToViewers($this, $pk);
 
+        $this->getInventory()->clearAll();
+        $this->getInventory()->setItem(4, Item::get(Item::END_ROD, 0, 1));
+        $this->getInventory()->setItem(22, Item::get(Item::END_ROD, 0, 1));
+
         $this->isOpen = true;
         $this->currentPlayer = $player;
 
-        switch (PiggyCrates::getCrateMode()) {
+        switch (PiggyCrates::$instance->getConfig()->getNested("crates.mode")) {
             case "instant":
-                $this->close();
+                $this->closeCrate();
                 foreach ($this->crateType->getDrop($this->crateType->getDropCount()) as $drop) {
                     $player->getInventory()->addItem($drop);
                 }
                 break;
             case "roulette":
             default:
+                PiggyCrates::$instance->getScheduler()->scheduleRepeatingTask(new RouletteTask($this), 1);
                 break;
         }
     }
 
-    public function close(): void
+    public function closeCrate(): void
     {
         if (!$this->isOpen) return;
 
@@ -97,6 +103,15 @@ class CrateTile extends Chest
 
         $this->isOpen = false;
         $this->currentPlayer = null;
+    }
+
+    public function close(): void
+    {
+        foreach ($this->floatingTextParticles as $floatingTextParticle) {
+            $floatingTextParticle[1]->setInvisible();
+            $floatingTextParticle[0]->getLevel()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
+        }
+        parent::close();
     }
 
     /**
@@ -143,6 +158,7 @@ class CrateTile extends Chest
     {
         parent::addAdditionalSpawnData($nbt);
         $nbt->setString(self::TAG_ID, "Chest");
+        $nbt->setString(self::TAG_CUSTOM_NAME, $this->crateType->getName() . " Crate");
     }
 
     /**

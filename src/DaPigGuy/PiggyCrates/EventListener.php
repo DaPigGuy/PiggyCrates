@@ -44,7 +44,7 @@ class EventListener implements Listener
             $tile = $block->getLevel()->getTile($block);
             if ($tile instanceof CrateTile) {
                 if ($tile->getCrateType()->isValidKey($item)) {
-                    $tile->open($player, $item);
+                    $tile->openCrate($player, $item);
                 }
                 $event->setCancelled();
             } elseif ($tile instanceof Chest) {
@@ -57,6 +57,11 @@ class EventListener implements Listener
                     $tile->close();
                     $player->sendMessage(TextFormat::GREEN . PiggyCrates::getCrateToCreate($player)->getName() . " Crate created.");
                     PiggyCrates::setInCrateCreationMode($player, null);
+                    $event->setCancelled();
+                }
+            } else {
+                if ($item->getNamedTagEntry("KeyType") !== null) {
+                    $event->setCancelled();
                 }
             }
         }

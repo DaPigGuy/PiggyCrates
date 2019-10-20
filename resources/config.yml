@@ -6,3 +6,6 @@ keys:
 crates:
   # Options: instant, roulette
   mode: roulette
+  roulette:
+    duration: 30
+    speed: 2

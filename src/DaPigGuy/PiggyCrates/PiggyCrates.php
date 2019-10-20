@@ -26,11 +26,11 @@ use ReflectionException;
  */
 class PiggyCrates extends PluginBase
 {
+    /** @var PiggyCrates */
+    public static $instance;
+
     /** @var Crate[] */
     public static $crates = [];
-
-    /** @var string */
-    public static $crateMode;
 
     /** @var array */
     public static $crateCreation;
@@ -40,6 +40,8 @@ class PiggyCrates extends PluginBase
      */
     public function onEnable(): void
     {
+        self::$instance = $this;
+
         Tile::registerTile(CrateTile::class);
 
         $this->saveDefaultConfig();
@@ -57,8 +59,6 @@ class PiggyCrates extends PluginBase
                 return new CrateItem($item, $itemData["chance"] ?? 100);
             }, $crateData["drops"] ?? []), $crateData["amount"], $crateData["commands"] ?? []);
         }
-
-        self::$crateMode = $this->getConfig()->getNested("crates.mode");
 
         $this->getServer()->getCommandMap()->register("piggycrates", new CrateCommand($this, "crate", "Create a crate"));
         $this->getServer()->getCommandMap()->register("piggycrates", new KeyCommand($this, "key", "Give a crate key"));
@@ -82,14 +82,6 @@ class PiggyCrates extends PluginBase
     public static function getCrates(): array
     {
         return self::$crates;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getCrateMode(): string
-    {
-        return self::$crateMode;
     }
 
     /**
