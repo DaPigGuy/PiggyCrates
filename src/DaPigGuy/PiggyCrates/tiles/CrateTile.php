@@ -109,7 +109,7 @@ class CrateTile extends Chest
     {
         foreach ($this->floatingTextParticles as $floatingTextParticle) {
             $floatingTextParticle[1]->setInvisible();
-            $floatingTextParticle[0]->getLevel()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
+            if ($floatingTextParticle[0]->getLevel()) $floatingTextParticle[0]->getLevel()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
         }
         parent::close();
     }

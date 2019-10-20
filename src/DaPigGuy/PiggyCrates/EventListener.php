@@ -47,7 +47,9 @@ class EventListener implements Listener
                     $tile->openCrate($player, $item);
                 }
                 $event->setCancelled();
-            } elseif ($tile instanceof Chest) {
+                return;
+            }
+            if ($tile instanceof Chest) {
                 if (PiggyCrates::inCrateCreationMode($player)) {
                     $nbt = $tile->getSpawnCompound();
                     $nbt->setString("CrateType", PiggyCrates::getCrateToCreate($player)->getName());
@@ -58,13 +60,11 @@ class EventListener implements Listener
                     $player->sendMessage(TextFormat::GREEN . PiggyCrates::getCrateToCreate($player)->getName() . " Crate created.");
                     PiggyCrates::setInCrateCreationMode($player, null);
                     $event->setCancelled();
-                }
-            } else {
-                if ($item->getNamedTagEntry("KeyType") !== null) {
-                    $event->setCancelled();
+                    return;
                 }
             }
         }
+        if ($item->getNamedTagEntry("KeyType") !== null) $event->setCancelled();
     }
 
     /**
