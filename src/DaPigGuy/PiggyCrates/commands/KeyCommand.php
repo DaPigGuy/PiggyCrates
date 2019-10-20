@@ -41,11 +41,15 @@ class KeyCommand extends BaseCommand
      */
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
+        if (!isset($args["type"])) {
+            $sender->sendMessage("Usage: /key <type>");
+            return;
+        }
         if (!$sender instanceof Player && !isset($args["player"])) {
             $sender->sendMessage("Usage: /key <type> <amount> <player>");
             return;
         }
-        $target = isset($args["player"]) ? $this->plugin->getServer()->getPlayer($args["player"]) : $sender;
+        $target = empty($args["player"]) ? $sender : $this->plugin->getServer()->getPlayer($args["player"]);
         if (!$target instanceof Player) {
             $sender->sendMessage(TextFormat::RED . "Invalid player.");
             return;

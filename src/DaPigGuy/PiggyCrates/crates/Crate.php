@@ -23,6 +23,8 @@ class Crate
     public $name;
     /** @var CrateItem[] */
     public $drops;
+    /** @var int */
+    public $dropCount;
     /** @var string[] */
     public $commands;
 
@@ -33,11 +35,12 @@ class Crate
      * @param CrateItem[] $drops
      * @param string[] $commands
      */
-    public function __construct(PiggyCrates $plugin, string $name, array $drops, array $commands)
+    public function __construct(PiggyCrates $plugin, string $name, array $drops, int $dropCount, array $commands)
     {
         $this->plugin = $plugin;
         $this->name = $name;
         $this->drops = $drops;
+        $this->dropCount = $dropCount;
         $this->commands = $commands;
     }
 
@@ -58,18 +61,10 @@ class Crate
     }
 
     /**
-     * @return string[]
-     */
-    public function getCommands(): array
-    {
-        return $this->commands;
-    }
-
-    /**
      * @param int $amount
-     * @return Item
+     * @return Item[]
      */
-    public function getDrop(int $amount): Item
+    public function getDrop(int $amount): array
     {
         $dropTable = [];
         foreach ($this->drops as $drop) {
@@ -86,14 +81,30 @@ class Crate
     }
 
     /**
+     * @return int
+     */
+    public function getDropCount(): int
+    {
+        return $this->dropCount;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCommands(): array
+    {
+        return $this->commands;
+    }
+
+    /**
      * @param Player $player
      * @param int $amount
      */
     public function giveKey(Player $player, int $amount): void
     {
-        $key = Item::get($this->plugin->getConfig()->getNested("key.id"), $this->plugin->getConfig()->getNested("key.meta"), $amount);
-        $key->setCustomName(ucfirst(str_replace("{CRATE}", $this->getName(), $this->getName() . $this->plugin->getConfig()->getNested("key.name"))));
-        $key->setLore([str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("key.lore"))]);
+        $key = Item::get((int)$this->plugin->getConfig()->getNested("keys.id"), (int)$this->plugin->getConfig()->getNested("keys.meta"), $amount);
+        $key->setCustomName(ucfirst(str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("keys.name"))));
+        $key->setLore([str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("keys.lore"))]);
         $key->setNamedTagEntry(new ListTag(Item::TAG_ENCH));
         $key->setNamedTagEntry(new StringTag("KeyType", $this->getName()));
         $player->getInventory()->addItem($key);
@@ -105,8 +116,8 @@ class Crate
      */
     public function isValidKey(Item $item): bool
     {
-        return $item->getId() === $this->plugin->getConfig()->getNested("key.id") &&
-            $item->getDamage() === $this->plugin->getConfig()->getNested("key.meta") &&
+        return $item->getId() === (int)$this->plugin->getConfig()->getNested("keys.id") &&
+            $item->getDamage() === (int)$this->plugin->getConfig()->getNested("keys.meta") &&
             ($tag = $item->getNamedTagEntry("KeyType")) !== null &&
             $tag->getValue() === $this->getName();
     }

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace DaPigGuy\PiggyCrates\commands;
 
-use CortexPE\Commando\args\IntegerArgument;
 use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 /**
- * Class KeyAllCommand
+ * Class CrateCommand
  * @package DaPigGuy\PiggyCrates\commands
  */
-class KeyAllCommand extends BaseCommand
+class CrateCommand extends BaseCommand
 {
     /** @var PiggyCrates */
     private $plugin;
@@ -40,26 +40,30 @@ class KeyAllCommand extends BaseCommand
      */
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
-        if (!isset($args["type"])) {
-            $sender->sendMessage("Usage: /keyall <type>");
+        if (!$sender instanceof Player) {
+            $sender->sendMessage(TextFormat::RED . "Please use this in-game.");
             return;
         }
-        $amount = $args["amount"] ?? 1;
-        if (!is_numeric($amount)) {
-            $sender->sendMessage(TextFormat::RED . "Amount must be numeric.");
+        if (!isset($args["type"])) {
+            $sender->sendMessage("Usage: /crate <type>");
+            return;
+        }
+        if ($args["type"] === "cancel") {
+            if (!PiggyCrates::inCrateCreationMode($sender)) {
+                $sender->sendMessage(TextFormat::RED . "You are not in crate creation mode.");
+                return;
+            }
+            PiggyCrates::setInCrateCreationMode($sender, null);
+            $sender->sendMessage(TextFormat::GREEN . "Crate creation cancelled.");
             return;
         }
         $crate = PiggyCrates::getCrate($args["type"]);
         if ($crate === null) {
-            $sender->sendMessage(TextFormat::RED . "Invalid crate type.");
+            $sender->sendMessage(TextFormat::RED . "Invalid crate.");
             return;
         }
-        foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
-            $crate->giveKey($player, $amount);
-            $player->sendMessage(TextFormat::GREEN . "You've received the " . $crate->getName() . " key.");
-        }
-        $sender->sendMessage(TextFormat::GREEN . "You've given all online players the " . $crate->getName() . " key.");
-
+        PiggyCrates::setInCrateCreationMode($sender, $crate);
+        $sender->sendMessage(TextFormat::GREEN . "Please tap a chest block to create a crate, or use /crate cancel to cancel.");
     }
 
     /**
@@ -68,6 +72,5 @@ class KeyAllCommand extends BaseCommand
     public function prepare(): void
     {
         $this->registerArgument(0, new RawStringArgument("type"));
-        $this->registerArgument(1, new IntegerArgument("amount", true));
     }
 }

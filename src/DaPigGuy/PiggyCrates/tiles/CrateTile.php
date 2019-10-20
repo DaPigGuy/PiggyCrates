@@ -48,6 +48,10 @@ class CrateTile extends Chest
             $player->sendTip(TextFormat::RED . "Crate is currently being opened.");
             return;
         }
+        if (count($player->getInventory()->getContents()) > $player->getInventory()->getSize() - $this->crateType->getDropCount()) {
+            $player->sendTip(TextFormat::RED . "You must have " . $this->crateType->getDropCount() . " empty slots.");
+            return;
+        }
 
         $player->getInventory()->removeItem($key->setCount(1));
 
@@ -61,12 +65,23 @@ class CrateTile extends Chest
 
         $this->isOpen = true;
         $this->currentPlayer = $player;
+
+        switch (PiggyCrates::getCrateMode()) {
+            case "instant":
+                $this->close();
+                foreach ($this->crateType->getDrop($this->crateType->getDropCount()) as $drop){
+                    $player->getInventory()->addItem($drop);
+                }
+                break;
+            case "roulette":
+            default:
+                break;
+        }
     }
 
     public function close(): void
     {
         if (!$this->isOpen) return;
-
 
         $pk = new BlockEventPacket();
         $pk->x = $this->x;

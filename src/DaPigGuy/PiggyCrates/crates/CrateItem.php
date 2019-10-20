@@ -33,7 +33,7 @@ class CrateItem
      */
     public function getItem(): Item
     {
-        return $this->getItem();
+        return $this->item;
     }
 
     /**

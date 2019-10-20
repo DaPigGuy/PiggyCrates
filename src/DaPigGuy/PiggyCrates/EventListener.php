@@ -10,6 +10,9 @@ use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\inventory\ChestInventory;
+use pocketmine\tile\Chest;
+use pocketmine\tile\Tile;
+use pocketmine\utils\TextFormat;
 
 /**
  * Class EventListener
@@ -42,6 +45,18 @@ class EventListener implements Listener
             if ($tile instanceof CrateTile) {
                 if ($tile->getCrateType()->isValidKey($item)) {
                     $tile->open($player, $item);
+                }
+                $event->setCancelled();
+            } elseif ($tile instanceof Chest) {
+                if (PiggyCrates::inCrateCreationMode($player)) {
+                    $nbt = $tile->getSpawnCompound();
+                    $nbt->setString("CrateType", PiggyCrates::getCrateToCreate($player)->getName());
+                    /** @var CrateTile $newTile */
+                    $newTile = Tile::createTile("CrateTile", $event->getBlock()->getLevel(), $nbt);
+                    $newTile->spawnToAll();
+                    $tile->close();
+                    $player->sendMessage(TextFormat::GREEN . PiggyCrates::getCrateToCreate($player)->getName() . " Crate created.");
+                    PiggyCrates::setInCrateCreationMode($player, null);
                 }
             }
         }
