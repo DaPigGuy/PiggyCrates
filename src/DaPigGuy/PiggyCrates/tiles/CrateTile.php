@@ -174,6 +174,7 @@ class CrateTile extends Chest
                 $particle = $floatingTextParticle[1];
                 if (!$player->isOnline() || $player->getLevel() !== $this->level) {
                     $particle->setInvisible();
+                    $this->level->addParticle($particle, [$player]);
                     unset($this->floatingTextParticles[$key]);
                 }
             }
@@ -184,6 +185,6 @@ class CrateTile extends Chest
                 }
             }
         }
-        return parent::onUpdate();
+        return !$this->closed;
     }
 }
