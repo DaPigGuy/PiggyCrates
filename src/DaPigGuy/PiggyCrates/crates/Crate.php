@@ -21,6 +21,8 @@ class Crate
 
     /** @var string */
     public $name;
+    /** @var string */
+    public $floatingText;
     /** @var CrateItem[] */
     public $drops;
     /** @var int */
@@ -32,13 +34,16 @@ class Crate
      * Crate constructor.
      * @param PiggyCrates $plugin
      * @param string $name
+     * @param string $floatingText
      * @param CrateItem[] $drops
+     * @param int $dropCount
      * @param string[] $commands
      */
-    public function __construct(PiggyCrates $plugin, string $name, array $drops, int $dropCount, array $commands)
+    public function __construct(PiggyCrates $plugin, string $name, string $floatingText, array $drops, int $dropCount, array $commands)
     {
         $this->plugin = $plugin;
         $this->name = $name;
+        $this->floatingText = $floatingText;
         $this->drops = $drops;
         $this->dropCount = $dropCount;
         $this->commands = $commands;
@@ -50,6 +55,14 @@ class Crate
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFloatingText(): string
+    {
+        return $this->floatingText;
     }
 
     /**

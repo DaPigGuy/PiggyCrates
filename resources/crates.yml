@@ -10,6 +10,7 @@ crates:
         amount: 10
         chance: 75
     amount: 1
+    floating-text: "Common Crate"
   Uncommon:
     drops:
       - id: 263
@@ -25,6 +26,7 @@ crates:
         amount: 16
         chance: 10
     amount: 1
+    floating-text: "Uncommon Crate"
   Vote:
     drops:
       - id: 265
@@ -40,6 +42,7 @@ crates:
         amount: 64
         chance: 50
     amount: 1
+    floating-text: "Vote Crate"
   Mythic:
     drops:
       - id: 264
@@ -55,6 +58,7 @@ crates:
         amount: 16
         chance: 50
     amount: 1
+    floating-text: "Mythic Crate"
   Legendary:
     drops:
       - id: 49
@@ -70,3 +74,4 @@ crates:
         amount: 5
         chance: 5
     amount: 1
+    floating-text: "Legendary Crate"

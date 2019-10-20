@@ -7,6 +7,7 @@ namespace DaPigGuy\PiggyCrates\tiles;
 use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\item\Item;
+use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\Player;
@@ -28,6 +29,9 @@ class CrateTile extends Chest
     public $isOpen = false;
     /** @var Player|null */
     public $currentPlayer;
+
+    /** @var array[] */
+    public $floatingTextParticles = [];
 
     /**
      * @return Crate|null
@@ -69,7 +73,7 @@ class CrateTile extends Chest
         switch (PiggyCrates::getCrateMode()) {
             case "instant":
                 $this->close();
-                foreach ($this->crateType->getDrop($this->crateType->getDropCount()) as $drop){
+                foreach ($this->crateType->getDrop($this->crateType->getDropCount()) as $drop) {
                     $player->getInventory()->addItem($drop);
                 }
                 break;
@@ -119,6 +123,8 @@ class CrateTile extends Chest
         parent::readSaveData($nbt);
         $this->crateName = $nbt->getString("CrateType");
         $this->crateType = PiggyCrates::getCrate($this->crateName);
+
+        $this->scheduleUpdate();
     }
 
     /**
@@ -137,5 +143,31 @@ class CrateTile extends Chest
     {
         parent::addAdditionalSpawnData($nbt);
         $nbt->setString(self::TAG_ID, "Chest");
+    }
+
+    /**
+     * @return bool
+     */
+    public function onUpdate(): bool
+    {
+        if (!$this->closed && $this->crateType->getFloatingText() !== "") {
+            foreach ($this->floatingTextParticles as $key => $floatingTextParticle) {
+                /** @var Player $player */
+                $player = $floatingTextParticle[0];
+                /** @var FloatingTextParticle $particle */
+                $particle = $floatingTextParticle[1];
+                if (!$player->isOnline() || $player->getLevel() !== $this->level) {
+                    $particle->setInvisible();
+                    unset($this->floatingTextParticles[$key]);
+                }
+            }
+            foreach ($this->level->getPlayers() as $player) {
+                if (!isset($this->floatingTextParticles[$player->getName()])) {
+                    $this->floatingTextParticles[$player->getName()] = [$player, new FloatingTextParticle($this->add(0.5, 1, 0.5), $this->crateType->getFloatingText())];
+                    $this->level->addParticle($this->floatingTextParticles[$player->getName()][1], [$player]);
+                }
+            }
+        }
+        return parent::onUpdate();
     }
 }
