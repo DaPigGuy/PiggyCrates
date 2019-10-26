@@ -42,7 +42,7 @@ class RouletteTask extends Task
     /**
      * @param int $currentTick
      */
-    public function onRun(int $currentTick)
+    public function onRun(int $currentTick): void
     {
         if (!$this->tile->getCurrentPlayer() instanceof Player || !$this->tile->getCurrentPlayer()->isOnline()) {
             $this->tile->closeCrate();
