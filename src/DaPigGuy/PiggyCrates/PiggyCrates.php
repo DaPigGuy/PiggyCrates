@@ -52,6 +52,7 @@ class PiggyCrates extends PluginBase
             self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData): CrateItem {
                 $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], $itemData["nbt"] ?? "");
                 if (isset($itemData["name"])) $item->setCustomName($itemData["name"]);
+                if (isset($itemData["lore"])) $item->setLore(explode("\n", $itemData["lore"]));
                 if (isset($itemData["enchantments"])) foreach ($itemData["enchantments"] as $enchantmentData) {
                     $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) !== null && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
                     if ($enchantment !== null) $item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentData["level"]));
