@@ -57,7 +57,7 @@ class PiggyCrates extends PluginBase
                     $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) !== null && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
                     if ($enchantment !== null) $item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentData["level"]));
                 }
-                return new CrateItem($item, $itemData["chance"] ?? 100);
+                return new CrateItem($item, $itemData["commands"] ?? [], $itemData["chance"] ?? 100);
             }, $crateData["drops"] ?? []), $crateData["amount"], $crateData["commands"] ?? []);
         }
 

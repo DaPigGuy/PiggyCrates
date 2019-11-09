@@ -14,17 +14,21 @@ class CrateItem
 {
     /** @var Item */
     public $item;
+    /** @var string[] */
+    public $commands;
     /** @var int */
     public $chance;
 
     /**
      * CrateItem constructor.
      * @param Item $item
+     * @param string[] $commands
      * @param int $chance
      */
-    public function __construct(Item $item, int $chance)
+    public function __construct(Item $item, array $commands, int $chance)
     {
         $this->item = $item;
+        $this->commands = $commands;
         $this->chance = $chance;
     }
 
@@ -34,6 +38,14 @@ class CrateItem
     public function getItem(): Item
     {
         return $this->item;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCommands(): array
+    {
+        return $this->commands;
     }
 
     /**

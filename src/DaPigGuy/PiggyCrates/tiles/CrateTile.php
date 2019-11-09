@@ -7,6 +7,7 @@ namespace DaPigGuy\PiggyCrates\tiles;
 use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tasks\RouletteTask;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\item\Item;
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\nbt\tag\CompoundTag;
@@ -79,7 +80,13 @@ class CrateTile extends Chest
             case "instant":
                 $this->closeCrate();
                 foreach ($this->crateType->getDrop($this->crateType->getDropCount()) as $drop) {
-                    $player->getInventory()->addItem($drop);
+                    $player->getInventory()->addItem($drop->getItem());
+                    foreach ($drop->getCommands() as $command) {
+                        $player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $player->getName(), $command));
+                    }
+                }
+                foreach ($this->crateType->getCommands() as $command) {
+                    $player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $player->getName(), $command));
                 }
                 break;
             case "roulette":

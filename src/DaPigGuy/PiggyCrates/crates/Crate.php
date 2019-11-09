@@ -75,14 +75,14 @@ class Crate
 
     /**
      * @param int $amount
-     * @return Item[]
+     * @return CrateItem[]
      */
     public function getDrop(int $amount): array
     {
         $dropTable = [];
         foreach ($this->drops as $drop) {
             for ($i = 0; $i < $drop->getChance(); $i++) {
-                $dropTable[] = $drop->getItem();
+                $dropTable[] = $drop;
             }
         }
 

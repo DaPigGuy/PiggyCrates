@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace DaPigGuy\PiggyCrates\tasks;
 
+use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
-use pocketmine\item\Item;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 
@@ -26,7 +27,7 @@ class RouletteTask extends Task
     /** @var int */
     private $itemsLeft;
 
-    /** @var Item */
+    /** @var CrateItem[] */
     private $lastRewards = [];
 
     /**
@@ -57,7 +58,14 @@ class RouletteTask extends Task
             } elseif ($this->currentTick - PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration") > 20) {
                 $this->itemsLeft--;
                 $this->tile->getCurrentPlayer()->getInventory()->addItem($this->tile->getInventory()->getItem(13));
+                foreach ($this->lastRewards[13]->getCommands() as $command) {
+                    $this->tile->getCurrentPlayer()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->tile->getCurrentPlayer()->getName(), $command));
+                }
                 if ($this->itemsLeft === 0) {
+                    foreach ($this->tile->getCrateType()->getCommands() as $command) {
+                        $this->tile->getCurrentPlayer()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->tile->getCurrentPlayer()->getName(), $command));
+                    }
+
                     $this->tile->getCurrentPlayer()->removeWindow($this->tile->getInventory());
 
                     $this->tile->closeCrate();
@@ -74,11 +82,11 @@ class RouletteTask extends Task
             foreach ($this->lastRewards as $slot => $lastReward) {
                 if ($slot !== 9) {
                     $lastRewards[$slot - 1] = $lastReward;
-                    $this->tile->getInventory()->setItem($slot - 1, $lastReward);
+                    $this->tile->getInventory()->setItem($slot - 1, $lastReward->getItem());
                 }
             }
             $lastRewards[17] = $this->tile->getCrateType()->getDrop(1)[0];
-            $this->tile->getInventory()->setItem(17, $lastRewards[17]);
+            $this->tile->getInventory()->setItem(17, $lastRewards[17]->getItem());
             $this->lastRewards = $lastRewards;
         }
     }

@@ -10,6 +10,7 @@ crates:
         amount: 10
         chance: 75
     amount: 1
+    commands: ["say {PLAYER} has opened an Common Crate"]
     floating-text: "Common Crate"
   Uncommon:
     drops:
@@ -26,6 +27,7 @@ crates:
         amount: 16
         chance: 10
     amount: 1
+    commands: ["say {PLAYER} has opened an Uncommon Crate"]
     floating-text: "Uncommon Crate"
   Vote:
     drops:
@@ -42,6 +44,7 @@ crates:
         amount: 64
         chance: 50
     amount: 1
+    commands: ["say {PLAYER} has opened an Vote Crate"]
     floating-text: "Vote Crate"
   Mythic:
     drops:
@@ -58,6 +61,7 @@ crates:
         amount: 16
         chance: 50
     amount: 1
+    commands: ["say {PLAYER} has opened an Mythic Crate"]
     floating-text: "Mythic Crate"
   Legendary:
     drops:
@@ -74,4 +78,5 @@ crates:
         amount: 5
         chance: 5
     amount: 1
+    commands: ["say {PLAYER} has opened an Legendary Crate"]
     floating-text: "Legendary Crate"
