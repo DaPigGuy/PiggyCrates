@@ -71,6 +71,7 @@ class CrateCommand extends BaseCommand
      */
     public function prepare(): void
     {
+        $this->setPermission("piggycrates.command.crate");
         $this->registerArgument(0, new RawStringArgument("type"));
     }
 }

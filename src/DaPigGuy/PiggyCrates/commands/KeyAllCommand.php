@@ -67,6 +67,7 @@ class KeyAllCommand extends BaseCommand
      */
     public function prepare(): void
     {
+        $this->setPermission("piggycrates.command.keyall");
         $this->registerArgument(0, new RawStringArgument("type"));
         $this->registerArgument(1, new IntegerArgument("amount", true));
     }

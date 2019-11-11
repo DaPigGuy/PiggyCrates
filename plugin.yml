@@ -14,6 +14,9 @@ permissions:
         default: op
         description: "Use all PiggyCrates commands"
         children:
+          piggycrates.command.crate:
+            default: op
+            description: "Use /crate"
           piggycrates.command.key:
             default: op
             description: "Use /key"

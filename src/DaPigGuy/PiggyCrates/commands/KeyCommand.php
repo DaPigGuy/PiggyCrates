@@ -75,6 +75,7 @@ class KeyCommand extends BaseCommand
      */
     public function prepare(): void
     {
+        $this->setPermission("piggycrates.command.key");
         $this->registerArgument(0, new RawStringArgument("type"));
         $this->registerArgument(1, new IntegerArgument("amount", true));
         $this->registerArgument(2, new RawStringArgument("player", true));
