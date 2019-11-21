@@ -9,6 +9,7 @@ use DaPigGuy\PiggyCrates\commands\KeyAllCommand;
 use DaPigGuy\PiggyCrates\commands\KeyCommand;
 use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\crates\CrateItem;
+use DaPigGuy\PiggyCrates\tasks\CheckUpdatesTask;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use pocketmine\item\enchantment\Enchantment;
@@ -66,6 +67,8 @@ class PiggyCrates extends PluginBase
         $this->getServer()->getCommandMap()->register("piggycrates", new KeyAllCommand($this, "keyall", "Give all online players a crate key"));
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+
+        $this->getServer()->getAsyncPool()->submitTask(new CheckUpdatesTask($this->getDescription()->getVersion(), $this->getDescription()->getCompatibleApis()[0]));
     }
 
     /**
