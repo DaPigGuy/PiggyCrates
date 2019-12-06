@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DaPigGuy\PiggyCrates;
 
+use CortexPE\Commando\BaseCommand;
 use DaPigGuy\PiggyCrates\commands\CrateCommand;
 use DaPigGuy\PiggyCrates\commands\KeyAllCommand;
 use DaPigGuy\PiggyCrates\commands\KeyCommand;
@@ -41,6 +42,12 @@ class PiggyCrates extends PluginBase
      */
     public function onEnable(): void
     {
+        if (!class_exists(BaseCommand::class)) {
+            $this->getLogger()->error("Commando virion not found. Please download PiggyCrates from Poggit-CI or use DEVirion (not recommended).");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+            return;
+        }
+
         self::$instance = $this;
 
         Tile::registerTile(CrateTile::class);
