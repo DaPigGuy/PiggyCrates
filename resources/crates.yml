@@ -69,10 +69,10 @@ crates:
         meta: 0
         amount: 1
         chance: 10
-        name: "Telekinetic Pickaxe"
+        name: "Telepathic Pickaxe"
         lore: "Items mined are transported into your inventory"
         enchantments:
-          - name: "telekinesis"
+          - name: "telepathy"
             level: 1
       - id: 49
         meta: 0
