@@ -57,11 +57,15 @@ class PiggyCrates extends PluginBase
 
         $crateConfig = new Config($this->getDataFolder() . "crates.yml");
         foreach ($crateConfig->get("crates") as $crateName => $crateData) {
-            self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData): CrateItem {
+            self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName): CrateItem {
                 $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], $itemData["nbt"] ?? "");
                 if (isset($itemData["name"])) $item->setCustomName($itemData["name"]);
                 if (isset($itemData["lore"])) $item->setLore(explode("\n", $itemData["lore"]));
                 if (isset($itemData["enchantments"])) foreach ($itemData["enchantments"] as $enchantmentData) {
+                    if (!isset($enchantmentData["name"]) || !isset($enchantmentData["level"])) {
+                        $this->getLogger()->error("Invalid enchantment configuration used in crate " . $crateName);
+                        continue;
+                    }
                     $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) !== null && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
                     if ($enchantment !== null) $item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentData["level"]));
                 }
