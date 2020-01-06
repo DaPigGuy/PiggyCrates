@@ -65,6 +65,15 @@ crates:
     floating-text: "Mythic Crate"
   Legendary:
     drops:
+      - id: 278
+        meta: 0
+        amount: 1
+        chance: 10
+        name: "Telekinetic Pickaxe"
+        lore: "Items mined are transported into your inventory"
+        enchantments:
+          - name: "telekinesis"
+            level: 1
       - id: 49
         meta: 0
         amount: 32
@@ -72,7 +81,7 @@ crates:
       - id: 466
         meta: 0
         amount: 16
-        chance: 80
+        chance: 70
       - id: 7
         meta: 0
         amount: 5
