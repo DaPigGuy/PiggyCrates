@@ -43,7 +43,9 @@ class EventListener implements Listener
         if ($block->getId() === Block::CHEST) {
             $tile = $block->getLevel()->getTile($block);
             if ($tile instanceof CrateTile) {
-                if ($tile->getCrateType()->isValidKey($item)) {
+                if ($tile->getCrateType() === null) {
+                    $player->sendTip(TextFormat::RED . "Invalid or missing crate type.");
+                } elseif ($tile->getCrateType()->isValidKey($item)) {
                     $tile->openCrate($player, $item);
                 }
                 $event->setCancelled();

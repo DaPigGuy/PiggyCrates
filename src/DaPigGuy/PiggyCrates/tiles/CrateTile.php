@@ -165,7 +165,7 @@ class CrateTile extends Chest
     {
         parent::addAdditionalSpawnData($nbt);
         $nbt->setString(self::TAG_ID, "Chest");
-        $nbt->setString(self::TAG_CUSTOM_NAME, $this->crateType->getName() . " Crate");
+        $nbt->setString(self::TAG_CUSTOM_NAME, ($this->crateType === null ? "Unknown" : $this->crateType->getName()) . " Crate");
     }
 
     /**
@@ -173,7 +173,7 @@ class CrateTile extends Chest
      */
     public function onUpdate(): bool
     {
-        if (!$this->closed && $this->crateType->getFloatingText() !== "") {
+        if (!$this->closed && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
             foreach ($this->floatingTextParticles as $key => $floatingTextParticle) {
                 /** @var Player $player */
                 $player = $floatingTextParticle[0];
