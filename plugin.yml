@@ -5,6 +5,7 @@ api: 3.2.0
 load: POSTWORLD
 author: DaPigGuy
 softdepend: ["PiggyCustomEnchants"]
+website: "https://github.com/DaPigGuy/PiggyCrates/"
 permissions:
   piggycrates:
     default: false
