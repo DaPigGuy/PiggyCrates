@@ -54,8 +54,8 @@ class CrateTile extends Chest
             $player->sendTip(TextFormat::RED . "Crate is currently being opened.");
             return;
         }
-        if (count($player->getInventory()->getContents()) > $player->getInventory()->getSize() - $this->crateType->getDropCount()) {
-            $player->sendTip(TextFormat::RED . "You must have " . $this->crateType->getDropCount() . " empty slots.");
+        if (count($player->getInventory()->getContents()) > $player->getInventory()->getSize() - $crateType->getDropCount()) {
+            $player->sendTip(TextFormat::RED . "You must have " . $crateType->getDropCount() . " empty slots.");
             return;
         }
 
