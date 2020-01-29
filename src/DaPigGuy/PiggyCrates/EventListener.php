@@ -10,6 +10,7 @@ use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\inventory\ChestInventory;
+use pocketmine\level\Level;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Tile;
 use pocketmine\utils\TextFormat;
@@ -39,9 +40,11 @@ class EventListener implements Listener
     {
         $player = $event->getPlayer();
         $block = $event->getBlock();
+        /** @var Level $level */
+        $level = $block->getLevel();
         $item = $player->getInventory()->getItemInHand();
         if ($block->getId() === Block::CHEST) {
-            $tile = $block->getLevel()->getTile($block);
+            $tile = $level->getTile($block);
             if ($tile instanceof CrateTile) {
                 if ($tile->getCrateType() === null) {
                     $player->sendTip(TextFormat::RED . "Invalid or missing crate type.");
@@ -52,14 +55,14 @@ class EventListener implements Listener
                 return;
             }
             if ($tile instanceof Chest) {
-                if (PiggyCrates::inCrateCreationMode($player)) {
+                if (($crate = PiggyCrates::getCrateToCreate($player)) !== null) {
                     $nbt = $tile->getSpawnCompound();
-                    $nbt->setString("CrateType", PiggyCrates::getCrateToCreate($player)->getName());
+                    $nbt->setString("CrateType", $crate->getName());
                     /** @var CrateTile $newTile */
-                    $newTile = Tile::createTile("CrateTile", $event->getBlock()->getLevel(), $nbt);
+                    $newTile = Tile::createTile("CrateTile", $level, $nbt);
                     $newTile->spawnToAll();
                     $tile->close();
-                    $player->sendMessage(TextFormat::GREEN . PiggyCrates::getCrateToCreate($player)->getName() . " Crate created.");
+                    $player->sendMessage(TextFormat::GREEN . $crate->getName() . " Crate created.");
                     PiggyCrates::setInCrateCreationMode($player, null);
                     $event->setCancelled();
                     return;
