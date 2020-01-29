@@ -24,7 +24,7 @@ class CrateTile extends Chest
 {
     /** @var string */
     public $crateName;
-    /** @var Crate */
+    /** @var Crate|null */
     public $crateType;
 
     /** @var bool */
@@ -49,7 +49,7 @@ class CrateTile extends Chest
      */
     public function openCrate(Player $player, Item $key): void
     {
-        if ($this->crateType === null) return;
+        if ($this->crateType === null || ($level = $this->getLevel()) === null) return;
         if ($this->isOpen) {
             $player->sendTip(TextFormat::RED . "Crate is currently being opened.");
             return;
@@ -67,7 +67,7 @@ class CrateTile extends Chest
         $pk->z = $this->getFloorZ();
         $pk->eventType = 1;
         $pk->eventData = 1;
-        $this->getLevel()->broadcastPacketToViewers($this, $pk);
+        $level->broadcastPacketToViewers($this, $pk);
 
         $this->getInventory()->clearAll();
         $this->getInventory()->setItem(4, Item::get(Item::END_ROD, 0, 1));
@@ -98,7 +98,7 @@ class CrateTile extends Chest
 
     public function closeCrate(): void
     {
-        if (!$this->isOpen) return;
+        if (!$this->isOpen || ($level = $this->getLevel()) === null) return;
 
         $pk = new BlockEventPacket();
         $pk->x = $this->getFloorX();
@@ -106,7 +106,7 @@ class CrateTile extends Chest
         $pk->z = $this->getFloorZ();
         $pk->eventType = 1;
         $pk->eventData = 0;
-        $this->getLevel()->broadcastPacketToViewers($this, $pk);
+        $level->broadcastPacketToViewers($this, $pk);
 
         $this->isOpen = false;
         $this->currentPlayer = null;
@@ -173,22 +173,22 @@ class CrateTile extends Chest
      */
     public function onUpdate(): bool
     {
-        if (!$this->closed && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
+        if (!$this->closed && ($level = $this->getLevel()) !== null && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
             foreach ($this->floatingTextParticles as $key => $floatingTextParticle) {
                 /** @var Player $player */
                 $player = $floatingTextParticle[0];
                 /** @var FloatingTextParticle $particle */
                 $particle = $floatingTextParticle[1];
-                if (!$player->isOnline() || $player->getLevel() !== $this->level) {
+                if (!$player->isOnline() || $player->getLevel() !== $level) {
                     $particle->setInvisible();
-                    $this->level->addParticle($particle, [$player]);
+                    $level->addParticle($particle, [$player]);
                     unset($this->floatingTextParticles[$key]);
                 }
             }
-            foreach ($this->level->getPlayers() as $player) {
+            foreach ($level->getPlayers() as $player) {
                 if (!isset($this->floatingTextParticles[$player->getName()])) {
                     $this->floatingTextParticles[$player->getName()] = [$player, new FloatingTextParticle($this->add(0.5, 1, 0.5), $this->crateType->getFloatingText())];
-                    $this->level->addParticle($this->floatingTextParticles[$player->getName()][1], [$player]);
+                    $level->addParticle($this->floatingTextParticles[$player->getName()][1], [$player]);
                 }
             }
         }
