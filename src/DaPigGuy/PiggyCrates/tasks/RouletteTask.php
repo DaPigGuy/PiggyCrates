@@ -69,7 +69,7 @@ class RouletteTask extends Task
                     $this->tile->getCurrentPlayer()->removeWindow($this->tile->getInventory());
 
                     $this->tile->closeCrate();
-                    $this->getHandler()->cancel();
+                    if (($handler = $this->getHandler()) !== null) $handler->cancel();
                 } else {
                     $this->currentTick = 0;
                     $this->showReward = false;

@@ -49,7 +49,7 @@ class CrateTile extends Chest
      */
     public function openCrate(Player $player, Item $key): void
     {
-        if ($this->crateType === null || ($level = $this->getLevel()) === null) return;
+        if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
         if ($this->isOpen) {
             $player->sendTip(TextFormat::RED . "Crate is currently being opened.");
             return;
@@ -79,13 +79,13 @@ class CrateTile extends Chest
         switch (PiggyCrates::$instance->getConfig()->getNested("crates.mode")) {
             case "instant":
                 $this->closeCrate();
-                foreach ($this->crateType->getDrop($this->crateType->getDropCount()) as $drop) {
+                foreach ($crateType->getDrop($crateType->getDropCount()) as $drop) {
                     $player->getInventory()->addItem($drop->getItem());
                     foreach ($drop->getCommands() as $command) {
                         $player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $player->getName(), $command));
                     }
                 }
-                foreach ($this->crateType->getCommands() as $command) {
+                foreach ($crateType->getCommands() as $command) {
                     $player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $player->getName(), $command));
                 }
                 break;
