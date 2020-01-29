@@ -44,6 +44,7 @@ class KeyAllCommand extends BaseCommand
             $sender->sendMessage("Usage: /keyall <type>");
             return;
         }
+        /** @var int $amount */
         $amount = $args["amount"] ?? 1;
         if (!is_numeric($amount)) {
             $sender->sendMessage(TextFormat::RED . "Amount must be numeric.");

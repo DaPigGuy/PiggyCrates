@@ -79,6 +79,10 @@ class RouletteTask extends Task
         }
         if ($this->currentTick % PiggyCrates::$instance->getConfig()->getNested("crates.roulette.speed") === 0) {
             $lastRewards = [];
+            /**
+             * @var int $slot
+             * @var  CrateItem $lastReward
+             */
             foreach ($this->lastRewards as $slot => $lastReward) {
                 if ($slot !== 9) {
                     $lastRewards[$slot - 1] = $lastReward;
