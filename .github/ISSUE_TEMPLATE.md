@@ -16,6 +16,8 @@ Please make sure your issue complies with these guidelines:
 - PiggyCrates:
 <!-- Do /version to check, do not input "latest". -->
 - PMMP:
+<!-- The operating system your server is running on. -->
+- OS:
 
 #### **Steps to Reproduce the Issue**
 <!-- How do you reproduce the issue? -->
