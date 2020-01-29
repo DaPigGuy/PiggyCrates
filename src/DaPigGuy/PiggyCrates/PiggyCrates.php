@@ -13,6 +13,7 @@ use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\tasks\CheckUpdatesTask;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
+use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
@@ -66,7 +67,7 @@ class PiggyCrates extends PluginBase
                         $this->getLogger()->error("Invalid enchantment configuration used in crate " . $crateName);
                         continue;
                     }
-                    $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) !== null && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
+                    $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) instanceof PiggyCustomEnchants && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
                     if ($enchantment !== null) $item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentData["level"]));
                 }
                 return new CrateItem($item, $itemData["commands"] ?? [], $itemData["chance"] ?? 100);

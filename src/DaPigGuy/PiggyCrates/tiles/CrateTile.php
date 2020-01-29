@@ -62,9 +62,9 @@ class CrateTile extends Chest
         $player->getInventory()->removeItem($key->setCount(1));
 
         $pk = new BlockEventPacket();
-        $pk->x = $this->x;
-        $pk->y = $this->y;
-        $pk->z = $this->z;
+        $pk->x = $this->getFloorX();
+        $pk->y = $this->getFloorY();
+        $pk->z = $this->getFloorZ();
         $pk->eventType = 1;
         $pk->eventData = 1;
         $this->getLevel()->broadcastPacketToViewers($this, $pk);
@@ -101,9 +101,9 @@ class CrateTile extends Chest
         if (!$this->isOpen) return;
 
         $pk = new BlockEventPacket();
-        $pk->x = $this->x;
-        $pk->y = $this->y;
-        $pk->z = $this->z;
+        $pk->x = $this->getFloorX();
+        $pk->y = $this->getFloorY();
+        $pk->z = $this->getFloorZ();
         $pk->eventType = 1;
         $pk->eventData = 0;
         $this->getLevel()->broadcastPacketToViewers($this, $pk);
