@@ -37,7 +37,7 @@ class RouletteTask extends Task
     public function __construct(CrateTile $tile)
     {
         $this->tile = $tile;
-        $this->itemsLeft = $tile->getCrateType()->getDropCount();
+        $this->itemsLeft = $tile->getCrateType() === null ? 0 : $tile->getCrateType()->getDropCount();
     }
 
     /**
@@ -45,9 +45,9 @@ class RouletteTask extends Task
      */
     public function onRun(int $currentTick): void
     {
-        if (!$this->tile->getCurrentPlayer() instanceof Player || !$this->tile->getCurrentPlayer()->isOnline()) {
+        if (!$this->tile->getCurrentPlayer() instanceof Player || !$this->tile->getCurrentPlayer()->isOnline() || ($crateType = $this->tile->getCrateType()) === null) {
             $this->tile->closeCrate();
-            $this->getHandler()->cancel();
+            if (($handler = $this->getHandler()) !== null) $handler->cancel();
             return;
         }
         $this->currentTick++;
@@ -62,14 +62,14 @@ class RouletteTask extends Task
                     $this->tile->getCurrentPlayer()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->tile->getCurrentPlayer()->getName(), $command));
                 }
                 if ($this->itemsLeft === 0) {
-                    foreach ($this->tile->getCrateType()->getCommands() as $command) {
+                    foreach ($crateType->getCommands() as $command) {
                         $this->tile->getCurrentPlayer()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->tile->getCurrentPlayer()->getName(), $command));
                     }
 
                     $this->tile->getCurrentPlayer()->removeWindow($this->tile->getInventory());
 
                     $this->tile->closeCrate();
-                    $this->getHandler()->cancel();
+                    if (($handler = $this->getHandler()) !== null) $handler->cancel();
                 } else {
                     $this->currentTick = 0;
                     $this->showReward = false;
@@ -89,7 +89,7 @@ class RouletteTask extends Task
                     $this->tile->getInventory()->setItem($slot - 1, $lastReward->getItem());
                 }
             }
-            $lastRewards[17] = $this->tile->getCrateType()->getDrop(1)[0];
+            $lastRewards[17] = $crateType->getDrop(1)[0];
             $this->tile->getInventory()->setItem(17, $lastRewards[17]->getItem());
             $this->lastRewards = $lastRewards;
         }
