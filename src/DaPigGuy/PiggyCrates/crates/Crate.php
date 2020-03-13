@@ -10,10 +10,6 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 
-/**
- * Class Crate
- * @package DaPigGuy\PiggyCrates\crates
- */
 class Crate
 {
     /** @var PiggyCrates */
@@ -31,12 +27,7 @@ class Crate
     public $commands;
 
     /**
-     * Crate constructor.
-     * @param PiggyCrates $plugin
-     * @param string $name
-     * @param string $floatingText
      * @param CrateItem[] $drops
-     * @param int $dropCount
      * @param string[] $commands
      */
     public function __construct(PiggyCrates $plugin, string $name, string $floatingText, array $drops, int $dropCount, array $commands)
@@ -49,17 +40,11 @@ class Crate
         $this->commands = $commands;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getFloatingText(): string
     {
         return $this->floatingText;
@@ -74,7 +59,6 @@ class Crate
     }
 
     /**
-     * @param int $amount
      * @return CrateItem[]
      */
     public function getDrop(int $amount): array
@@ -93,9 +77,6 @@ class Crate
         }, $keys);
     }
 
-    /**
-     * @return int
-     */
     public function getDropCount(): int
     {
         return $this->dropCount;
@@ -109,10 +90,6 @@ class Crate
         return $this->commands;
     }
 
-    /**
-     * @param Player $player
-     * @param int $amount
-     */
     public function giveKey(Player $player, int $amount): void
     {
         $key = Item::get((int)$this->plugin->getConfig()->getNested("keys.id"), (int)$this->plugin->getConfig()->getNested("keys.meta"), $amount);
@@ -123,10 +100,6 @@ class Crate
         $player->getInventory()->addItem($key);
     }
 
-    /**
-     * @param Item $item
-     * @return bool
-     */
     public function isValidKey(Item $item): bool
     {
         return $item->getId() === (int)$this->plugin->getConfig()->getNested("keys.id") &&

@@ -13,19 +13,12 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-/**
- * Class KeyCommand
- * @package DaPigGuy\PiggyCrates\commands
- */
 class KeyCommand extends BaseCommand
 {
     /** @var PiggyCrates */
     private $plugin;
 
     /**
-     * @param PiggyCrates $plugin
-     * @param string $name
-     * @param string $description
      * @param string[] $aliases
      */
     public function __construct(PiggyCrates $plugin, string $name, string $description = "", array $aliases = [])
@@ -34,11 +27,6 @@ class KeyCommand extends BaseCommand
         parent::__construct($name, $description, $aliases);
     }
 
-    /**
-     * @param CommandSender $sender
-     * @param string $aliasUsed
-     * @param array $args
-     */
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!isset($args["type"])) {

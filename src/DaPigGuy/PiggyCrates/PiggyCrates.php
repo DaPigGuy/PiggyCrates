@@ -23,10 +23,6 @@ use pocketmine\tile\Tile;
 use pocketmine\utils\Config;
 use ReflectionException;
 
-/**
- * Class PiggyCrates
- * @package DaPigGuy\PiggyCrates
- */
 class PiggyCrates extends PluginBase
 {
     /** @var PiggyCrates */
@@ -83,36 +79,21 @@ class PiggyCrates extends PluginBase
         $this->getServer()->getAsyncPool()->submitTask(new CheckUpdatesTask($this->getDescription()->getVersion(), $this->getDescription()->getCompatibleApis()[0]));
     }
 
-    /**
-     * @param string $name
-     * @return Crate|null
-     */
     public static function getCrate(string $name): ?Crate
     {
         return self::$crates[$name] ?? null;
     }
 
-    /**
-     * @return array
-     */
     public static function getCrates(): array
     {
         return self::$crates;
     }
 
-    /**
-     * @param Player $player
-     * @return bool
-     */
     public static function inCrateCreationMode(Player $player): bool
     {
         return isset(self::$crateCreation[$player->getName()]);
     }
 
-    /**
-     * @param Player $player
-     * @param Crate|null $crate
-     */
     public static function setInCrateCreationMode(Player $player, ?Crate $crate): void
     {
         if ($crate === null) {
@@ -121,10 +102,6 @@ class PiggyCrates extends PluginBase
         self::$crateCreation[$player->getName()] = $crate;
     }
 
-    /**
-     * @param Player $player
-     * @return Crate|null
-     */
     public static function getCrateToCreate(Player $player): ?Crate
     {
         return self::$crateCreation[$player->getName()] ?? null;

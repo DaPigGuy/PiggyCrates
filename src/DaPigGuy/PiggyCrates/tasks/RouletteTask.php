@@ -11,10 +11,6 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
 
-/**
- * Class RouletteTask
- * @package DaPigGuy\PiggyCrates\tasks
- */
 class RouletteTask extends Task
 {
     /** @var CrateTile */
@@ -30,19 +26,12 @@ class RouletteTask extends Task
     /** @var CrateItem[] */
     private $lastRewards = [];
 
-    /**
-     * RouletteTask constructor.
-     * @param CrateTile $tile
-     */
     public function __construct(CrateTile $tile)
     {
         $this->tile = $tile;
         $this->itemsLeft = $tile->getCrateType() === null ? 0 : $tile->getCrateType()->getDropCount();
     }
 
-    /**
-     * @param int $currentTick
-     */
     public function onRun(int $currentTick): void
     {
         if (!$this->tile->getCurrentPlayer() instanceof Player || !$this->tile->getCurrentPlayer()->isOnline() || ($crateType = $this->tile->getCrateType()) === null) {

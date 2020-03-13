@@ -15,27 +15,16 @@ use pocketmine\tile\Chest;
 use pocketmine\tile\Tile;
 use pocketmine\utils\TextFormat;
 
-/**
- * Class EventListener
- * @package DaPigGuy\PiggyCrates
- */
 class EventListener implements Listener
 {
     /** @var PiggyCrates */
     private $plugin;
 
-    /**
-     * EventListener constructor.
-     * @param PiggyCrates $plugin
-     */
     public function __construct(PiggyCrates $plugin)
     {
         $this->plugin = $plugin;
     }
 
-    /**
-     * @param PlayerInteractEvent $event
-     */
     public function onInteract(PlayerInteractEvent $event): void
     {
         $player = $event->getPlayer();
@@ -72,9 +61,6 @@ class EventListener implements Listener
         if ($item->getNamedTagEntry("KeyType") !== null) $event->setCancelled();
     }
 
-    /**
-     * @param InventoryTransactionEvent $event
-     */
     public function onTransaction(InventoryTransactionEvent $event): void
     {
         $transaction = $event->getTransaction();

@@ -16,10 +16,6 @@ use pocketmine\Player;
 use pocketmine\tile\Chest;
 use pocketmine\utils\TextFormat;
 
-/**
- * Class CrateTile
- * @package DaPigGuy\PiggyCrates\tiles
- */
 class CrateTile extends Chest
 {
     /** @var string */
@@ -35,18 +31,11 @@ class CrateTile extends Chest
     /** @var array[] */
     public $floatingTextParticles = [];
 
-    /**
-     * @return Crate|null
-     */
     public function getCrateType(): ?Crate
     {
         return $this->crateType;
     }
 
-    /**
-     * @param Player $player
-     * @param Item $key
-     */
     public function openCrate(Player $player, Item $key): void
     {
         if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
@@ -121,25 +110,16 @@ class CrateTile extends Chest
         parent::close();
     }
 
-    /**
-     * @return bool
-     */
     public function isOpen(): bool
     {
         return $this->isOpen;
     }
 
-    /**
-     * @return Player|null
-     */
     public function getCurrentPlayer(): ?Player
     {
         return $this->currentPlayer;
     }
 
-    /**
-     * @param CompoundTag $nbt
-     */
     protected function readSaveData(CompoundTag $nbt): void
     {
         parent::readSaveData($nbt);
@@ -149,18 +129,12 @@ class CrateTile extends Chest
         $this->scheduleUpdate();
     }
 
-    /**
-     * @param CompoundTag $nbt
-     */
     protected function writeSaveData(CompoundTag $nbt): void
     {
         parent::writeSaveData($nbt);
         $nbt->setString("CrateType", $this->crateName);
     }
 
-    /**
-     * @param CompoundTag $nbt
-     */
     public function addAdditionalSpawnData(CompoundTag $nbt): void
     {
         parent::addAdditionalSpawnData($nbt);
@@ -168,9 +142,6 @@ class CrateTile extends Chest
         $nbt->setString(self::TAG_CUSTOM_NAME, ($this->crateType === null ? "Unknown" : $this->crateType->getName()) . " Crate");
     }
 
-    /**
-     * @return bool
-     */
     public function onUpdate(): bool
     {
         if (!$this->closed && ($level = $this->getLevel()) !== null && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {

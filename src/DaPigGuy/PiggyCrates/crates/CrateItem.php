@@ -6,10 +6,6 @@ namespace DaPigGuy\PiggyCrates\crates;
 
 use pocketmine\item\Item;
 
-/**
- * Class CrateItem
- * @package DaPigGuy\PiggyCrates\crates
- */
 class CrateItem
 {
     /** @var Item */
@@ -20,10 +16,7 @@ class CrateItem
     public $chance;
 
     /**
-     * CrateItem constructor.
-     * @param Item $item
      * @param string[] $commands
-     * @param int $chance
      */
     public function __construct(Item $item, array $commands, int $chance)
     {
@@ -32,9 +25,6 @@ class CrateItem
         $this->chance = $chance;
     }
 
-    /**
-     * @return Item
-     */
     public function getItem(): Item
     {
         return $this->item;
@@ -48,9 +38,6 @@ class CrateItem
         return $this->commands;
     }
 
-    /**
-     * @return int
-     */
     public function getChance(): int
     {
         return $this->chance;

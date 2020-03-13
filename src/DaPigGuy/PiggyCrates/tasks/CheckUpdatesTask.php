@@ -9,10 +9,6 @@ use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use pocketmine\utils\Internet;
 
-/**
- * Class CheckUpdatesTask
- * @package DaPigGuy\PiggyCrates\tasks
- */
 class CheckUpdatesTask extends AsyncTask
 {
     /** @var string */
@@ -20,11 +16,6 @@ class CheckUpdatesTask extends AsyncTask
     /** @var string */
     private $api;
 
-    /**
-     * CheckUpdatesTask constructor.
-     * @param string $version
-     * @param string $api
-     */
     public function __construct(string $version, string $api)
     {
         $this->version = $version;
@@ -34,7 +25,7 @@ class CheckUpdatesTask extends AsyncTask
     public function onRun(): void
     {
         $releases = Internet::getURL("https://poggit.pmmp.io/releases.json?name=PiggyCrates");
-        if ($releases !== null) {
+        if (is_string($releases)) {
             $data = json_decode($releases, true);
             if ($this->isLatestVersion($data[0]["version"])) {
                 if ($this->isAPICompatible($data[0]["api"][0])) {
@@ -58,10 +49,6 @@ class CheckUpdatesTask extends AsyncTask
         }
     }
 
-    /**
-     * @param string $version
-     * @return bool
-     */
     public function isLatestVersion(string $version): bool
     {
         $versionInformation = explode(".", $version);
@@ -74,10 +61,6 @@ class CheckUpdatesTask extends AsyncTask
         return false;
     }
 
-    /**
-     * @param array $range
-     * @return bool
-     */
     public function isAPICompatible(array $range): bool
     {
         $lowestAPI = $range["from"];
