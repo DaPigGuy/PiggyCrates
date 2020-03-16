@@ -29,7 +29,7 @@ PiggyCrates is a simple and customizable crates plugin, supporting an unlimited 
 
 ## Information
 * We do not support any spoons. Anything to do with spoons (Issues or PRs) will be ignored.
-* We are using the following virions: [Commando](https://github.com/CortexPE/Commando).
+* We are using the following virions: [Commando](https://github.com/CortexPE/Commando), [InvMenu](https://github.com/Muqsit/InvMenu).
     * **You MUST use the pre-compiled phar from [Poggit-CI](https://poggit.pmmp.io/ci/DaPigGuy/PiggyCrates/~) instead of GitHub.**
     * If you wish to run it via source, check out [DEVirion](https://github.com/poggit/devirion).
 * Check out our installation guide at [PiggyDocs](https://piggydocs.aericio.net/PiggyCrates.html).
