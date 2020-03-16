@@ -9,18 +9,18 @@ website: "https://github.com/DaPigGuy/PiggyCrates/"
 permissions:
   piggycrates:
     default: false
-    description: "Use everything in PiggyCrates"
+    description: "Allows usage of all PiggyCrates features"
     children:
       piggycrates.command:
         default: op
-        description: "Use all PiggyCrates commands"
+        description: "Allow usage of all PiggyCrates commands"
         children:
           piggycrates.command.crate:
             default: op
-            description: "Use /crate"
+            description: "Allow usage of the /crate command"
           piggycrates.command.key:
             default: op
-            description: "Use /key"
+            description: "Allow usage of the /key command"
           piggycrates.command.keyall:
             default: op
-            description: "Use /keyall"
+            description: "Allow usage of the /keyall command"
