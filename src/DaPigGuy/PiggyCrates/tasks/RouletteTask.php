@@ -37,11 +37,11 @@ class RouletteTask extends Task
      */
     private $menu;
     /**
-     * @var Player
+     * @var Player|null
      */
     private $player;
 
-    public function __construct(CrateTile $tile, Player $player = null, $preview = false)
+    public function __construct(CrateTile $tile, ?Player $player = null, bool $preview = false)
     {
         $this->tile = $tile;
         $this->itemsLeft = $tile->getCrateType() === null ? 0 : $tile->getCrateType()->getDropCount();
