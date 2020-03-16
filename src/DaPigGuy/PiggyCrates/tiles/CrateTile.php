@@ -69,8 +69,7 @@ class CrateTile extends Chest
             case "instant":
                 $this->closeCrate();
                 foreach ($crateType->getDrop($crateType->getDropCount()) as $drop) {
-                    $item = $drop->getItem();
-                    $player->getInventory()->addItem($item);
+                    $player->getInventory()->addItem($drop->getItem());
                     foreach ($drop->getCommands() as $command) {
                         $player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $player->getName(), $command));
                     }
