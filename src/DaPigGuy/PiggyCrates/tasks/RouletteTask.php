@@ -54,7 +54,7 @@ class RouletteTask extends Task
     public function onRun(int $currentTick): void
     {
         if ($this->preview) {
-            $this->roulette(true);
+            $this->roulette();
             return;
         }
 
@@ -93,7 +93,7 @@ class RouletteTask extends Task
         $this->roulette();
     }
 
-    public function roulette(bool $preview = false): void
+    public function roulette(): void
     {
         $crateType = $this->tile->getCrateType();
         if ($crateType === null) {
@@ -103,7 +103,7 @@ class RouletteTask extends Task
             return;
         }
 
-        if ($preview) $this->currentTick++;
+        if ($this->preview) $this->currentTick++;
 
         if ($this->currentTick % PiggyCrates::$instance->getConfig()->getNested("crates.roulette.speed") === 0) {
             $lastRewards = [];
@@ -114,7 +114,7 @@ class RouletteTask extends Task
             foreach ($this->lastRewards as $slot => $lastReward) {
                 if ($slot !== 9) {
                     $lastRewards[$slot - 1] = $lastReward;
-                    if ($preview) {
+                    if ($this->preview) {
                         $this->menu->getInventory()->setItem($slot - 1, $lastReward->getItem());
                     } else {
                         $this->tile->getInventory()->setItem($slot - 1, $lastReward->getItem());
@@ -123,7 +123,7 @@ class RouletteTask extends Task
             }
 
             $lastRewards[17] = $crateType->getDrop(1)[0];
-            if ($preview) {
+            if ($this->preview) {
                 $this->menu->getInventory()->setItem(17, $lastRewards[17]->getItem());
             } else {
                 $this->tile->getInventory()->setItem(17, $lastRewards[17]->getItem());
