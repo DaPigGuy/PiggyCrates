@@ -14,9 +14,11 @@ use DaPigGuy\PiggyCrates\tasks\CheckUpdatesTask;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
+use muqsit\invmenu\InvMenuHandler;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\tile\Tile;
@@ -45,6 +47,10 @@ class PiggyCrates extends PluginBase
             return;
         }
 
+        if(!InvMenuHandler::isRegistered()) {
+            InvMenuHandler::register($this);
+        }
+
         self::$instance = $this;
 
         Tile::registerTile(CrateTile::class);
@@ -66,6 +72,7 @@ class PiggyCrates extends PluginBase
                     $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) instanceof PiggyCustomEnchants && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
                     if ($enchantment !== null) $item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentData["level"]));
                 }
+                //if(isset($itemData["command"])) $item->setNamedTagEntry(new StringTag("execute_command", $itemData["command"]));
                 return new CrateItem($item, $itemData["commands"] ?? [], $itemData["chance"] ?? 100);
             }, $crateData["drops"] ?? []), $crateData["amount"], $crateData["commands"] ?? []);
         }
