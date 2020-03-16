@@ -32,13 +32,11 @@ class RouletteTask extends Task
 
     /** @var bool */
     private $preview = false;
-    /**
-     * @var SharedInvMenu
-     */
+
+    /** @var SharedInvMenu */
     private $menu;
-    /**
-     * @var Player|null
-     */
+
+    /** @var Player|null */
     private $player;
 
     public function __construct(CrateTile $tile, ?Player $player = null, bool $preview = false)
