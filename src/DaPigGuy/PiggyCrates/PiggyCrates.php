@@ -46,7 +46,7 @@ class PiggyCrates extends PluginBase
             return;
         }
 
-        if(!InvMenuHandler::isRegistered()) {
+        if (!InvMenuHandler::isRegistered()) {
             InvMenuHandler::register($this);
         }
 

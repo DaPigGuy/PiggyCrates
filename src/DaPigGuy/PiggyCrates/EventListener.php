@@ -39,7 +39,7 @@ class EventListener implements Listener
                     $player->sendTip(TextFormat::RED . "Invalid or missing crate type.");
                 } elseif ($tile->getCrateType()->isValidKey($item)) {
                     $tile->openCrate($player, $item);
-                } elseif($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
+                } elseif ($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
                     $tile->previewCrate($player);
                 }
                 $event->setCancelled();
