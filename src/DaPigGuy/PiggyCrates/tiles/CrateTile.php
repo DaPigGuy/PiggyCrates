@@ -101,6 +101,13 @@ class CrateTile extends Chest
         $this->currentPlayer = null;
     }
 
+    public function previewCrate(Player $player): void
+    {
+        if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
+
+        PiggyCrates::$instance->getScheduler()->scheduleRepeatingTask(new RouletteTask($this, $player, true), 1);
+    }
+
     public function close(): void
     {
         foreach ($this->floatingTextParticles as $floatingTextParticle) {
@@ -118,21 +125,6 @@ class CrateTile extends Chest
     public function getCurrentPlayer(): ?Player
     {
         return $this->currentPlayer;
-    }
-
-    protected function readSaveData(CompoundTag $nbt): void
-    {
-        parent::readSaveData($nbt);
-        $this->crateName = $nbt->getString("CrateType");
-        $this->crateType = PiggyCrates::getCrate($this->crateName);
-
-        $this->scheduleUpdate();
-    }
-
-    protected function writeSaveData(CompoundTag $nbt): void
-    {
-        parent::writeSaveData($nbt);
-        $nbt->setString("CrateType", $this->crateName);
     }
 
     public function addAdditionalSpawnData(CompoundTag $nbt): void
@@ -164,5 +156,20 @@ class CrateTile extends Chest
             }
         }
         return !$this->closed;
+    }
+
+    protected function readSaveData(CompoundTag $nbt): void
+    {
+        parent::readSaveData($nbt);
+        $this->crateName = $nbt->getString("CrateType");
+        $this->crateType = PiggyCrates::getCrate($this->crateName);
+
+        $this->scheduleUpdate();
+    }
+
+    protected function writeSaveData(CompoundTag $nbt): void
+    {
+        parent::writeSaveData($nbt);
+        $nbt->setString("CrateType", $this->crateName);
     }
 }

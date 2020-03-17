@@ -14,6 +14,7 @@ use DaPigGuy\PiggyCrates\tasks\CheckUpdatesTask;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
+use muqsit\invmenu\InvMenuHandler;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
@@ -43,6 +44,10 @@ class PiggyCrates extends PluginBase
             $this->getLogger()->error("Commando virion not found. Please download PiggyCrates from Poggit-CI or use DEVirion (not recommended).");
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
+        }
+
+        if (!InvMenuHandler::isRegistered()) {
+            InvMenuHandler::register($this);
         }
 
         self::$instance = $this;
