@@ -41,9 +41,10 @@ class CrateTile extends Chest
     public function __construct(Level $level, CompoundTag $nbt)
     {
         parent::__construct($level, $nbt);
-        $this->menu = InvMenu::create($this->crateType->dropCount > 9 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
+        if (($crateType = $this->crateType) === null) return;
+        $this->menu = InvMenu::create($crateType->getDropCount() > 27 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
         $this->menu->readonly();
-        $this->menu->setName($this->crateType->getName() . " Crate");
+        $this->menu->setName($crateType->getName() . " Crate");
     }
 
     public function getCrateType(): ?Crate
@@ -121,16 +122,16 @@ class CrateTile extends Chest
         if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
 
         $chances = 0;
-        foreach ($this->crateType->drops as $crateItem) $chances += $crateItem->chance;
+        foreach ($crateType->getDrops() as $crateItem) $chances += $crateItem->chance;
 
-        usort($this->crateType->drops, function (CrateItem $a, CrateItem $b) {
+        usort($crateType->getDrops(), function (CrateItem $a, CrateItem $b) {
             if ($a->getChance() > $b->getChance()) return -1;
             if ($a->getChance() < $b->getChance()) return 1;
             return 0;
         });
 
         $slot = 0;
-        foreach ($this->crateType->drops as $crateItem) {
+        foreach ($crateType->getDrops() as $crateItem) {
             if ($slot >= 53) return; // Maximum supported preview items is 54, meaning lowest chances are not shown.
             $item = clone $crateItem->item;
             $item->setCustomName(TextFormat::RESET . TextFormat::GREEN . $crateItem->getItem()->getCount() . "x " . TextFormat::RESET . $item->getName());
