@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace DaPigGuy\PiggyCrates\tiles;
 
 use DaPigGuy\PiggyCrates\crates\Crate;
+use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tasks\RouletteTask;
+use muqsit\invmenu\InvMenu;
+use muqsit\invmenu\SharedInvMenu;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\item\Item;
+use pocketmine\level\Level;
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
@@ -30,6 +34,17 @@ class CrateTile extends Chest
 
     /** @var array[] */
     public $floatingTextParticles = [];
+
+    /** @var SharedInvMenu */
+    private $menu;
+
+    public function __construct(Level $level, CompoundTag $nbt)
+    {
+        parent::__construct($level, $nbt);
+        $this->menu = InvMenu::create($this->crateType->dropCount > 9 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
+        $this->menu->readonly();
+        $this->menu->setName($this->crateType->getName() . " Crate");
+    }
 
     public function getCrateType(): ?Crate
     {
@@ -105,7 +120,25 @@ class CrateTile extends Chest
     {
         if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
 
-        PiggyCrates::$instance->getScheduler()->scheduleRepeatingTask(new RouletteTask($this, $player, true), 1);
+        $chances = 0;
+        foreach ($this->crateType->drops as $crateItem) $chances += $crateItem->chance;
+
+        usort($this->crateType->drops, function (CrateItem $a, CrateItem $b) {
+            if ($a->getChance() > $b->getChance()) return -1;
+            if ($a->getChance() < $b->getChance()) return 1;
+            return 0;
+        });
+
+        $slot = 0;
+        foreach ($this->crateType->drops as $crateItem) {
+            if ($slot >= 53) return; // Maximum supported preview items is 54, meaning lowest chances are not shown.
+            $item = clone $crateItem->item;
+            $item->setCustomName(TextFormat::RESET . TextFormat::GREEN . $crateItem->getItem()->getCount() . "x " . TextFormat::RESET . $item->getName());
+            $item->setLore([TextFormat::RESET, TextFormat::RESET . TextFormat::GOLD . "Chance: " . round(($crateItem->chance / $chances) * 100, 2, PHP_ROUND_HALF_UP) . "%"]);
+            $this->menu->getInventory()->setItem($slot, $item);
+            $slot++;
+        }
+        $this->menu->send($player);
     }
 
     public function close(): void
