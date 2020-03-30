@@ -2,7 +2,7 @@
 name: Feature Suggestion
 about: Suggest features you would like added to PiggyCrates
 title: ''
-labels: 'suggestion'
+labels: 'Type: Enhancement'
 assignees: 'DaPigGuy'
 ---
 

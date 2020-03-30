@@ -2,7 +2,7 @@
 name: Crash
 about: Report a crash in PiggyCrates
 title: ''
-labels: 'bug'
+labels: 'Type: Bug'
 assignees: 'DaPigGuy'
 ---
 
