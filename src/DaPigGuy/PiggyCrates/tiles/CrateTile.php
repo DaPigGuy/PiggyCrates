@@ -121,17 +121,18 @@ class CrateTile extends Chest
     {
         if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
 
-        $chances = 0;
-        foreach ($crateType->getDrops() as $crateItem) $chances += $crateItem->chance;
-
-        usort($crateType->getDrops(), function (CrateItem $a, CrateItem $b) {
+        $drops = $crateType->getDrops();
+        usort($drops, function (CrateItem $a, CrateItem $b) {
             if ($a->getChance() > $b->getChance()) return -1;
             if ($a->getChance() < $b->getChance()) return 1;
             return 0;
         });
 
+        $chances = 0;
+        foreach ($drops as $crateItem) $chances += $crateItem->chance;
+
         $slot = 0;
-        foreach ($crateType->getDrops() as $crateItem) {
+        foreach ($drops as $crateItem) {
             if ($slot >= 53) return; // Maximum supported preview items is 54, meaning lowest chances are not shown.
             $item = clone $crateItem->item;
             $item->setCustomName(TextFormat::RESET . TextFormat::GREEN . $crateItem->getItem()->getCount() . "x " . TextFormat::RESET . $item->getName());
