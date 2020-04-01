@@ -1,6 +1,6 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/DaPigGuy/PiggyCrates
 branches:
-- master
+  - master
 projects:
   PiggyCrates:
     path: ""
@@ -9,4 +9,6 @@ projects:
         version: ^0.5
       - src: muqsit/InvMenu/InvMenu
         version: ^3.1
+    lint:
+      phpstan: false
 ...
