@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace DaPigGuy\PiggyCrates;
 
 use CortexPE\Commando\BaseCommand;
+use CortexPE\Commando\exception\HookAlreadyRegistered;
+use CortexPE\Commando\PacketHooker;
 use DaPigGuy\PiggyCrates\commands\CrateCommand;
 use DaPigGuy\PiggyCrates\commands\KeyAllCommand;
 use DaPigGuy\PiggyCrates\commands\KeyCommand;
@@ -37,6 +39,7 @@ class PiggyCrates extends PluginBase
 
     /**
      * @throws ReflectionException
+     * @throws HookAlreadyRegistered
      */
     public function onEnable(): void
     {
@@ -75,6 +78,7 @@ class PiggyCrates extends PluginBase
             }, $crateData["drops"] ?? []), $crateData["amount"], $crateData["commands"] ?? []);
         }
 
+        if (!PacketHooker::isRegistered()) PacketHooker::register($this);
         $this->getServer()->getCommandMap()->register("piggycrates", new CrateCommand($this, "crate", "Create a crate"));
         $this->getServer()->getCommandMap()->register("piggycrates", new KeyCommand($this, "key", "Give a crate key"));
         $this->getServer()->getCommandMap()->register("piggycrates", new KeyAllCommand($this, "keyall", "Give all online players a crate key"));
