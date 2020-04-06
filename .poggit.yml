@@ -6,7 +6,7 @@ projects:
     path: ""
     libs:
       - src: CortexPE/Commando/Commando
-        version: ^0.5
+        version: ^0.6
       - src: muqsit/InvMenu/InvMenu
         version: ^3.1
     lint:
