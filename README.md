@@ -19,6 +19,9 @@ PiggyCrates is a simple and customizable crates plugin, supporting an unlimited 
      * `id`: Item ID
      * `meta`: Item Meta
      * `amount`: Item Amount
+     * (Optional) `type`: Item Type
+       * (Default) `item`: Runs all crate item commands & gives the item
+       * `command`: Runs all crate item commands
      * (Optional) `chance`: Item Weight
      * (Optional) `nbt`: Item NBT as stringified JSON
      * (Optional) `name`: Item Name
@@ -45,12 +48,12 @@ PiggyCrates is a simple and customizable crates plugin, supporting an unlimited 
        commands:
          - "say {PLAYER} has opened the example crate!"
        drops:
-         # 75% chance for 1x Diamond Sword named Sharpened Diamond Sword w/ Sharpness 5 enchantment
+         # 50% chance for 1x Diamond Sword named Sharpened Diamond Sword w/ Sharpness 5 enchantment
          # Will run the command "/tell" on drop
          - id: 276
            meta: 0
            amount: 1
-           chance: 75
+           chance: 50
            name: "Sharpened Diamond Sword"
            enchantments:
              - name: "Sharpness"
@@ -68,6 +71,15 @@ PiggyCrates is a simple and customizable crates plugin, supporting an unlimited 
                level: 5
            commands:
              - "tell {PLAYER} You got a Sharpened Iron Sword! ;o"
+         # 25% chance for player to get money
+         - id: 266
+           meta: 0
+           amount: 1
+           chance: 25
+           name: "$2500"
+           type: command
+           commands:
+             - "givemoney {PLAYER} 2500"
     ```
 7. Restart your server.
 8. Connect to your server.
