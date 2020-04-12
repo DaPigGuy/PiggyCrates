@@ -10,6 +10,8 @@ class CrateItem
 {
     /** @var Item */
     public $item;
+    /** @var string */
+    public $type;
     /** @var string[] */
     public $commands;
     /** @var int */
@@ -18,9 +20,10 @@ class CrateItem
     /**
      * @param string[] $commands
      */
-    public function __construct(Item $item, array $commands, int $chance)
+    public function __construct(Item $item, string $type, array $commands, int $chance)
     {
         $this->item = $item;
+        $this->type = $type;
         $this->commands = $commands;
         $this->chance = $chance;
     }
@@ -28,6 +31,11 @@ class CrateItem
     public function getItem(): Item
     {
         return $this->item;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**

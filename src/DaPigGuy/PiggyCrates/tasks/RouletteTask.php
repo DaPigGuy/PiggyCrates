@@ -46,7 +46,7 @@ class RouletteTask extends Task
                 $this->showReward = true;
             } elseif ($this->currentTick - PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration") > 20) {
                 $this->itemsLeft--;
-                $this->tile->getCurrentPlayer()->getInventory()->addItem($this->tile->getInventory()->getItem(13));
+                if ($this->lastRewards[13]->getType() === "item") $this->tile->getCurrentPlayer()->getInventory()->addItem($this->tile->getInventory()->getItem(13));
                 foreach ($this->lastRewards[13]->getCommands() as $command) {
                     $this->tile->getCurrentPlayer()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->tile->getCurrentPlayer()->getName(), $command));
                 }

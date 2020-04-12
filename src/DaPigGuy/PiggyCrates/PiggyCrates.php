@@ -61,8 +61,9 @@ class PiggyCrates extends PluginBase
         $this->saveResource("crates.yml");
 
         $crateConfig = new Config($this->getDataFolder() . "crates.yml");
+        $types = ["item", "command"];
         foreach ($crateConfig->get("crates") as $crateName => $crateData) {
-            self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName): CrateItem {
+            self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName, $types): CrateItem {
                 $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], $itemData["nbt"] ?? "");
                 if (isset($itemData["name"])) $item->setCustomName($itemData["name"]);
                 if (isset($itemData["lore"])) $item->setLore(explode("\n", $itemData["lore"]));
@@ -74,7 +75,12 @@ class PiggyCrates extends PluginBase
                     $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) instanceof PiggyCustomEnchants && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
                     if ($enchantment !== null) $item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentData["level"]));
                 }
-                return new CrateItem($item, $itemData["commands"] ?? [], $itemData["chance"] ?? 100);
+                $itemData["type"] = $itemData["type"] ?? "item";
+                if (!in_array($itemData["type"], $types)) {
+                    $itemData["type"] = "item";
+                    $this->getLogger()->warning("Invalid crate item type supplied in crate type " . $crateName . ". Assuming type item.");
+                }
+                return new CrateItem($item, $itemData["type"], $itemData["commands"] ?? [], $itemData["chance"] ?? 100);
             }, $crateData["drops"] ?? []), $crateData["amount"], $crateData["commands"] ?? []);
         }
 
