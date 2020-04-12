@@ -20,6 +20,7 @@ use muqsit\invmenu\InvMenuHandler;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
+use pocketmine\nbt\JsonNbtParser;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\tile\Tile;
@@ -64,7 +65,7 @@ class PiggyCrates extends PluginBase
         $types = ["item", "command"];
         foreach ($crateConfig->get("crates") as $crateName => $crateData) {
             self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName, $types): CrateItem {
-                $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], $itemData["nbt"] ?? "");
+                $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], isset($itemData["nbt"]) ? JsonNbtParser::parseJson($itemData["nbt"]) : "");
                 if (isset($itemData["name"])) $item->setCustomName($itemData["name"]);
                 if (isset($itemData["lore"])) $item->setLore(explode("\n", $itemData["lore"]));
                 if (isset($itemData["enchantments"])) foreach ($itemData["enchantments"] as $enchantmentData) {
