@@ -16,6 +16,7 @@ use DaPigGuy\PiggyCrates\tasks\CheckUpdatesTask;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
+use Exception;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
@@ -65,7 +66,15 @@ class PiggyCrates extends PluginBase
         $types = ["item", "command"];
         foreach ($crateConfig->get("crates") as $crateName => $crateData) {
             self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName, $types): CrateItem {
-                $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], isset($itemData["nbt"]) ? JsonNbtParser::parseJson($itemData["nbt"]) : "");
+                $tags = "";
+                if (isset($itemData["nbt"])) {
+                    try {
+                        $tags = JsonNbtParser::parseJson($itemData["nbt"]) ?? "";
+                    } catch (Exception $e) {
+                        $this->getLogger()->warning("Invalid crate item NBT supplied in crate type " . $crateName . ".");
+                    }
+                }
+                $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], $tags);
                 if (isset($itemData["name"])) $item->setCustomName($itemData["name"]);
                 if (isset($itemData["lore"])) $item->setLore(explode("\n", $itemData["lore"]));
                 if (isset($itemData["enchantments"])) foreach ($itemData["enchantments"] as $enchantmentData) {
