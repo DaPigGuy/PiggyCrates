@@ -4,6 +4,7 @@ branches:
 projects:
   PiggyCrates:
     path: ""
+    icon: "resources/PiggyCrates.gif"
     libs:
       - src: CortexPE/Commando/Commando
         version: ^0.6
