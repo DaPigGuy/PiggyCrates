@@ -3,7 +3,7 @@ Please make sure your issue complies with these guidelines:
 - * [ ] Use same formatting
 - * [ ] Changes must have been tested on PMMP.
 - * [ ] Unless it is a minor code modification, you must use an IDE.
-- * [ ] Have a detailed title (i.e "Fix Crate items don't appear in inventory")
+- * [ ] Have a detailed title.
 
 ### What does the PR change?
 <!-- 

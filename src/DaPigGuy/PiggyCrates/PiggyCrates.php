@@ -45,10 +45,17 @@ class PiggyCrates extends PluginBase
      */
     public function onEnable(): void
     {
-        if (!class_exists(BaseCommand::class)) {
-            $this->getLogger()->error("Commando virion not found. Please download PiggyCrates from Poggit-CI or use DEVirion (not recommended).");
-            $this->getServer()->getPluginManager()->disablePlugin($this);
-            return;
+        foreach (
+            [
+                "Commando" => BaseCommand::class,
+                "InvMenu" => InvMenuHandler::class
+            ] as $virion => $class
+        ) {
+            if (!class_exists($class)) {
+                $this->getLogger()->error($virion . " virion not found. Please download PiggyCrates from Poggit-CI or use DEVirion (not recommended).");
+                $this->getServer()->getPluginManager()->disablePlugin($this);
+                return;
+            }
         }
 
         if (!InvMenuHandler::isRegistered()) {
