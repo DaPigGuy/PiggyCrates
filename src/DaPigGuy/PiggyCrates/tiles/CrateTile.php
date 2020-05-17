@@ -42,7 +42,7 @@ class CrateTile extends Chest
     {
         parent::__construct($level, $nbt);
         if (($crateType = $this->crateType) === null) return;
-        $this->menu = InvMenu::create($crateType->getDropCount() > 27 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
+        $this->menu = InvMenu::create(count($crateType->getDrops()) > 27 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
         $this->menu->readonly();
         $this->menu->setName($crateType->getName() . " Crate");
     }
@@ -133,7 +133,7 @@ class CrateTile extends Chest
 
         $slot = 0;
         foreach ($drops as $crateItem) {
-            if ($slot >= 53) return; // Maximum supported preview items is 54, meaning lowest chances are not shown.
+            if ($slot > 53) break; // Maximum supported preview items is 54, meaning lowest chances are not shown.
             $item = clone $crateItem->item;
             $item->setCustomName(TextFormat::RESET . TextFormat::GREEN . $crateItem->getItem()->getCount() . "x " . TextFormat::RESET . $item->getName());
             $item->setLore([TextFormat::RESET, TextFormat::RESET . TextFormat::GOLD . "Chance: " . round(($crateItem->chance / $chances) * 100, 2, PHP_ROUND_HALF_UP) . "%"]);
