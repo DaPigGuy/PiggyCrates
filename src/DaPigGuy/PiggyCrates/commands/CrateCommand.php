@@ -9,29 +9,13 @@ use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\Player;
-use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
 
-class CrateCommand extends BaseCommand implements PluginIdentifiableCommand
+class CrateCommand extends BaseCommand
 {
     /** @var PiggyCrates */
-    private $plugin;
-
-    /**
-     * @param string[] $aliases
-     */
-    public function __construct(PiggyCrates $plugin, string $name, string $description = "", array $aliases = [])
-    {
-        $this->plugin = $plugin;
-        parent::__construct($name, $description, $aliases);
-    }
-
-    public function getPlugin(): Plugin
-    {
-        return $this->plugin;
-    }
+    protected $plugin;
 
     /**
      * @param array $args
