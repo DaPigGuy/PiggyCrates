@@ -4,57 +4,78 @@ declare(strict_types=1);
 
 namespace DaPigGuy\PiggyCrates\tasks;
 
+use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
+use muqsit\invmenu\InvMenu;
 use pocketmine\command\ConsoleCommandSender;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
+use pocketmine\utils\TextFormat;
 
 class RouletteTask extends Task
 {
+    const INVENTORY_ROW_COUNT = 9;
+
+    /** @var Player */
+    private $player;
+    /** @var Crate */
+    private $crate;
     /** @var CrateTile */
     private $tile;
+    /** @var InvMenu */
+    private $menu;
+
     /** @var int */
     private $currentTick = 0;
     /** @var bool */
     private $showReward = false;
-
     /** @var int */
     private $itemsLeft;
 
     /** @var CrateItem[] */
     private $lastRewards = [];
 
-    public function __construct(CrateTile $tile)
+    public function __construct(Player $player, CrateTile $tile)
     {
+        $this->player = $player;
+        $this->crate = $tile->getCrateType();
         $this->tile = $tile;
-        $this->itemsLeft = $tile->getCrateType() === null ? 0 : $tile->getCrateType()->getDropCount();
+        $this->menu = InvMenu::create(InvMenu::TYPE_CHEST)->readonly();
+        $this->menu->getInventory()->setContents([4 => ($endRod = ItemFactory::get(ItemIds::END_ROD)->setCustomName(TextFormat::ITALIC)), 22 => $endRod]);
+        $this->menu->send($player);
+        $this->menu->setInventoryCloseListener(function (Player $player): void {
+            if ($this->itemsLeft > 0) $this->menu->send($player);
+        });
+        $this->itemsLeft = $this->crate->getDropCount();
     }
 
     public function onRun(int $currentTick): void
     {
-        if (!$this->tile->getCurrentPlayer() instanceof Player || !$this->tile->getCurrentPlayer()->isOnline() || ($crateType = $this->tile->getCrateType()) === null) {
+        if (!$this->player->isOnline()) {
             $this->tile->closeCrate();
             if (($handler = $this->getHandler()) !== null) $handler->cancel();
             return;
         }
         $this->currentTick++;
-        $this->tile->getCurrentPlayer()->addWindow($this->tile->getInventory());
         if ($this->currentTick >= PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration")) {
             if (!$this->showReward) {
                 $this->showReward = true;
             } elseif ($this->currentTick - PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration") > 20) {
                 $this->itemsLeft--;
-                if ($this->lastRewards[13]->getType() === "item") $this->tile->getCurrentPlayer()->getInventory()->addItem($this->tile->getInventory()->getItem(13));
-                foreach ($this->lastRewards[13]->getCommands() as $command) {
-                    $this->tile->getCurrentPlayer()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->tile->getCurrentPlayer()->getName(), $command));
+                $reward = $this->lastRewards[floor(self::INVENTORY_ROW_COUNT / 2)];
+                if ($reward->getType() === "item") $this->player->getInventory()->addItem($reward->getItem());
+                foreach ($reward->getCommands() as $command) {
+                    $this->player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->player->getName(), $command));
                 }
                 if ($this->itemsLeft === 0) {
-                    foreach ($crateType->getCommands() as $command) {
-                        $this->tile->getCurrentPlayer()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->tile->getCurrentPlayer()->getName(), $command));
+                    foreach ($this->crate->getCommands() as $command) {
+                        $this->player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->player->getName(), $command));
                     }
-                    $this->tile->getCurrentPlayer()->removeWindow($this->tile->getInventory());
+                    $this->player->removeWindow($this->menu->getInventory());
                     $this->tile->closeCrate();
                     if (($handler = $this->getHandler()) !== null) $handler->cancel();
                 } else {
@@ -66,20 +87,13 @@ class RouletteTask extends Task
         }
 
         if ($this->currentTick % PiggyCrates::$instance->getConfig()->getNested("crates.roulette.speed") === 0) {
-            $lastRewards = [];
-            /**
-             * @var  int $slot
-             * @var  CrateItem $lastReward
-             */
+            $this->lastRewards[self::INVENTORY_ROW_COUNT] = $this->crate->getDrop(1)[0];
             foreach ($this->lastRewards as $slot => $lastReward) {
-                if ($slot !== 9) {
-                    $lastRewards[$slot - 1] = $lastReward;
-                    $this->tile->getInventory()->setItem($slot - 1, $lastReward->getItem());
+                if ($slot !== 0) {
+                    $this->lastRewards[$slot - 1] = $lastReward;
+                    $this->menu->getInventory()->setItem($slot + self::INVENTORY_ROW_COUNT - 1, $lastReward->getItem());
                 }
             }
-            $lastRewards[17] = $crateType->getDrop(1)[0];
-            $this->tile->getInventory()->setItem(17, $lastRewards[17]->getItem());
-            $this->lastRewards = $lastRewards;
         }
     }
 }

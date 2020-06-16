@@ -74,10 +74,6 @@ class CrateTile extends Chest
         $pk->eventData = 1;
         $level->broadcastPacketToViewers($this, $pk);
 
-        $this->getInventory()->clearAll();
-        $this->getInventory()->setItem(4, Item::get(Item::END_ROD, 0, 1));
-        $this->getInventory()->setItem(22, Item::get(Item::END_ROD, 0, 1));
-
         $this->isOpen = true;
         $this->currentPlayer = $player;
 
@@ -96,7 +92,7 @@ class CrateTile extends Chest
                 break;
             case "roulette":
             default:
-                PiggyCrates::$instance->getScheduler()->scheduleRepeatingTask(new RouletteTask($this), 1);
+                PiggyCrates::getInstance()->getScheduler()->scheduleRepeatingTask(new RouletteTask($player, $this), 1);
                 break;
         }
     }
