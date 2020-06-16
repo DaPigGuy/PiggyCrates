@@ -77,7 +77,7 @@ class CrateTile extends Chest
         $this->isOpen = true;
         $this->currentPlayer = $player;
 
-        switch (PiggyCrates::$instance->getConfig()->getNested("crates.mode")) {
+        switch (PiggyCrates::getInstance()->getConfig()->getNested("crates.mode")) {
             case "instant":
                 $this->closeCrate();
                 foreach ($crateType->getDrop($crateType->getDropCount()) as $drop) {

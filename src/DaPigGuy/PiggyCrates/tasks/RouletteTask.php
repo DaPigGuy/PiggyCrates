@@ -61,10 +61,10 @@ class RouletteTask extends Task
             return;
         }
         $this->currentTick++;
-        if ($this->currentTick >= PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration")) {
+        if ($this->currentTick >= PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.duration")) {
             if (!$this->showReward) {
                 $this->showReward = true;
-            } elseif ($this->currentTick - PiggyCrates::$instance->getConfig()->getNested("crates.roulette.duration") > 20) {
+            } elseif ($this->currentTick - PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.duration") > 20) {
                 $this->itemsLeft--;
                 $reward = $this->lastRewards[floor(self::INVENTORY_ROW_COUNT / 2)];
                 if ($reward->getType() === "item") $this->player->getInventory()->addItem($reward->getItem());
@@ -86,7 +86,7 @@ class RouletteTask extends Task
             return;
         }
 
-        if ($this->currentTick % PiggyCrates::$instance->getConfig()->getNested("crates.roulette.speed") === 0) {
+        if ($this->currentTick % PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.speed") === 0) {
             $this->lastRewards[self::INVENTORY_ROW_COUNT] = $this->crate->getDrop(1)[0];
             foreach ($this->lastRewards as $slot => $lastReward) {
                 if ($slot !== 0) {

@@ -31,7 +31,7 @@ use ReflectionException;
 class PiggyCrates extends PluginBase
 {
     /** @var PiggyCrates */
-    public static $instance;
+    private static $instance;
 
     /** @var Crate[] */
     public $crates = [];
