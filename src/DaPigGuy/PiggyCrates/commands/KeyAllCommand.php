@@ -10,7 +10,6 @@ use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\command\CommandSender;
-use pocketmine\utils\TextFormat;
 
 class KeyAllCommand extends BaseCommand
 {
@@ -29,19 +28,19 @@ class KeyAllCommand extends BaseCommand
         /** @var int $amount */
         $amount = $args["amount"] ?? 1;
         if (!is_numeric($amount)) {
-            $sender->sendMessage(TextFormat::RED . "Amount must be numeric.");
+            $sender->sendMessage($this->plugin->getMessage("commands.keyall.error.not-numeric"));
             return;
         }
         $crate = $this->plugin->getCrate($args["type"]);
         if ($crate === null) {
-            $sender->sendMessage(TextFormat::RED . "Invalid crate type.");
+            $sender->sendMessage($this->plugin->getMessage("commands.keyall.error.invalid-crate"));
             return;
         }
         foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
             $crate->giveKey($player, $amount);
-            $player->sendMessage(TextFormat::GREEN . "You've received the " . $crate->getName() . " key.");
+            $player->sendMessage($this->plugin->getMessage("commands.keyall.success.sender", ["{CRATE}" => $crate->getName()]));
         }
-        $sender->sendMessage(TextFormat::GREEN . "You've given all online players the " . $crate->getName() . " key.");
+        $sender->sendMessage($this->plugin->getMessage("commands.keyall.success.target", ["{CRATE}" => $crate->getName()]));
 
     }
 

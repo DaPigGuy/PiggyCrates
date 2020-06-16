@@ -13,7 +13,6 @@ use pocketmine\inventory\ChestInventory;
 use pocketmine\level\Level;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Tile;
-use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener
 {
@@ -36,7 +35,7 @@ class EventListener implements Listener
             $tile = $level->getTile($block);
             if ($tile instanceof CrateTile) {
                 if ($tile->getCrateType() === null) {
-                    $player->sendTip(TextFormat::RED . "Invalid or missing crate type.");
+                    $player->sendTip($this->plugin->getMessage("crates.error.invalid-crate"));
                 } elseif ($tile->getCrateType()->isValidKey($item)) {
                     $tile->openCrate($player, $item);
                 } elseif ($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
@@ -53,7 +52,7 @@ class EventListener implements Listener
                     $newTile = Tile::createTile("CrateTile", $level, $nbt);
                     $newTile->spawnToAll();
                     $tile->close();
-                    $player->sendMessage(TextFormat::GREEN . $crate->getName() . " Crate created.");
+                    $player->sendMessage($this->plugin->getMessage("crates.success.crate-created", ["{CRATE}" => $crate->getName()]));
                     $this->plugin->setInCrateCreationMode($player, null);
                     $event->setCancelled();
                     return;

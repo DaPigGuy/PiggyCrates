@@ -11,7 +11,6 @@ use CortexPE\Commando\exception\ArgumentOrderException;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
-use pocketmine\utils\TextFormat;
 
 class KeyCommand extends BaseCommand
 {
@@ -33,23 +32,23 @@ class KeyCommand extends BaseCommand
         }
         $target = empty($args["player"]) ? $sender : $this->plugin->getServer()->getPlayer($args["player"]);
         if (!$target instanceof Player) {
-            $sender->sendMessage(TextFormat::RED . "Invalid player.");
+            $sender->sendMessage($this->plugin->getMessage("commands.key.error.invalid-player"));
             return;
         }
         /** @var int $amount */
         $amount = $args["amount"] ?? 1;
         if (!is_numeric($amount)) {
-            $sender->sendMessage(TextFormat::RED . "Amount must be numeric.");
+            $sender->sendMessage($this->plugin->getMessage("commands.key.error.not-numeric"));
             return;
         }
         $crate = $this->plugin->getCrate($args["type"]);
         if ($crate === null) {
-            $sender->sendMessage(TextFormat::RED . "Invalid crate type.");
+            $sender->sendMessage($this->plugin->getMessage("commands.key.error.invalid-crate"));
             return;
         }
         $crate->giveKey($target, $amount);
-        $target->sendMessage(TextFormat::GREEN . "You've received the " . $crate->getName() . " key.");
-        $sender->sendMessage(TextFormat::GREEN . "You've given " . $target->getName() . " the " . $crate->getName() . " key.");
+        $target->sendMessage($this->plugin->getMessage("commands.key.success.sender", ["{CRATE}" => $crate->getName()]));
+        $sender->sendMessage($this->plugin->getMessage("commands.key.success.target", ["{CRATE}" => $crate->getName(), "{TARGET}" => $target->getName()]));
 
     }
 

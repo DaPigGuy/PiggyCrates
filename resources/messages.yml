@@ -1,0 +1,36 @@
+commands:
+  use-in-game: "{RED}Please use this in-game."
+  crate:
+    error:
+      invalid-crate: "{RED}Invalid crate."
+    success: "{GREEN}Please tap a chest block to create a crate, or use /crate cancel to cancel."
+    creation-mode:
+      not-in-mode: "{RED}You are not in crate creation mode."
+      cancelled: "{GREEN}Crate creation cancelled."
+  key:
+    error:
+      invalid-player: "{RED}Invalid player."
+      invalid-crate: "{RED}Invalid crate type."
+      not-numeric: "{RED}Amount must be numeric."
+    success:
+      sender: "{GREEN}You've received the {CRATE} key."
+      target: "{GREEN}You've given {TARGET} the {CRATE} key."
+  keyall:
+    error:
+      invalid-crate: "{RED}Invalid crate type."
+      not-numeric: "{RED}Amount must be numeric."
+    success:
+      sender: "{GREEN}You've received the {CRATE} key."
+      target: "{GREEN}You've given all online players the {CRATE} key."
+crates:
+  menu-name: "{CRATE} Crate"
+  preview:
+    item:
+      name: "{GREEN}{COUNT}x {RESET}{ITEM}"
+      lore: "{GOLD}Chance: {CHANCE}%"
+  error:
+    invalid-crate: "{RED}Invalid or missing crate type."
+    currently-opened: "{RED}Crate is currently being opened."
+    inventory-full: "{RED}You must have {COUNT} empty slots."
+  success:
+    crate-created: "{GREEN}{CRATE} Crate created."

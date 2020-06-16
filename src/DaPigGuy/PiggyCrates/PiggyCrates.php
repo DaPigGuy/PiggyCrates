@@ -14,6 +14,7 @@ use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\tasks\CheckUpdatesTask;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
+use DaPigGuy\PiggyCrates\utils\Utils;
 use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
 use Exception;
@@ -32,6 +33,9 @@ class PiggyCrates extends PluginBase
 {
     /** @var PiggyCrates */
     private static $instance;
+
+    /** @var Config */
+    private $messages;
 
     /** @var Crate[] */
     public $crates = [];
@@ -65,8 +69,10 @@ class PiggyCrates extends PluginBase
 
         Tile::registerTile(CrateTile::class);
 
-        $this->saveDefaultConfig();
         $this->saveResource("crates.yml");
+        $this->saveResource("messages.yml");
+        $this->messages = new Config($this->getDataFolder() . "messages.yml");
+        $this->saveDefaultConfig();
 
         $crateConfig = new Config($this->getDataFolder() . "crates.yml");
         $types = ["item", "command"];
@@ -113,6 +119,11 @@ class PiggyCrates extends PluginBase
     public static function getInstance(): PiggyCrates
     {
         return self::$instance;
+    }
+
+    public function getMessage(string $key, array $tags = []): string
+    {
+        return Utils::translateColorTags(str_replace(array_keys($tags), $tags, $this->messages->getNested($key, $key)));
     }
 
     public function getCrate(string $name): ?Crate

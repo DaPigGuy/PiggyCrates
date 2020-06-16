@@ -44,7 +44,7 @@ class CrateTile extends Chest
         if (($crateType = $this->crateType) === null) return;
         $this->menu = InvMenu::create(count($crateType->getDrops()) > 27 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
         $this->menu->readonly();
-        $this->menu->setName($crateType->getName() . " Crate");
+        $this->menu->setName(PiggyCrates::getInstance()->getMessage("crates.menu-name", ["{CRATE}" => $crateType->getName()]));
     }
 
     public function getCrateType(): ?Crate
@@ -56,11 +56,11 @@ class CrateTile extends Chest
     {
         if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
         if ($this->isOpen) {
-            $player->sendTip(TextFormat::RED . "Crate is currently being opened.");
+            $player->sendTip(PiggyCrates::getInstance()->getMessage("crates.error.currently-opened"));
             return;
         }
         if (count($player->getInventory()->getContents()) > $player->getInventory()->getSize() - $crateType->getDropCount()) {
-            $player->sendTip(TextFormat::RED . "You must have " . $crateType->getDropCount() . " empty slots.");
+            $player->sendTip(PiggyCrates::getInstance()->getMessage("crates.error.inventory-full", ["{COUNT}" => $crateType->getDropCount()]));
             return;
         }
 
@@ -131,8 +131,8 @@ class CrateTile extends Chest
         foreach ($drops as $crateItem) {
             if ($slot > 53) break; // Maximum supported preview items is 54, meaning lowest chances are not shown.
             $item = clone $crateItem->item;
-            $item->setCustomName(TextFormat::RESET . TextFormat::GREEN . $crateItem->getItem()->getCount() . "x " . TextFormat::RESET . $item->getName());
-            $item->setLore([TextFormat::RESET, TextFormat::RESET . TextFormat::GOLD . "Chance: " . round(($crateItem->chance / $chances) * 100, 2, PHP_ROUND_HALF_UP) . "%"]);
+            $item->setCustomName(TextFormat::RESET . PiggyCrates::getInstance()->getMessage("crates.preview.item.name", ["{COUNT}" => $crateItem->getItem()->getCount(), "{ITEM}" => $item->getName()]));
+            $item->setLore([TextFormat::RESET, TextFormat::RESET . PiggyCrates::getInstance()->getMessage("crates.preview.item.lore", ["{CHANCE}" => round(($crateItem->chance / $chances) * 100, 2, PHP_ROUND_HALF_UP)])]);
             $this->menu->getInventory()->setItem($slot, $item);
             $slot++;
         }
