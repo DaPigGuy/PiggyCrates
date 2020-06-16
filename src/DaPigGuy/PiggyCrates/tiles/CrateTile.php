@@ -92,7 +92,7 @@ class CrateTile extends Chest
                 break;
             case "roulette":
             default:
-                PiggyCrates::getInstance()->getScheduler()->scheduleRepeatingTask(new RouletteTask($player, $this), 1);
+                PiggyCrates::getInstance()->getScheduler()->scheduleRepeatingTask(new RouletteTask($this), 1);
                 break;
         }
     }

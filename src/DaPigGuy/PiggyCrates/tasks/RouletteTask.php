@@ -9,6 +9,7 @@ use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use muqsit\invmenu\InvMenu;
+use muqsit\invmenu\SharedInvMenu;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
@@ -26,7 +27,7 @@ class RouletteTask extends Task
     private $crate;
     /** @var CrateTile */
     private $tile;
-    /** @var InvMenu */
+    /** @var SharedInvMenu */
     private $menu;
 
     /** @var int */
@@ -39,17 +40,22 @@ class RouletteTask extends Task
     /** @var CrateItem[] */
     private $lastRewards = [];
 
-    public function __construct(Player $player, CrateTile $tile)
+    public function __construct(CrateTile $tile)
     {
-        $this->player = $player;
+        /** @var Player player */
+        $this->player = $tile->getCurrentPlayer();
+        /** @var Crate crate */
         $this->crate = $tile->getCrateType();
         $this->tile = $tile;
-        $this->menu = InvMenu::create(InvMenu::TYPE_CHEST)->readonly();
+
+        $this->menu = InvMenu::create(InvMenu::TYPE_CHEST);
         $this->menu->getInventory()->setContents([4 => ($endRod = ItemFactory::get(ItemIds::END_ROD)->setCustomName(TextFormat::ITALIC)), 22 => $endRod]);
-        $this->menu->send($player);
         $this->menu->setInventoryCloseListener(function (Player $player): void {
             if ($this->itemsLeft > 0) $this->menu->send($player);
         });
+        $this->menu->readonly();
+        $this->menu->send($player);
+
         $this->itemsLeft = $this->crate->getDropCount();
     }
 
@@ -88,6 +94,10 @@ class RouletteTask extends Task
 
         if ($this->currentTick % PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.speed") === 0) {
             $this->lastRewards[self::INVENTORY_ROW_COUNT] = $this->crate->getDrop(1)[0];
+            /**
+             * @var int $slot
+             * @var CrateItem $lastReward
+             */
             foreach ($this->lastRewards as $slot => $lastReward) {
                 if ($slot !== 0) {
                     $this->lastRewards[$slot - 1] = $lastReward;
