@@ -31,20 +31,20 @@ class CrateCommand extends BaseCommand
             return;
         }
         if ($args["type"] === "cancel") {
-            if (!PiggyCrates::inCrateCreationMode($sender)) {
+            if (!$this->plugin->inCrateCreationMode($sender)) {
                 $sender->sendMessage(TextFormat::RED . "You are not in crate creation mode.");
                 return;
             }
-            PiggyCrates::setInCrateCreationMode($sender, null);
+            $this->plugin->setInCrateCreationMode($sender, null);
             $sender->sendMessage(TextFormat::GREEN . "Crate creation cancelled.");
             return;
         }
-        $crate = PiggyCrates::getCrate($args["type"]);
+        $crate = $this->plugin->getCrate($args["type"]);
         if ($crate === null) {
             $sender->sendMessage(TextFormat::RED . "Invalid crate.");
             return;
         }
-        PiggyCrates::setInCrateCreationMode($sender, $crate);
+        $this->plugin->setInCrateCreationMode($sender, $crate);
         $sender->sendMessage(TextFormat::GREEN . "Please tap a chest block to create a crate, or use /crate cancel to cancel.");
     }
 

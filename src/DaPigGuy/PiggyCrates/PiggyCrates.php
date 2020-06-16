@@ -34,10 +34,9 @@ class PiggyCrates extends PluginBase
     public static $instance;
 
     /** @var Crate[] */
-    public static $crates = [];
-
+    public $crates = [];
     /** @var array */
-    public static $crateCreation;
+    public $crateCreation;
 
     /**
      * @throws ReflectionException
@@ -72,7 +71,7 @@ class PiggyCrates extends PluginBase
         $crateConfig = new Config($this->getDataFolder() . "crates.yml");
         $types = ["item", "command"];
         foreach ($crateConfig->get("crates") as $crateName => $crateData) {
-            self::$crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName, $types): CrateItem {
+            $this->crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName, $types): CrateItem {
                 $tags = "";
                 if (isset($itemData["nbt"])) {
                     try {
@@ -111,31 +110,36 @@ class PiggyCrates extends PluginBase
         $this->getServer()->getAsyncPool()->submitTask(new CheckUpdatesTask());
     }
 
-    public static function getCrate(string $name): ?Crate
+    public static function getInstance(): PiggyCrates
     {
-        return self::$crates[$name] ?? null;
+        return self::$instance;
     }
 
-    public static function getCrates(): array
+    public function getCrate(string $name): ?Crate
     {
-        return self::$crates;
+        return $this->crates[$name] ?? null;
     }
 
-    public static function inCrateCreationMode(Player $player): bool
+    public function getCrates(): array
     {
-        return isset(self::$crateCreation[$player->getName()]);
+        return $this->crates;
     }
 
-    public static function setInCrateCreationMode(Player $player, ?Crate $crate): void
+    public function inCrateCreationMode(Player $player): bool
+    {
+        return isset($this->crateCreation[$player->getName()]);
+    }
+
+    public function setInCrateCreationMode(Player $player, ?Crate $crate): void
     {
         if ($crate === null) {
-            unset(self::$crateCreation[$player->getName()]);
+            unset($this->crateCreation[$player->getName()]);
         }
-        self::$crateCreation[$player->getName()] = $crate;
+        $this->crateCreation[$player->getName()] = $crate;
     }
 
-    public static function getCrateToCreate(Player $player): ?Crate
+    public function getCrateToCreate(Player $player): ?Crate
     {
-        return self::$crateCreation[$player->getName()] ?? null;
+        return $this->crateCreation[$player->getName()] ?? null;
     }
 }

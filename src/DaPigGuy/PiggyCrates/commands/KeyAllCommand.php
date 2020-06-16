@@ -32,7 +32,7 @@ class KeyAllCommand extends BaseCommand
             $sender->sendMessage(TextFormat::RED . "Amount must be numeric.");
             return;
         }
-        $crate = PiggyCrates::getCrate($args["type"]);
+        $crate = $this->plugin->getCrate($args["type"]);
         if ($crate === null) {
             $sender->sendMessage(TextFormat::RED . "Invalid crate type.");
             return;

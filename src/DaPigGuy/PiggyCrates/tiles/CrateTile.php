@@ -197,7 +197,7 @@ class CrateTile extends Chest
     {
         parent::readSaveData($nbt);
         $this->crateName = $nbt->getString("CrateType");
-        $this->crateType = PiggyCrates::getCrate($this->crateName);
+        $this->crateType = PiggyCrates::getInstance()->getCrate($this->crateName);
 
         $this->scheduleUpdate();
     }

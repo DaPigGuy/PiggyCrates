@@ -46,7 +46,7 @@ class EventListener implements Listener
                 return;
             }
             if ($tile instanceof Chest) {
-                if (($crate = PiggyCrates::getCrateToCreate($player)) !== null) {
+                if (($crate = $this->plugin->getCrateToCreate($player)) !== null) {
                     $nbt = $tile->getSpawnCompound();
                     $nbt->setString("CrateType", $crate->getName());
                     /** @var CrateTile $newTile */
@@ -54,7 +54,7 @@ class EventListener implements Listener
                     $newTile->spawnToAll();
                     $tile->close();
                     $player->sendMessage(TextFormat::GREEN . $crate->getName() . " Crate created.");
-                    PiggyCrates::setInCrateCreationMode($player, null);
+                    $this->plugin->setInCrateCreationMode($player, null);
                     $event->setCancelled();
                     return;
                 }

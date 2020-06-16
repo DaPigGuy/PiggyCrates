@@ -19,8 +19,7 @@ class CheckUpdatesTask extends AsyncTask
 
     public function onCompletion(Server $server): void
     {
-        /** @var PiggyCrates $plugin */
-        $plugin = $server->getPluginManager()->getPlugin("PiggyCrates");
+        $plugin = PiggyCrates::getInstance();
         try {
             if ($plugin->isEnabled()) {
                 $results = $this->getResult();
