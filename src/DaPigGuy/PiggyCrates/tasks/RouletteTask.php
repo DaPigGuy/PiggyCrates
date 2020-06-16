@@ -42,10 +42,14 @@ class RouletteTask extends Task
 
     public function __construct(CrateTile $tile)
     {
-        /** @var Player player */
-        $this->player = $tile->getCurrentPlayer();
-        /** @var Crate crate */
-        $this->crate = $tile->getCrateType();
+        /** @var Player $player */
+        $player = $tile->getCurrentPlayer();
+        $this->player = $player;
+
+        /** @var Crate $crate */
+        $crate = $tile->getCrateType();
+        $this->crate = $crate;
+
         $this->tile = $tile;
 
         $this->menu = InvMenu::create(InvMenu::TYPE_CHEST);
@@ -56,7 +60,7 @@ class RouletteTask extends Task
         $this->menu->readonly();
         $this->menu->send($player);
 
-        $this->itemsLeft = $this->crate->getDropCount();
+        $this->itemsLeft = $crate->getDropCount();
     }
 
     public function onRun(int $currentTick): void
