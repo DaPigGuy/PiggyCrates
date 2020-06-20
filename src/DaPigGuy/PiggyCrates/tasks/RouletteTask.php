@@ -71,10 +71,14 @@ class RouletteTask extends Task
             return;
         }
         $this->currentTick++;
-        if ($this->currentTick >= PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.duration")) {
+        $speed = PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.speed");
+        $safeSpeed = $speed >= 1 ? $speed : 1;
+        $duration = PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.duration");
+        $safeDuration = (($duration / $safeSpeed) >= 5.5) ? $duration : (5.5 * $safeSpeed);
+        if ($this->currentTick >= $safeDuration) {
             if (!$this->showReward) {
                 $this->showReward = true;
-            } elseif ($this->currentTick - PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.duration") > 20) {
+            } elseif ($this->currentTick - $safeDuration > 20) {
                 $this->itemsLeft--;
                 $reward = $this->lastRewards[floor(self::INVENTORY_ROW_COUNT / 2)];
                 if ($reward->getType() === "item") $this->player->getInventory()->addItem($reward->getItem());
@@ -96,7 +100,7 @@ class RouletteTask extends Task
             return;
         }
 
-        if ($this->currentTick % PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.speed") === 0) {
+        if ($this->currentTick % $safeSpeed === 0) {
             $this->lastRewards[self::INVENTORY_ROW_COUNT] = $this->crate->getDrop(1)[0];
             /**
              * @var int $slot
