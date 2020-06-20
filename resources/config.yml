@@ -12,4 +12,4 @@ crates:
     duration: 30
     # Minimum speed: speed >= 1
     # If speed ends up being less than 1, then your default speed will be set to 1.
-    speed: 1
+    speed: 2
