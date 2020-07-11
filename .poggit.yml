@@ -4,7 +4,7 @@ branches:
 projects:
   PiggyCrates:
     path: ""
-    icon: "resources/PiggyCrates.gif"
+    icon: "resources/img/PiggyCrates.gif"
     libs:
       - src: ParoxityTeam/Commando/Commando
         version: ^2.1.0
