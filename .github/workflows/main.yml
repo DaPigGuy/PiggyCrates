@@ -21,7 +21,7 @@ jobs:
       - name: wget virions, InvMenu
         uses: wei/wget@v1
         with:
-          args: -O vendor/InvMenu.phar https://poggit.pmmp.io/r/75631/InvMenu_dev-85.phar
+          args: -O vendor/InvMenu.phar https://poggit.pmmp.io/r/94959/InvMenu_dev-105.phar
       - name: Run PHPStan
         uses: nxtlvlsoftware/pmmp-phpstan-action@3
         with:
