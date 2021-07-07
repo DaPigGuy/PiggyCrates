@@ -6,8 +6,8 @@ projects:
     path: ""
     icon: "resources/img/PiggyCrates.gif"
     libs:
-      - src: ParoxityTeam/Commando/Commando
-        version: ^2.1.0
+      - src: Paroxity/Commando/Commando
+        version: ^2.1.2
       - src: muqsit/InvMenu/InvMenu
         version: ^4.1.1
     lint:
