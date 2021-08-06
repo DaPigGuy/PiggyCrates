@@ -9,7 +9,6 @@ use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tasks\RouletteTask;
 use muqsit\invmenu\InvMenu;
-use muqsit\invmenu\SharedInvMenu;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
@@ -26,16 +25,13 @@ class CrateTile extends Chest
     public $crateName;
     /** @var Crate|null */
     public $crateType;
-
     /** @var bool */
     public $isOpen = false;
     /** @var Player|null */
     public $currentPlayer;
-
     /** @var array[] */
     public $floatingTextParticles = [];
-
-    /** @var SharedInvMenu */
+    /** @var InvMenu */
     private $menu;
 
     public function __construct(Level $level, CompoundTag $nbt)
