@@ -53,7 +53,7 @@ class RouletteTask extends Task
         $this->menu->setInventoryCloseListener(function (Player $player): void {
             if ($this->itemsLeft > 0) $this->menu->send($player);
         });
-        $this->menu->readonly();
+        $this->menu->setListener(InvMenu::readonly());
         $this->menu->send($player);
 
         $this->itemsLeft = $crate->getDropCount();
