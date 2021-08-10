@@ -9,7 +9,6 @@ use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tasks\RouletteTask;
 use muqsit\invmenu\InvMenu;
-use muqsit\invmenu\SharedInvMenu;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
@@ -35,7 +34,7 @@ class CrateTile extends Chest
     /** @var array[] */
     public $floatingTextParticles = [];
 
-    /** @var SharedInvMenu */
+    /** @var InvMenu */
     private $menu;
 
     public function __construct(Level $level, CompoundTag $nbt)
@@ -43,7 +42,7 @@ class CrateTile extends Chest
         parent::__construct($level, $nbt);
         if (($crateType = $this->crateType) === null) return;
         $this->menu = InvMenu::create(count($crateType->getDrops()) > 27 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
-        $this->menu->readonly();
+        $this->menu->setListener(InvMenu::readonly());
         $this->menu->setName(PiggyCrates::getInstance()->getMessage("crates.menu-name", ["{CRATE}" => $crateType->getName()]));
     }
 

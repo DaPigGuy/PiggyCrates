@@ -9,7 +9,6 @@ use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use muqsit\invmenu\InvMenu;
-use muqsit\invmenu\SharedInvMenu;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
@@ -27,7 +26,7 @@ class RouletteTask extends Task
     private $crate;
     /** @var CrateTile */
     private $tile;
-    /** @var SharedInvMenu */
+    /** @var InvMenu */
     private $menu;
 
     /** @var int */
@@ -57,7 +56,7 @@ class RouletteTask extends Task
         $this->menu->setInventoryCloseListener(function (Player $player): void {
             if ($this->itemsLeft > 0) $this->menu->send($player);
         });
-        $this->menu->readonly();
+        $this->menu->setListener(InvMenu::readonly());
         $this->menu->send($player);
 
         $this->itemsLeft = $crate->getDropCount();
