@@ -114,7 +114,7 @@ class CrateTile extends Chest
 
     public function previewCrate(Player $player): void
     {
-        if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
+        if (($crateType = $this->crateType) === null || $this->getLevel() === null) return;
 
         $drops = $crateType->getDrops();
         usort($drops, function (CrateItem $a, CrateItem $b) {
