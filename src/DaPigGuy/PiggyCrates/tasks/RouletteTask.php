@@ -19,6 +19,7 @@ use pocketmine\utils\TextFormat;
 class RouletteTask extends Task
 {
     const INVENTORY_ROW_COUNT = 9;
+
     /** @var Player */
     private $player;
     /** @var Crate */
@@ -27,12 +28,14 @@ class RouletteTask extends Task
     private $tile;
     /** @var InvMenu */
     private $menu;
+
     /** @var int */
     private $currentTick = 0;
     /** @var bool */
     private $showReward = false;
     /** @var int */
     private $itemsLeft;
+
     /** @var CrateItem[] */
     private $lastRewards = [];
 

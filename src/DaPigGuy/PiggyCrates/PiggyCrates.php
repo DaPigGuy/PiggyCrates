@@ -61,6 +61,12 @@ class PiggyCrates extends PluginBase
             }
         }
 
+        if ($this->getServer()->getPluginManager()->getPlugin("InvCrashFix") === null) {
+            $this->getLogger()->info("Missing InvCrashFix plugin. Download here: https://poggit.pmmp.io/r/94956/InvCrashFix_dev-3.phar");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+            return;
+        }
+
         if (!InvMenuHandler::isRegistered()) {
             InvMenuHandler::register($this);
         }

@@ -25,12 +25,15 @@ class CrateTile extends Chest
     public $crateName;
     /** @var Crate|null */
     public $crateType;
+
     /** @var bool */
     public $isOpen = false;
     /** @var Player|null */
     public $currentPlayer;
+
     /** @var array[] */
     public $floatingTextParticles = [];
+
     /** @var InvMenu */
     private $menu;
 
