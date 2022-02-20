@@ -13,10 +13,13 @@ use pocketmine\player\Player;
 
 class CrateCommand extends BaseCommand
 {
+    /** @var PiggyCrates */
+    protected $plugin;
+
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!$sender instanceof Player) {
-            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.use-in-game"));
+            $sender->sendMessage($this->plugin->getMessage("commands.use-in-game"));
             return;
         }
         if (!isset($args["type"])) {
@@ -24,21 +27,21 @@ class CrateCommand extends BaseCommand
             return;
         }
         if ($args["type"] === "cancel") {
-            if (!PiggyCrates::getInstance()->inCrateCreationMode($sender)) {
-                $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.crate.creation-mode.not-in-mode"));
+            if (!$this->plugin->inCrateCreationMode($sender)) {
+                $sender->sendMessage($this->plugin->getMessage("commands.crate.creation-mode.not-in-mode"));
                 return;
             }
-            PiggyCrates::getInstance()->setInCrateCreationMode($sender, null);
-            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.crate.creation-mode.cancelled"));
+            $this->plugin->setInCrateCreationMode($sender, null);
+            $sender->sendMessage($this->plugin->getMessage("commands.crate.creation-mode.cancelled"));
             return;
         }
-        $crate = PiggyCrates::getInstance()->getCrate($args["type"]);
+        $crate = $this->plugin->getCrate($args["type"]);
         if ($crate === null) {
-            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.crate.error.invalid-crate"));
+            $sender->sendMessage($this->plugin->getMessage("commands.crate.error.invalid-crate"));
             return;
         }
-        PiggyCrates::getInstance()->setInCrateCreationMode($sender, $crate);
-        $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.crate.success"));
+        $this->plugin->setInCrateCreationMode($sender, $crate);
+        $sender->sendMessage($this->plugin->getMessage("commands.crate.success"));
     }
 
     /**

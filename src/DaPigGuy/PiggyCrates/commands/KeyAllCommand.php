@@ -13,6 +13,9 @@ use pocketmine\command\CommandSender;
 
 class KeyAllCommand extends BaseCommand
 {
+    /** @var PiggyCrates */
+    protected $plugin;
+    
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!isset($args["type"])) {
@@ -22,19 +25,19 @@ class KeyAllCommand extends BaseCommand
         /** @var int $amount */
         $amount = $args["amount"] ?? 1;
         if (!is_numeric($amount)) {
-            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.keyall.error.not-numeric"));
+            $sender->sendMessage($this->plugin->getMessage("commands.keyall.error.not-numeric"));
             return;
         }
-        $crate = PiggyCrates::getInstance()->getCrate($args["type"]);
+        $crate = $this->plugin->getCrate($args["type"]);
         if ($crate === null) {
-            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.keyall.error.invalid-crate"));
+            $sender->sendMessage($this->plugin->getMessage("commands.keyall.error.invalid-crate"));
             return;
         }
-        foreach (PiggyCrates::getInstance()->getServer()->getOnlinePlayers() as $player) {
+        foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
             $crate->giveKey($player, $amount);
-            $player->sendMessage(PiggyCrates::getInstance()->getMessage("commands.keyall.success.sender", ["{CRATE}" => $crate->getName()]));
+            $player->sendMessage($this->plugin->getMessage("commands.keyall.success.sender", ["{CRATE}" => $crate->getName()]));
         }
-        $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.keyall.success.target", ["{CRATE}" => $crate->getName()]));
+        $sender->sendMessage($this->plugin->getMessage("commands.keyall.success.target", ["{CRATE}" => $crate->getName()]));
 
     }
 
