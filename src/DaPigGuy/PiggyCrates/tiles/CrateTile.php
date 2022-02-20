@@ -24,14 +24,11 @@ use pocketmine\world\particle\FloatingTextParticle;
 
 class CrateTile extends Chest
 {
-    /** @var string */
     public string $crateName;
-    /** @var Crate|null */
     public ?Crate $crateType;
 
     /** @var bool */
     public bool $isOpen = false;
-    /** @var Player|null */
     public ?Player $currentPlayer;
 
     /** @var array[] */
