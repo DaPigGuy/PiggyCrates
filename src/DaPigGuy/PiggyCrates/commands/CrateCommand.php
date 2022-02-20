@@ -13,7 +13,6 @@ use pocketmine\player\Player;
 
 class CrateCommand extends BaseCommand
 {
-
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!$sender instanceof Player) {

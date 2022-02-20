@@ -39,10 +39,10 @@ class PiggyCrates extends PluginBase
     /** @var array */
     public array $crateCreation;
 
-	/**
-	 * @throws HookAlreadyRegistered
-	 */
-	public function onEnable(): void
+    /**
+     * @throws HookAlreadyRegistered
+     */
+    public function onEnable(): void
     {
         foreach (
             [

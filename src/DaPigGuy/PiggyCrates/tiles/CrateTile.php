@@ -33,7 +33,7 @@ class CrateTile extends Chest
     /** @var array[] */
     public array $floatingTextParticles = [];
 
-	public function getCrateType(): ?Crate
+    public function getCrateType(): ?Crate
     {
         return $this->crateType;
     }
@@ -87,7 +87,7 @@ class CrateTile extends Chest
     {
         if (!$this->isOpen) return;
 
-        $this->getPosition()->getWorld()->broadcastPacketToViewers($this->getPosition(), BlockEventPacket::create(BlockPosition::fromVector3($this->getPosition()->asVector3()), 1,0));
+        $this->getPosition()->getWorld()->broadcastPacketToViewers($this->getPosition(), BlockEventPacket::create(BlockPosition::fromVector3($this->getPosition()->asVector3()), 1, 0));
 
         $this->isOpen = false;
         $this->currentPlayer = null;
@@ -108,7 +108,7 @@ class CrateTile extends Chest
         foreach ($drops as $crateItem) $chances += $crateItem->chance;
 
         $menu = InvMenu::create(count($drops) > 27 ? InvMenuTypeIds::TYPE_DOUBLE_CHEST : InvMenuTypeIds::TYPE_CHEST);
-	    $menu->setListener(InvMenu::readonly());
+        $menu->setListener(InvMenu::readonly());
         $menu->setName(PiggyCrates::getInstance()->getMessage("crates.menu-name", ["{CRATE}" => $crateType->getName()]));
 
         $slot = 0;
@@ -152,7 +152,7 @@ class CrateTile extends Chest
     public function onUpdate(): bool // TODO: Update for 4.0.0
     {
 
-		var_dump($this->floatingTextParticles);
+        var_dump($this->floatingTextParticles);
         if (!$this->closed && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
             $world = $this->getPosition()->getWorld();
             foreach ($this->floatingTextParticles as $key => $floatingTextParticle) {
@@ -186,5 +186,4 @@ class CrateTile extends Chest
         parent::writeSaveData($nbt);
         $nbt->setString("CrateType", $this->crateName);
     }
-
 }
