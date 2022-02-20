@@ -25,7 +25,6 @@ use pocketmine\world\particle\FloatingTextParticle;
 class CrateTile extends Chest
 {
     public string $crateName;
-    /** @var Crate|null */
     public ?Crate $crateType;
 
     /** @var bool */
