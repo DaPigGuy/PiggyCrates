@@ -137,7 +137,7 @@ class CrateTile extends Chest
         foreach ($this->floatingTextParticles as $key => $particle) {
             $player = Server::getInstance()->getPlayerExact($key);
             $particle->setInvisible();
-            $player?->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
+            if ($player !== null) $player->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
         }
         unset(PiggyCrates::getInstance()->crateTiles[array_search($this, PiggyCrates::getInstance()->crateTiles)]);
         parent::close();
@@ -166,9 +166,11 @@ class CrateTile extends Chest
             $world = $this->getPosition()->getWorld();
             foreach ($this->floatingTextParticles as $key => $particle) {
                 $player = Server::getInstance()->getPlayerExact($key);
-                if ($player?->getWorld() !== $world) {
+                if ($player === null) {
+                    unset($this->floatingTextParticles[$key]);
+                } else if ($player->getWorld() !== $world) {
                     $particle->setInvisible();
-                    $player?->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
+                    $player->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
                     unset($this->floatingTextParticles[$key]);
                 }
             }
