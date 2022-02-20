@@ -18,6 +18,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\player\Player;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\particle\FloatingTextParticle;
 use pocketmine\world\World;
@@ -31,7 +32,7 @@ class CrateTile extends Chest
     public bool $isOpen = false;
     public ?Player $currentPlayer;
 
-    /** @var array[] */
+    /** @var Array<string, FloatingTextParticle> */
     public array $floatingTextParticles = [];
 
     public function __construct(World $world, Vector3 $pos)
@@ -133,9 +134,10 @@ class CrateTile extends Chest
 
     public function close(): void
     {
-        foreach ($this->floatingTextParticles as $floatingTextParticle) {
-            $floatingTextParticle[1]->setInvisible();
-            if ($floatingTextParticle[0]->getWorld()) $floatingTextParticle[0]->getWorld()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
+        foreach ($this->floatingTextParticles as $key => $particle) {
+            $player = Server::getInstance()->getPlayerExact($key);
+            $particle->setInvisible();
+            $player?->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
         }
         unset(PiggyCrates::getInstance()->crateTiles[array_search($this, PiggyCrates::getInstance()->crateTiles)]);
         parent::close();
@@ -162,19 +164,18 @@ class CrateTile extends Chest
     {
         if (!$this->closed && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
             $world = $this->getPosition()->getWorld();
-            foreach ($this->floatingTextParticles as $key => $floatingTextParticle) {
-                $player = $floatingTextParticle[0];
-                $particle = $floatingTextParticle[1];
-                if (!$player->isOnline() || $player->getWorld() !== $world) {
+            foreach ($this->floatingTextParticles as $key => $particle) {
+                $player = Server::getInstance()->getPlayerExact($key);
+                if ($player?->getWorld() !== $world) {
                     $particle->setInvisible();
-                    $world->addParticle($this->getPosition()->add(0.5, 1, 0.5), $particle, [$player]);
+                    $player?->getWorld()->addParticle($this, $particle, [$player]);
                     unset($this->floatingTextParticles[$key]);
                 }
             }
             foreach ($world->getPlayers() as $player) {
                 if (!isset($this->floatingTextParticles[$player->getName()])) {
-                    $this->floatingTextParticles[$player->getName()] = [$player, new FloatingTextParticle($this->crateType->getFloatingText())];
-                    $world->addParticle($this->getPosition()->add(0.5, 1, 0.5), $this->floatingTextParticles[$player->getName()][1], [$player]);
+                    $this->floatingTextParticles[$player->getName()] = new FloatingTextParticle($this->crateType->getFloatingText());
+                    $world->addParticle($this->getPosition()->add(0.5, 1, 0.5), $this->floatingTextParticles[$player->getName()], [$player]);
                 }
             }
         }
