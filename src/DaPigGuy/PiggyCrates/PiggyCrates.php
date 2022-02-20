@@ -149,6 +149,7 @@ class PiggyCrates extends PluginBase
     {
         if ($crate === null) {
             unset($this->crateCreation[$player->getName()]);
+            return;
         }
         $this->crateCreation[$player->getName()] = $crate;
     }
