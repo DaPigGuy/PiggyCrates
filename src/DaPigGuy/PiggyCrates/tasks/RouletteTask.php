@@ -76,12 +76,13 @@ class RouletteTask extends Task
                 $this->itemsLeft--;
                 $reward = $this->lastRewards[floor(self::INVENTORY_ROW_COUNT / 2)];
                 if ($reward->getType() === "item") $this->player->getInventory()->addItem($reward->getItem());
+                $server = $this->player->getServer();
                 foreach ($reward->getCommands() as $command) {
-                    $this->player->getServer()->dispatchCommand(new ConsoleCommandSender($this->player->getServer(), Server::getInstance()->getLanguage()), str_replace("{PLAYER}", $this->player->getName(), $command));
+                    $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $this->player->getName(), $command));
                 }
                 if ($this->itemsLeft === 0) {
                     foreach ($this->crate->getCommands() as $command) {
-                        $this->player->getServer()->dispatchCommand(new ConsoleCommandSender($this->player->getServer(), Server::getInstance()->getLanguage()), str_replace("{PLAYER}", $this->player->getName(), $command));
+                        $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $this->player->getName(), $command));
                     }
                     $this->player->removeCurrentWindow();
                     $this->tile->closeCrate();
