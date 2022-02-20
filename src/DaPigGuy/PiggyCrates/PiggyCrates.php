@@ -77,7 +77,7 @@ class PiggyCrates extends PluginBase
                 $tags = null;
                 if (isset($itemData["nbt"])) {
                     try {
-                        $tags = JsonNbtParser::parseJson($itemData["nbt"]) ?? "";
+                        $tags = JsonNbtParser::parseJson($itemData["nbt"]);
                     } catch (Exception $e) {
                         $this->getLogger()->warning("Invalid crate item NBT supplied in crate type " . $crateName . ".");
                     }
