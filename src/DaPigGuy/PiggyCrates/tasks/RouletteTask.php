@@ -9,35 +9,30 @@ use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use muqsit\invmenu\InvMenu;
-use pocketmine\command\ConsoleCommandSender;
+use muqsit\invmenu\type\InvMenuTypeIds;
+use pocketmine\console\ConsoleCommandSender;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 class RouletteTask extends Task
 {
     const INVENTORY_ROW_COUNT = 9;
 
-    /** @var Player */
-    private $player;
-    /** @var Crate */
-    private $crate;
-    /** @var CrateTile */
-    private $tile;
-    /** @var InvMenu */
-    private $menu;
+    private Player $player;
+    private Crate $crate;
+    private CrateTile $tile;
+    private InvMenu $menu;
 
-    /** @var int */
-    private $currentTick = 0;
-    /** @var bool */
-    private $showReward = false;
-    /** @var int */
-    private $itemsLeft;
+    private int $currentTick = 0;
+    private bool $showReward = false;
+    private int $itemsLeft;
 
     /** @var CrateItem[] */
-    private $lastRewards = [];
+    private array $lastRewards = [];
 
     public function __construct(CrateTile $tile)
     {
@@ -51,8 +46,8 @@ class RouletteTask extends Task
 
         $this->tile = $tile;
 
-        $this->menu = InvMenu::create(InvMenu::TYPE_CHEST);
-        $this->menu->getInventory()->setContents([4 => ($endRod = ItemFactory::get(ItemIds::END_ROD)->setCustomName(TextFormat::ITALIC)), 22 => $endRod]);
+        $this->menu = InvMenu::create(InvMenuTypeIds::TYPE_CHEST);
+        $this->menu->getInventory()->setContents([4 => ($endRod = ItemFactory::getInstance()->get(ItemIds::END_ROD)->setCustomName(TextFormat::ITALIC)), 22 => $endRod]);
         $this->menu->setInventoryCloseListener(function (Player $player): void {
             if ($this->itemsLeft > 0) $this->menu->send($player);
         });
@@ -62,7 +57,7 @@ class RouletteTask extends Task
         $this->itemsLeft = $crate->getDropCount();
     }
 
-    public function onRun(int $currentTick): void
+    public function onRun(): void
     {
         if (!$this->player->isOnline()) {
             $this->tile->closeCrate();
@@ -81,14 +76,15 @@ class RouletteTask extends Task
                 $this->itemsLeft--;
                 $reward = $this->lastRewards[floor(self::INVENTORY_ROW_COUNT / 2)];
                 if ($reward->getType() === "item") $this->player->getInventory()->addItem($reward->getItem());
+                $server = $this->player->getServer();
                 foreach ($reward->getCommands() as $command) {
-                    $this->player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->player->getName(), $command));
+                    $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $this->player->getName(), $command));
                 }
                 if ($this->itemsLeft === 0) {
                     foreach ($this->crate->getCommands() as $command) {
-                        $this->player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $this->player->getName(), $command));
+                        $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $this->player->getName(), $command));
                     }
-                    $this->player->removeWindow($this->menu->getInventory());
+                    $this->player->removeCurrentWindow();
                     $this->tile->closeCrate();
                     if (($handler = $this->getHandler()) !== null) $handler->cancel();
                 } else {

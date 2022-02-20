@@ -9,41 +9,35 @@ use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use DaPigGuy\PiggyCrates\tasks\RouletteTask;
 use muqsit\invmenu\InvMenu;
-use pocketmine\command\ConsoleCommandSender;
+use muqsit\invmenu\type\InvMenuTypeIds;
+use pocketmine\block\tile\Chest;
+use pocketmine\console\ConsoleCommandSender;
 use pocketmine\item\Item;
-use pocketmine\level\Level;
-use pocketmine\level\particle\FloatingTextParticle;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
-use pocketmine\Player;
-use pocketmine\tile\Chest;
+use pocketmine\network\mcpe\protocol\types\BlockPosition;
+use pocketmine\player\Player;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use pocketmine\world\particle\FloatingTextParticle;
+use pocketmine\world\World;
 
 class CrateTile extends Chest
 {
-    /** @var string */
-    public $crateName;
-    /** @var Crate|null */
-    public $crateType;
+    public string $crateName;
+    public ?Crate $crateType;
 
-    /** @var bool */
-    public $isOpen = false;
-    /** @var Player|null */
-    public $currentPlayer;
+    public bool $isOpen = false;
+    public ?Player $currentPlayer;
 
-    /** @var array[] */
-    public $floatingTextParticles = [];
+    /** @var Array<string, FloatingTextParticle> */
+    public array $floatingTextParticles = [];
 
-    /** @var InvMenu */
-    private $menu;
-
-    public function __construct(Level $level, CompoundTag $nbt)
+    public function __construct(World $world, Vector3 $pos)
     {
-        parent::__construct($level, $nbt);
-        if (($crateType = $this->crateType) === null) return;
-        $this->menu = InvMenu::create(count($crateType->getDrops()) > 27 ? InvMenu::TYPE_DOUBLE_CHEST : InvMenu::TYPE_CHEST);
-        $this->menu->setListener(InvMenu::readonly());
-        $this->menu->setName(PiggyCrates::getInstance()->getMessage("crates.menu-name", ["{CRATE}" => $crateType->getName()]));
+        parent::__construct($world, $pos);
+        PiggyCrates::getInstance()->crateTiles[] = $this;
     }
 
     public function getCrateType(): ?Crate
@@ -51,9 +45,15 @@ class CrateTile extends Chest
         return $this->crateType;
     }
 
+    public function setCrateType(Crate $crate): void
+    {
+        $this->crateName = $crate->getName();
+        $this->crateType = $crate;
+    }
+
     public function openCrate(Player $player, Item $key): void
     {
-        if (($crateType = $this->crateType) === null || ($level = $this->getLevel()) === null) return;
+        if (($crateType = $this->crateType) === null) return;
         if ($this->isOpen) {
             $player->sendTip(PiggyCrates::getInstance()->getMessage("crates.error.currently-opened"));
             return;
@@ -65,13 +65,7 @@ class CrateTile extends Chest
 
         $player->getInventory()->removeItem($key->setCount(1));
 
-        $pk = new BlockEventPacket();
-        $pk->x = $this->getFloorX();
-        $pk->y = $this->getFloorY();
-        $pk->z = $this->getFloorZ();
-        $pk->eventType = 1;
-        $pk->eventData = 1;
-        $level->broadcastPacketToViewers($this, $pk);
+        $this->getPosition()->getWorld()->broadcastPacketToViewers($this->getPosition(), BlockEventPacket::create(BlockPosition::fromVector3($this->getPosition()->asVector3()), 1, 1));
 
         $this->isOpen = true;
         $this->currentPlayer = $player;
@@ -79,14 +73,15 @@ class CrateTile extends Chest
         switch (PiggyCrates::getInstance()->getConfig()->getNested("crates.mode")) {
             case "instant":
                 $this->closeCrate();
+                $server = $player->getServer();
                 foreach ($crateType->getDrop($crateType->getDropCount()) as $drop) {
                     if ($drop->getType() === "item") $player->getInventory()->addItem($drop->getItem());
                     foreach ($drop->getCommands() as $command) {
-                        $player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $player->getName(), $command));
+                        $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $player->getName(), $command));
                     }
                 }
                 foreach ($crateType->getCommands() as $command) {
-                    $player->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{PLAYER}", $player->getName(), $command));
+                    $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $player->getName(), $command));
                 }
                 break;
             case "roulette":
@@ -98,15 +93,9 @@ class CrateTile extends Chest
 
     public function closeCrate(): void
     {
-        if (!$this->isOpen || ($level = $this->getLevel()) === null) return;
+        if (!$this->isOpen) return;
 
-        $pk = new BlockEventPacket();
-        $pk->x = $this->getFloorX();
-        $pk->y = $this->getFloorY();
-        $pk->z = $this->getFloorZ();
-        $pk->eventType = 1;
-        $pk->eventData = 0;
-        $level->broadcastPacketToViewers($this, $pk);
+        $this->getPosition()->getWorld()->broadcastPacketToViewers($this->getPosition(), BlockEventPacket::create(BlockPosition::fromVector3($this->getPosition()->asVector3()), 1, 0));
 
         $this->isOpen = false;
         $this->currentPlayer = null;
@@ -114,7 +103,7 @@ class CrateTile extends Chest
 
     public function previewCrate(Player $player): void
     {
-        if (($crateType = $this->crateType) === null || $this->getLevel() === null) return;
+        if (($crateType = $this->crateType) === null) return;
 
         $drops = $crateType->getDrops();
         usort($drops, function (CrateItem $a, CrateItem $b) {
@@ -126,24 +115,30 @@ class CrateTile extends Chest
         $chances = 0;
         foreach ($drops as $crateItem) $chances += $crateItem->chance;
 
+        $menu = InvMenu::create(count($drops) > 27 ? InvMenuTypeIds::TYPE_DOUBLE_CHEST : InvMenuTypeIds::TYPE_CHEST);
+        $menu->setListener(InvMenu::readonly());
+        $menu->setName(PiggyCrates::getInstance()->getMessage("crates.menu-name", ["{CRATE}" => $crateType->getName()]));
+
         $slot = 0;
         foreach ($drops as $crateItem) {
             if ($slot > 53) break; // Maximum supported preview items is 54, meaning lowest chances are not shown.
             $item = clone $crateItem->item;
             $item->setCustomName(TextFormat::RESET . PiggyCrates::getInstance()->getMessage("crates.preview.item.name", ["{COUNT}" => $crateItem->getItem()->getCount(), "{ITEM}" => $item->getName()]));
             $item->setLore([TextFormat::RESET, TextFormat::RESET . PiggyCrates::getInstance()->getMessage("crates.preview.item.lore", ["{CHANCE}" => round(($crateItem->chance / $chances) * 100, 2, PHP_ROUND_HALF_UP)])]);
-            $this->menu->getInventory()->setItem($slot, $item);
+            $menu->getInventory()->setItem($slot, $item);
             $slot++;
         }
-        $this->menu->send($player);
+        $menu->send($player);
     }
 
     public function close(): void
     {
-        foreach ($this->floatingTextParticles as $floatingTextParticle) {
-            $floatingTextParticle[1]->setInvisible();
-            if ($floatingTextParticle[0]->getLevel()) $floatingTextParticle[0]->getLevel()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
+        foreach ($this->floatingTextParticles as $key => $particle) {
+            $player = Server::getInstance()->getPlayerExact($key);
+            $particle->setInvisible();
+            if ($player !== null) $player->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
         }
+        unset(PiggyCrates::getInstance()->crateTiles[array_search($this, PiggyCrates::getInstance()->crateTiles)]);
         parent::close();
     }
 
@@ -166,35 +161,33 @@ class CrateTile extends Chest
 
     public function onUpdate(): bool
     {
-        if (!$this->closed && ($level = $this->getLevel()) !== null && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
-            foreach ($this->floatingTextParticles as $key => $floatingTextParticle) {
-                /** @var Player $player */
-                $player = $floatingTextParticle[0];
-                /** @var FloatingTextParticle $particle */
-                $particle = $floatingTextParticle[1];
-                if (!$player->isOnline() || $player->getLevel() !== $level) {
+        if (!$this->closed && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
+            $world = $this->getPosition()->getWorld();
+            foreach ($this->floatingTextParticles as $key => $particle) {
+                $player = Server::getInstance()->getPlayerExact($key);
+                if ($player === null) {
+                    unset($this->floatingTextParticles[$key]);
+                } else if ($player->getWorld() !== $world) {
                     $particle->setInvisible();
-                    $level->addParticle($particle, [$player]);
+                    $player->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
                     unset($this->floatingTextParticles[$key]);
                 }
             }
-            foreach ($level->getPlayers() as $player) {
+            foreach ($world->getPlayers() as $player) {
                 if (!isset($this->floatingTextParticles[$player->getName()])) {
-                    $this->floatingTextParticles[$player->getName()] = [$player, new FloatingTextParticle($this->add(0.5, 1, 0.5), $this->crateType->getFloatingText())];
-                    $level->addParticle($this->floatingTextParticles[$player->getName()][1], [$player]);
+                    $this->floatingTextParticles[$player->getName()] = new FloatingTextParticle($this->crateType->getFloatingText());
+                    $world->addParticle($this->getPosition()->add(0.5, 1, 0.5), $this->floatingTextParticles[$player->getName()], [$player]);
                 }
             }
         }
         return !$this->closed;
     }
 
-    protected function readSaveData(CompoundTag $nbt): void
+    public function readSaveData(CompoundTag $nbt): void
     {
         parent::readSaveData($nbt);
         $this->crateName = $nbt->getString("CrateType");
         $this->crateType = PiggyCrates::getInstance()->getCrate($this->crateName);
-
-        $this->scheduleUpdate();
     }
 
     protected function writeSaveData(CompoundTag $nbt): void

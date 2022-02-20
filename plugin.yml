@@ -1,7 +1,7 @@
 name: PiggyCrates
 main: DaPigGuy\PiggyCrates\PiggyCrates
-version: 2.1.0
-api: 3.22.1
+version: 3.0.0
+api: 4.0.0
 load: POSTWORLD
 author: DaPigGuy
 softdepend: ["PiggyCustomEnchants"]
@@ -10,17 +10,15 @@ permissions:
   piggycrates:
     default: false
     description: "Allows usage of all PiggyCrates features"
-    children:
-      piggycrates.command:
-        default: op
-        description: "Allow usage of all PiggyCrates commands"
-        children:
-          piggycrates.command.crate:
-            default: op
-            description: "Allow usage of the /crate command"
-          piggycrates.command.key:
-            default: op
-            description: "Allow usage of the /key command"
-          piggycrates.command.keyall:
-            default: op
-            description: "Allow usage of the /keyall command"
+  piggycrates.command:
+    default: op
+    description: "Allow usage of all PiggyCrates commands"
+  piggycrates.command.crate:
+    default: op
+    description: "Allow usage of the /crate command"
+  piggycrates.command.key:
+    default: op
+    description: "Allow usage of the /key command"
+  piggycrates.command.keyall:
+    default: op
+    description: "Allow usage of the /keyall command"

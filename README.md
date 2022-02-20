@@ -4,10 +4,7 @@ PiggyCrates is a simple and customizable crates plugin, supporting an unlimited 
 
 ## Prerequisites
 * Basic knowledge on how to install plugins from Poggit Releases and/or Poggit CI
-* PMMP 3.22.1+
-
-## Notice
-You will need to download the [InvCrashFix](https://poggit.pmmp.io/r/94956/InvCrashFix_dev-3.phar) plugin and update your PiggyCrates version to 2.1.0 for menus to function properly.
+* PMMP 4.0.0+
 
 ## Installation & Setup
 1. Install the plugin from Poggit.

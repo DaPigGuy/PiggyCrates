@@ -10,16 +10,13 @@ use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class KeyCommand extends BaseCommand
 {
     /** @var PiggyCrates */
     protected $plugin;
-
-    /**
-     * @param array $args
-     */
+    
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!isset($args["type"])) {
@@ -30,7 +27,7 @@ class KeyCommand extends BaseCommand
             $sender->sendMessage("Usage: /key <type> <amount> <player>");
             return;
         }
-        $target = empty($args["player"]) ? $sender : $this->plugin->getServer()->getPlayer($args["player"]);
+        $target = empty($args["player"]) ? $sender : $this->plugin->getServer()->getPlayerExact($args["player"]);
         if (!$target instanceof Player) {
             $sender->sendMessage($this->plugin->getMessage("commands.key.error.invalid-player"));
             return;

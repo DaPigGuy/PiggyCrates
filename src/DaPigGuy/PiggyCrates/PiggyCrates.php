@@ -19,31 +19,30 @@ use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
 use DaPigGuy\PiggyCustomEnchants\PiggyCustomEnchants;
 use Exception;
 use muqsit\invmenu\InvMenuHandler;
-use pocketmine\item\enchantment\Enchantment;
+use pocketmine\block\tile\TileFactory;
 use pocketmine\item\enchantment\EnchantmentInstance;
-use pocketmine\item\Item;
+use pocketmine\item\enchantment\StringToEnchantmentParser;
+use pocketmine\item\ItemFactory;
 use pocketmine\nbt\JsonNbtParser;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\tile\Tile;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Config;
-use ReflectionException;
 
 class PiggyCrates extends PluginBase
 {
-    /** @var PiggyCrates */
-    private static $instance;
+    private static PiggyCrates $instance;
 
-    /** @var Config */
-    private $messages;
+    private Config $messages;
 
     /** @var Crate[] */
-    public $crates = [];
-    /** @var array */
-    public $crateCreation;
+    public array $crates = [];
+    /** @var CrateTile[] */
+    public array $crateTiles = [];
+    /** @var Array<string, Crate> */
+    public array $crateCreation;
 
     /**
-     * @throws ReflectionException
      * @throws HookAlreadyRegistered
      */
     public function onEnable(): void
@@ -61,17 +60,13 @@ class PiggyCrates extends PluginBase
             }
         }
 
-        if ($this->getServer()->getPluginManager()->getPlugin("InvCrashFix") === null) {
-            $this->getLogger()->error("Missing InvCrashFix plugin. Menus may not work as intended. Download: https://poggit.pmmp.io/r/94956/InvCrashFix_dev-3.phar");
-        }
-
         if (!InvMenuHandler::isRegistered()) {
             InvMenuHandler::register($this);
         }
 
         self::$instance = $this;
 
-        Tile::registerTile(CrateTile::class);
+        TileFactory::getInstance()->register(CrateTile::class);
 
         $this->saveResource("crates.yml");
         $this->saveResource("messages.yml");
@@ -82,15 +77,15 @@ class PiggyCrates extends PluginBase
         $types = ["item", "command"];
         foreach ($crateConfig->get("crates") as $crateName => $crateData) {
             $this->crates[$crateName] = new Crate($this, $crateName, $crateData["floating-text"] ?? "", array_map(function (array $itemData) use ($crateName, $types): CrateItem {
-                $tags = "";
+                $tags = null;
                 if (isset($itemData["nbt"])) {
                     try {
-                        $tags = JsonNbtParser::parseJson($itemData["nbt"]) ?? "";
+                        $tags = JsonNbtParser::parseJson($itemData["nbt"]);
                     } catch (Exception $e) {
                         $this->getLogger()->warning("Invalid crate item NBT supplied in crate type " . $crateName . ".");
                     }
                 }
-                $item = Item::get($itemData["id"], $itemData["meta"], $itemData["amount"], $tags);
+                $item = ItemFactory::getInstance()->get($itemData["id"], $itemData["meta"], $itemData["amount"], $tags);
                 if (isset($itemData["name"])) $item->setCustomName($itemData["name"]);
                 if (isset($itemData["lore"])) $item->setLore(explode("\n", $itemData["lore"]));
                 if (isset($itemData["enchantments"])) foreach ($itemData["enchantments"] as $enchantmentData) {
@@ -98,7 +93,7 @@ class PiggyCrates extends PluginBase
                         $this->getLogger()->error("Invalid enchantment configuration used in crate " . $crateName);
                         continue;
                     }
-                    $enchantment = Enchantment::getEnchantmentByName($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) instanceof PiggyCustomEnchants && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
+                    $enchantment = StringToEnchantmentParser::getInstance()->parse($enchantmentData["name"]) ?? ((($plugin = $this->getServer()->getPluginManager()->getPlugin("PiggyCustomEnchants")) instanceof PiggyCustomEnchants && $plugin->isEnabled()) ? CustomEnchantManager::getEnchantmentByName($enchantmentData["name"]) : null);
                     if ($enchantment !== null) $item->addEnchantment(new EnchantmentInstance($enchantment, $enchantmentData["level"]));
                 }
                 $itemData["type"] = $itemData["type"] ?? "item";
@@ -117,6 +112,11 @@ class PiggyCrates extends PluginBase
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 
+        $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function () {
+            foreach ($this->crateTiles as $crateTile) {
+                $crateTile->onUpdate();
+            }
+        }), 20);
         $this->getServer()->getAsyncPool()->submitTask(new CheckUpdatesTask());
     }
 
@@ -149,6 +149,7 @@ class PiggyCrates extends PluginBase
     {
         if ($crate === null) {
             unset($this->crateCreation[$player->getName()]);
+            return;
         }
         $this->crateCreation[$player->getName()] = $crate;
     }

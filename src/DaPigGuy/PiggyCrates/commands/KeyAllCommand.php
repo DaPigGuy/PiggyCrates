@@ -15,10 +15,7 @@ class KeyAllCommand extends BaseCommand
 {
     /** @var PiggyCrates */
     protected $plugin;
-
-    /**
-     * @param array $args
-     */
+    
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!isset($args["type"])) {
