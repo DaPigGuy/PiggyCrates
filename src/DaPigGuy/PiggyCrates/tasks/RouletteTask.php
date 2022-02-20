@@ -90,7 +90,7 @@ class RouletteTask extends Task
                     foreach ($this->crate->getCommands() as $command) {
                         $this->player->getServer()->dispatchCommand(new ConsoleCommandSender($this->player->getServer(), Server::getInstance()->getLanguage()), str_replace("{PLAYER}", $this->player->getName(), $command));
                     }
-                    //$this->player->removeCurrentWindow();
+                    $this->player->removeCurrentWindow();
                     $this->tile->closeCrate();
                     if (($handler = $this->getHandler()) !== null) $handler->cancel();
                 } else {
