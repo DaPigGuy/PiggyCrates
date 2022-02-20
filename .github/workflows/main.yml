@@ -10,19 +10,12 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - name: Create Vendor Directory
+        run: mkdir vendor
+      - name: Download Virion Dependencies
         run: |
-          echo Making directory...
-          mkdir vendor
-          echo Directory made.
-      - name: wget virions, Commando
-        uses: wei/wget@v1
-        with:
-          args: -O vendor/Commando.phar https://poggit.pmmp.io/r/120160/Commando_dev-24.phar
-      - name: wget virions, InvMenu
-        uses: wei/wget@v1
-        with:
-          args: -O vendor/InvMenu.phar https://poggit.pmmp.io/r/131080/InvMenu_dev-153.phar
+          wget -O vendor/Commando.phar https://poggit.pmmp.io/r/90966/Commando_dev-2.phar
+          wget -O vendor/InvMenu.phar https://poggit.pmmp.io/r/94265/InvMenu_dev-101.phar
       - name: Run PHPStan
-        uses: paroxity/pmmp-phpstan-action@3.22.1
+        uses: paroxity/pmmp-phpstan-action@4.2.0
         with:
           phpstan-config: phpstan.neon.dist
