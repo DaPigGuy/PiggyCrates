@@ -135,7 +135,7 @@ class CrateTile extends Chest
     {
         foreach ($this->floatingTextParticles as $floatingTextParticle) {
             $floatingTextParticle[1]->setInvisible();
-            if ($floatingTextParticle[0]->getLevel()) $floatingTextParticle[0]->getLevel()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
+            if ($floatingTextParticle[0]->getWorld()) $floatingTextParticle[0]->getWorld()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
         }
         unset(PiggyCrates::getInstance()->crateTiles[array_search($this, PiggyCrates::getInstance()->crateTiles)]);
         parent::close();
