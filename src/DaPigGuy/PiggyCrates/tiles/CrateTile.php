@@ -168,7 +168,7 @@ class CrateTile extends Chest
                 $player = Server::getInstance()->getPlayerExact($key);
                 if ($player?->getWorld() !== $world) {
                     $particle->setInvisible();
-                    $player?->getWorld()->addParticle($this, $particle, [$player]);
+                    $player?->getWorld()->addParticle($this->getPosition(), $particle, [$player]);
                     unset($this->floatingTextParticles[$key]);
                 }
             }
