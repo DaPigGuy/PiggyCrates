@@ -13,13 +13,14 @@ use muqsit\invmenu\type\InvMenuTypeIds;
 use pocketmine\block\tile\Chest;
 use pocketmine\console\ConsoleCommandSender;
 use pocketmine\item\Item;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\player\Player;
-use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\particle\FloatingTextParticle;
+use pocketmine\world\World;
 
 class CrateTile extends Chest
 {
@@ -32,6 +33,12 @@ class CrateTile extends Chest
 
     /** @var array[] */
     public array $floatingTextParticles = [];
+
+    public function __construct(World $world, Vector3 $pos)
+    {
+        parent::__construct($world, $pos);
+        PiggyCrates::getInstance()->crateTiles[] = $this;
+    }
 
     public function getCrateType(): ?Crate
     {
@@ -130,6 +137,7 @@ class CrateTile extends Chest
             $floatingTextParticle[1]->setInvisible();
             if ($floatingTextParticle[0]->getLevel()) $floatingTextParticle[0]->getLevel()->addParticle($floatingTextParticle[1], [$floatingTextParticle[0]]);
         }
+        unset(PiggyCrates::getInstance()->crateTiles[array_search($this, PiggyCrates::getInstance()->crateTiles)]);
         parent::close();
     }
 
@@ -150,10 +158,8 @@ class CrateTile extends Chest
         $nbt->setString(self::TAG_CUSTOM_NAME, ($this->crateType === null ? "Unknown" : $this->crateType->getName()) . " Crate");
     }
 
-    public function onUpdate(): bool // TODO: Update for 4.0.0
+    public function onUpdate(): bool
     {
-
-        var_dump($this->floatingTextParticles);
         if (!$this->closed && $this->crateType !== null && $this->crateType->getFloatingText() !== "") {
             $world = $this->getPosition()->getWorld();
             foreach ($this->floatingTextParticles as $key => $floatingTextParticle) {

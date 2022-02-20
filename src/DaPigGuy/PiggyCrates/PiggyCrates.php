@@ -26,6 +26,7 @@ use pocketmine\item\ItemFactory;
 use pocketmine\nbt\JsonNbtParser;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Config;
 
 class PiggyCrates extends PluginBase
@@ -36,6 +37,8 @@ class PiggyCrates extends PluginBase
 
     /** @var Crate[] */
     public array $crates = [];
+    /** @var CrateTile[] */
+    public array $crateTiles;
     /** @var array */
     public array $crateCreation;
 
@@ -109,6 +112,11 @@ class PiggyCrates extends PluginBase
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 
+        $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function () {
+            foreach ($this->crateTiles as $crateTile) {
+                $crateTile->onUpdate();
+            }
+        }), 20);
         $this->getServer()->getAsyncPool()->submitTask(new CheckUpdatesTask());
     }
 
