@@ -39,7 +39,7 @@ class PiggyCrates extends PluginBase
     public array $crates = [];
     /** @var CrateTile[] */
     public array $crateTiles = [];
-    /** @var array */
+    /** @var Array<string, Crate> */
     public array $crateCreation;
 
     /**

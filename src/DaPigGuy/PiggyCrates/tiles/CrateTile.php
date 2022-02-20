@@ -28,7 +28,6 @@ class CrateTile extends Chest
     public string $crateName;
     public ?Crate $crateType;
 
-    /** @var bool */
     public bool $isOpen = false;
     public ?Player $currentPlayer;
 
