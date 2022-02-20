@@ -14,7 +14,6 @@ use pocketmine\nbt\tag\StringTag;
 
 class EventListener implements Listener
 {
-    /** @var PiggyCrates */
     private PiggyCrates $plugin;
 
     public function __construct(PiggyCrates $plugin)
