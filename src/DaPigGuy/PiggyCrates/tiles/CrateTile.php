@@ -66,14 +66,15 @@ class CrateTile extends Chest
         switch (PiggyCrates::getInstance()->getConfig()->getNested("crates.mode")) {
             case "instant":
                 $this->closeCrate();
+                $server = $player->getServer();
                 foreach ($crateType->getDrop($crateType->getDropCount()) as $drop) {
                     if ($drop->getType() === "item") $player->getInventory()->addItem($drop->getItem());
                     foreach ($drop->getCommands() as $command) {
-                        $player->getServer()->dispatchCommand(new ConsoleCommandSender($player->getServer(), Server::getInstance()->getLanguage()), str_replace("{PLAYER}", $player->getName(), $command));
+                        $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $player->getName(), $command));
                     }
                 }
                 foreach ($crateType->getCommands() as $command) {
-                    $player->getServer()->dispatchCommand(new ConsoleCommandSender($player->getServer(), Server::getInstance()->getLanguage()), str_replace("{PLAYER}", $player->getName(), $command));
+                    $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), str_replace("{PLAYER}", $player->getName(), $command));
                 }
                 break;
             case "roulette":
