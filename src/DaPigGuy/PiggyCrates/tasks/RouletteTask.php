@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace DaPigGuy\PiggyCrates\tasks;
 
-use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\crates\CrateItem;
 use DaPigGuy\PiggyCrates\PiggyCrates;
+use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\type\InvMenuTypeIds;
 use pocketmine\console\ConsoleCommandSender;
