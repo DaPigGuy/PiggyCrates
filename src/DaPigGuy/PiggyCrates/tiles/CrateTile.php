@@ -29,7 +29,6 @@ class CrateTile extends Chest
 
     /** @var bool */
     public bool $isOpen = false;
-    /** @var Player|null */
     public ?Player $currentPlayer;
 
     /** @var array[] */
