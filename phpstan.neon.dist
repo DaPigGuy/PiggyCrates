@@ -2,12 +2,14 @@ parameters:
   paths:
     - /source/src
   level: 8
-  bootstrapFiles:
+  autoload_files:
     - phar:///pocketmine/PocketMine-MP.phar/vendor/autoload.php
-  scanDirectories:
+  autoload_directories:
+    - /source/src
     - phar:///deps/PiggyCustomEnchants.phar/src/
     - phar:///source/vendor/Commando.phar/src/
     - phar:///source/vendor/InvMenu.phar/src/
   excludes_analyse:
     - source/vendor
+  reportUnmatchedIgnoredErrors: false
   checkMissingIterableValueType: false

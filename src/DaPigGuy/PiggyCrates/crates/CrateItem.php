@@ -9,13 +9,13 @@ use pocketmine\item\Item;
 class CrateItem
 {
     /** @var Item */
-    public $item;
+    public Item $item;
     /** @var string */
-    public $type;
+    public string $type;
     /** @var string[] */
-    public $commands;
+    public array $commands;
     /** @var int */
-    public $chance;
+    public int $chance;
 
     /**
      * @param string[] $commands

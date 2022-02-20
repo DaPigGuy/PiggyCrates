@@ -10,16 +10,16 @@ use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\exception\ArgumentOrderException;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class KeyCommand extends BaseCommand
 {
-    /** @var PiggyCrates */
-    protected $plugin;
 
-    /**
-     * @param array $args
-     */
+	/**
+	 * @param CommandSender $sender
+	 * @param string $aliasUsed
+	 * @param array $args
+	 */
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!isset($args["type"])) {
@@ -30,25 +30,25 @@ class KeyCommand extends BaseCommand
             $sender->sendMessage("Usage: /key <type> <amount> <player>");
             return;
         }
-        $target = empty($args["player"]) ? $sender : $this->plugin->getServer()->getPlayer($args["player"]);
+        $target = empty($args["player"]) ? $sender : PiggyCrates::getInstance()->getServer()->getPlayerExact($args["player"]);
         if (!$target instanceof Player) {
-            $sender->sendMessage($this->plugin->getMessage("commands.key.error.invalid-player"));
+            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.key.error.invalid-player"));
             return;
         }
         /** @var int $amount */
         $amount = $args["amount"] ?? 1;
         if (!is_numeric($amount)) {
-            $sender->sendMessage($this->plugin->getMessage("commands.key.error.not-numeric"));
+            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.key.error.not-numeric"));
             return;
         }
-        $crate = $this->plugin->getCrate($args["type"]);
+        $crate = PiggyCrates::getInstance()->getCrate($args["type"]);
         if ($crate === null) {
-            $sender->sendMessage($this->plugin->getMessage("commands.key.error.invalid-crate"));
+            $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.key.error.invalid-crate"));
             return;
         }
         $crate->giveKey($target, $amount);
-        $target->sendMessage($this->plugin->getMessage("commands.key.success.sender", ["{CRATE}" => $crate->getName()]));
-        $sender->sendMessage($this->plugin->getMessage("commands.key.success.target", ["{CRATE}" => $crate->getName(), "{TARGET}" => $target->getName()]));
+        $target->sendMessage(PiggyCrates::getInstance()->getMessage("commands.key.success.sender", ["{CRATE}" => $crate->getName()]));
+        $sender->sendMessage(PiggyCrates::getInstance()->getMessage("commands.key.success.target", ["{CRATE}" => $crate->getName(), "{TARGET}" => $target->getName()]));
 
     }
 

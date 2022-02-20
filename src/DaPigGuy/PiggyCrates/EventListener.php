@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace DaPigGuy\PiggyCrates;
 
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
-use pocketmine\block\Block;
-use pocketmine\event\inventory\InventoryTransactionEvent;
+use pocketmine\block\BlockLegacyIds;
+use pocketmine\block\tile\Chest;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\inventory\ChestInventory;
-use pocketmine\level\Level;
-use pocketmine\tile\Chest;
-use pocketmine\tile\Tile;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\StringTag;
 
 class EventListener implements Listener
 {
     /** @var PiggyCrates */
-    private $plugin;
+    private PiggyCrates $plugin;
 
     public function __construct(PiggyCrates $plugin)
     {
@@ -28,11 +26,11 @@ class EventListener implements Listener
     {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        /** @var Level $level */
-        $level = $block->getLevel();
+        $world = $block->getPosition()->getWorld();
         $item = $player->getInventory()->getItemInHand();
-        if ($block->getId() === Block::CHEST) {
-            $tile = $level->getTile($block);
+
+        if ($block->getId() === BlockLegacyIds::CHEST) {
+            $tile = $world->getTile($block->getPosition());
             if ($tile instanceof CrateTile) {
                 if ($tile->getCrateType() === null) {
                     $player->sendTip($this->plugin->getMessage("crates.error.invalid-crate"));
@@ -41,35 +39,22 @@ class EventListener implements Listener
                 } elseif ($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
                     $tile->previewCrate($player);
                 }
-                $event->setCancelled();
+                $event->cancel();
                 return;
             }
             if ($tile instanceof Chest) {
                 if (($crate = $this->plugin->getCrateToCreate($player)) !== null) {
-                    $nbt = $tile->getSpawnCompound();
-                    $nbt->setString("CrateType", $crate->getName());
-                    /** @var CrateTile $newTile */
-                    $newTile = Tile::createTile("CrateTile", $level, $nbt);
-                    $newTile->spawnToAll();
-                    $tile->close();
+                    $newTile = new CrateTile($world, $block->getPosition());
+                    $newTile->setCrateType($crate);
+	                $tile->close();
+					$world->addTile($newTile);
                     $player->sendMessage($this->plugin->getMessage("crates.success.crate-created", ["{CRATE}" => $crate->getName()]));
                     $this->plugin->setInCrateCreationMode($player, null);
-                    $event->setCancelled();
+                    $event->cancel();
                     return;
                 }
             }
         }
-        if ($item->getNamedTagEntry("KeyType") !== null) $event->setCancelled();
-    }
-
-    public function onTransaction(InventoryTransactionEvent $event): void
-    {
-        $transaction = $event->getTransaction();
-        $inventories = $transaction->getInventories();
-        foreach ($inventories as $inventory) {
-            if ($inventory instanceof ChestInventory && $inventory->getHolder() instanceof CrateTile) {
-                $event->setCancelled();
-            }
-        }
+        if ($item->getNamedTag()->getTag("KeyType") !== null) $event->cancel();
     }
 }

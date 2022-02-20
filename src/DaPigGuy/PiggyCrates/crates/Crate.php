@@ -6,25 +6,24 @@ namespace DaPigGuy\PiggyCrates\crates;
 
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\item\Item;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\StringTag;
-use pocketmine\Player;
+use pocketmine\item\ItemFactory;
+use pocketmine\player\Player;
 
 class Crate
 {
     /** @var PiggyCrates */
-    private $plugin;
+    private PiggyCrates $plugin;
 
     /** @var string */
-    public $name;
+    public string $name;
     /** @var string */
-    public $floatingText;
+    public string $floatingText;
     /** @var CrateItem[] */
-    public $drops;
+    public array $drops;
     /** @var int */
-    public $dropCount;
+    public int $dropCount;
     /** @var string[] */
-    public $commands;
+    public array $commands;
 
     /**
      * @param CrateItem[] $drops
@@ -92,19 +91,17 @@ class Crate
 
     public function giveKey(Player $player, int $amount): void
     {
-        $key = Item::get((int)$this->plugin->getConfig()->getNested("keys.id"), (int)$this->plugin->getConfig()->getNested("keys.meta"), $amount);
+        $key = ItemFactory::getInstance()->get((int)$this->plugin->getConfig()->getNested("keys.id"), (int)$this->plugin->getConfig()->getNested("keys.meta"), $amount);
         $key->setCustomName(ucfirst(str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("keys.name"))));
         $key->setLore([str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("keys.lore"))]);
-        $key->setNamedTagEntry(new ListTag(Item::TAG_ENCH));
-        $key->setNamedTagEntry(new StringTag("KeyType", $this->getName()));
+        $key->getNamedTag()->setString("KeyType", $this->getName());
         $player->getInventory()->addItem($key);
     }
 
     public function isValidKey(Item $item): bool
     {
         return $item->getId() === (int)$this->plugin->getConfig()->getNested("keys.id") &&
-            $item->getDamage() === (int)$this->plugin->getConfig()->getNested("keys.meta") &&
-            ($tag = $item->getNamedTagEntry("KeyType")) !== null &&
-            $tag->getValue() === $this->getName();
+            $item->getMeta() === (int)$this->plugin->getConfig()->getNested("keys.meta") &&
+            $item->getNamedTag()->getString("KeyType") === $this->getName();
     }
 }
