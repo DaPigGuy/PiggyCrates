@@ -22,20 +22,13 @@ class RouletteTask extends Task
 {
     const INVENTORY_ROW_COUNT = 9;
 
-    /** @var Player */
     private Player $player;
-    /** @var Crate */
     private Crate $crate;
-    /** @var CrateTile */
     private CrateTile $tile;
-    /** @var InvMenu */
     private InvMenu $menu;
 
-    /** @var int */
     private int $currentTick = 0;
-    /** @var bool */
     private bool $showReward = false;
-    /** @var int */
     private int $itemsLeft;
 
     /** @var CrateItem[] */

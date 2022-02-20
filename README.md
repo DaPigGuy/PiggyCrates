@@ -4,7 +4,7 @@ PiggyCrates is a simple and customizable crates plugin, supporting an unlimited 
 
 ## Prerequisites
 * Basic knowledge on how to install plugins from Poggit Releases and/or Poggit CI
-* PMMP 4.0.0 or greater
+* PMMP 4.0.0+
 
 ## Installation & Setup
 1. Install the plugin from Poggit.

@@ -11,7 +11,6 @@ use DaPigGuy\PiggyCrates\tasks\RouletteTask;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\type\InvMenuTypeIds;
 use pocketmine\block\tile\Chest;
-//use pocketmine\command\CommandSender;
 use pocketmine\console\ConsoleCommandSender;
 use pocketmine\item\Item;
 use pocketmine\nbt\tag\CompoundTag;

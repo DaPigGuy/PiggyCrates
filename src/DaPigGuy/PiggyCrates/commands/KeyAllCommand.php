@@ -13,11 +13,6 @@ use pocketmine\command\CommandSender;
 
 class KeyAllCommand extends BaseCommand
 {
-	/**
-	 * @param CommandSender $sender
-	 * @param string $aliasUsed
-	 * @param array $args
-	 */
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
         if (!isset($args["type"])) {

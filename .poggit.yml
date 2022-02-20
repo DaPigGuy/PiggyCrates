@@ -1,11 +1,10 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/DaPigGuy/PiggyCrates
 branches:
   - master
-  - pmmp-4.0.0
 projects:
   PiggyCrates:
     path: ""
-    icon: "resources/PiggyCrates.gif"
+    icon: "resources/img/PiggyCrates.gif"
     libs:
       - src: DaPigGuy/Commando-4.0.0/Commando
         version: ^2.1.0

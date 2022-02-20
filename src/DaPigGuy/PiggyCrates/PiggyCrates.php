@@ -30,10 +30,8 @@ use pocketmine\utils\Config;
 
 class PiggyCrates extends PluginBase
 {
-    /** @var PiggyCrates */
     private static PiggyCrates $instance;
 
-    /** @var Config */
     private Config $messages;
 
     /** @var Crate[] */
