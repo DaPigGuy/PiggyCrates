@@ -13,8 +13,8 @@ jobs:
         run: mkdir vendor
       - name: Download Virion Dependencies
         run: |
-          wget -O vendor/Commando.phar https://poggit.pmmp.io/r/90966/Commando_dev-2.phar
-          wget -O vendor/InvMenu.phar https://poggit.pmmp.io/r/94265/InvMenu_dev-101.phar
+          wget -O vendor/Commando.phar https://poggit.pmmp.io/r/94451/Commando_dev-3.phar
+          wget -O vendor/InvMenu.phar https://poggit.pmmp.io/r/157357/InvMenu_dev-165.phar
       - name: Run PHPStan
         uses: paroxity/pmmp-phpstan-action@4.2.0
         with:

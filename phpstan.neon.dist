@@ -9,6 +9,7 @@ parameters:
     - phar:///deps/PiggyCustomEnchants.phar/src/
     - phar:///source/vendor/Commando.phar/src/
     - phar:///source/vendor/InvMenu.phar/src/
-  excludes_analyse:
-    - source/vendor
+  excludePaths:
+    analyse:
+      - source/vendor
   checkMissingIterableValueType: false
