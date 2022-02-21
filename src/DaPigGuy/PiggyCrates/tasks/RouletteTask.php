@@ -15,7 +15,6 @@ use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
-use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 class RouletteTask extends Task
@@ -47,10 +46,8 @@ class RouletteTask extends Task
         $this->tile = $tile;
 
         $this->menu = InvMenu::create(InvMenuTypeIds::TYPE_CHEST);
+        $this->menu->setName(PiggyCrates::getInstance()->getMessage("crates.menu-name", ["{CRATE}" => $crate->getName()]));
         $this->menu->getInventory()->setContents([4 => ($endRod = ItemFactory::getInstance()->get(ItemIds::END_ROD)->setCustomName(TextFormat::ITALIC)), 22 => $endRod]);
-        $this->menu->setInventoryCloseListener(function (Player $player): void {
-            if ($this->itemsLeft > 0) $this->menu->send($player);
-        });
         $this->menu->setListener(InvMenu::readonly());
         $this->menu->send($player);
 
