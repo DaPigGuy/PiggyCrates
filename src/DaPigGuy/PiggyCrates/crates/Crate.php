@@ -11,28 +11,12 @@ use pocketmine\player\Player;
 
 class Crate
 {
-    private PiggyCrates $plugin;
-
-    public string $name;
-    public string $floatingText;
-    /** @var CrateItem[] */
-    public array $drops;
-    public int $dropCount;
-    /** @var string[] */
-    public array $commands;
-
     /**
      * @param CrateItem[] $drops
      * @param string[] $commands
      */
-    public function __construct(PiggyCrates $plugin, string $name, string $floatingText, array $drops, int $dropCount, array $commands)
+    public function __construct(private PiggyCrates $plugin, public string $name, public string $floatingText, public array $drops, public int $dropCount, public array $commands)
     {
-        $this->plugin = $plugin;
-        $this->name = $name;
-        $this->floatingText = $floatingText;
-        $this->drops = $drops;
-        $this->dropCount = $dropCount;
-        $this->commands = $commands;
     }
 
     public function getName(): string

@@ -8,21 +8,11 @@ use pocketmine\item\Item;
 
 class CrateItem
 {
-    public Item $item;
-    public string $type;
-    /** @var string[] */
-    public array $commands;
-    public int $chance;
-
     /**
      * @param string[] $commands
      */
-    public function __construct(Item $item, string $type, array $commands, int $chance)
+    public function __construct(public Item $item, public string $type, public array $commands, public int $chance)
     {
-        $this->item = $item;
-        $this->type = $type;
-        $this->commands = $commands;
-        $this->chance = $chance;
     }
 
     public function getItem(): Item

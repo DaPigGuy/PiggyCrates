@@ -14,11 +14,8 @@ use pocketmine\nbt\tag\StringTag;
 
 class EventListener implements Listener
 {
-    private PiggyCrates $plugin;
-
-    public function __construct(PiggyCrates $plugin)
+    public function __construct(private PiggyCrates $plugin)
     {
-        $this->plugin = $plugin;
     }
 
     public function onInteract(PlayerInteractEvent $event): void
