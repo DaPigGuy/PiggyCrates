@@ -9,6 +9,7 @@ parameters:
     - phar:///deps/PiggyCustomEnchants.phar/src/
     - phar:///source/vendor/Commando.phar/src/
     - phar:///source/vendor/InvMenu.phar/src/
+    - phar:///source/vendor/libPiggyUpdateChecker.phar/src/
   excludePaths:
     analyse:
       - source/vendor

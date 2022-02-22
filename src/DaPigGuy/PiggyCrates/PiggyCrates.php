@@ -7,12 +7,12 @@ namespace DaPigGuy\PiggyCrates;
 use CortexPE\Commando\BaseCommand;
 use CortexPE\Commando\exception\HookAlreadyRegistered;
 use CortexPE\Commando\PacketHooker;
+use DaPigGuy\libPiggyUpdateChecker\libPiggyUpdateChecker;
 use DaPigGuy\PiggyCrates\commands\CrateCommand;
 use DaPigGuy\PiggyCrates\commands\KeyAllCommand;
 use DaPigGuy\PiggyCrates\commands\KeyCommand;
 use DaPigGuy\PiggyCrates\crates\Crate;
 use DaPigGuy\PiggyCrates\crates\CrateItem;
-use DaPigGuy\PiggyCrates\tasks\CheckUpdatesTask;
 use DaPigGuy\PiggyCrates\tiles\CrateTile;
 use DaPigGuy\PiggyCrates\utils\Utils;
 use DaPigGuy\PiggyCustomEnchants\CustomEnchantManager;
@@ -66,6 +66,8 @@ class PiggyCrates extends PluginBase
 
         self::$instance = $this;
 
+        libPiggyUpdateChecker::init($this);
+
         TileFactory::getInstance()->register(CrateTile::class);
 
         $this->saveResource("crates.yml");
@@ -117,7 +119,6 @@ class PiggyCrates extends PluginBase
                 $crateTile->onUpdate();
             }
         }), 20);
-        $this->getServer()->getAsyncPool()->submitTask(new CheckUpdatesTask());
     }
 
     public static function getInstance(): PiggyCrates

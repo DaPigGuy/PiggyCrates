@@ -11,6 +11,8 @@ projects:
       - src: muqsit/InvMenu/InvMenu
         version: ^4.3.8
         branch: "4.0"
+      - src: DaPigGuy/libPiggyUpdateChecker/libPiggyUpdateChecker
+        version: ^1.0.0
     lint:
       phpstan: false
 ...
