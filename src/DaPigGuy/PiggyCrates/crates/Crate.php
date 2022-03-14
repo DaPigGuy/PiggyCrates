@@ -7,6 +7,7 @@ namespace DaPigGuy\PiggyCrates\crates;
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\player\Player;
 
 class Crate
@@ -82,6 +83,7 @@ class Crate
     {
         return $item->getId() === (int)$this->plugin->getConfig()->getNested("keys.id") &&
             $item->getMeta() === (int)$this->plugin->getConfig()->getNested("keys.meta") &&
-            $item->getNamedTag()->getString("KeyType") === $this->getName();
+            ($keyTypeTag = $item->getNamedTag()->getTag("KeyType")) instanceof StringTag &&
+            $keyTypeTag->getValue() === $this->getName();
     }
 }
