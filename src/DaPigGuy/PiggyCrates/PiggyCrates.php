@@ -50,7 +50,8 @@ class PiggyCrates extends PluginBase
         foreach (
             [
                 "Commando" => BaseCommand::class,
-                "InvMenu" => InvMenuHandler::class
+                "InvMenu" => InvMenuHandler::class,
+                "libPiggyUpdateChecker" => libPiggyUpdateChecker::class
             ] as $virion => $class
         ) {
             if (!class_exists($class)) {
