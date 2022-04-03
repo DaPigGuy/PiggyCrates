@@ -33,7 +33,9 @@ class EventListener implements Listener
                 } elseif ($tile->getCrateType()->isValidKey($item)) {
                     $tile->openCrate($player, $item);
                 } elseif ($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
-                    $tile->previewCrate($player);
+                    if (PiggyCrates::getInstance()->getConfig()->get("Preview-crate", true) === true){
+                        $tile->previewCrate($player);
+                    }
                 }
                 $event->cancel();
                 return;
