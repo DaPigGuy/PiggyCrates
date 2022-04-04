@@ -32,10 +32,9 @@ class EventListener implements Listener
                     $player->sendTip($this->plugin->getMessage("crates.error.invalid-crate"));
                 } elseif ($tile->getCrateType()->isValidKey($item)) {
                     $tile->openCrate($player, $item);
-                } elseif ($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
-                    if (PiggyCrates::getInstance()->getConfig()->get("preview-crate", true) === true){
-                        $tile->previewCrate($player);
-                    }
+                } elseif (PiggyCrates::getInstance()->getConfig()->getNested("crates.roulette.preview", true)) {
+                    $tile->previewCrate($player);
+                    } elseif ($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK) {
                 }
                 $event->cancel();
                 return;
