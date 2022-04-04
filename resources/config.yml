@@ -13,4 +13,6 @@ crates:
     # Minimum speed: speed >= 1
     # If speed ends up being less than 1, then your default speed will be set to 1.
     speed: 2
-preview-crate: true
+    #Crate preview:
+    #Use "true" or "false" to disable or enable this option.
+    preview: true
