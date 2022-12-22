@@ -9,7 +9,7 @@ projects:
       - src: Paroxity/Commando/Commando
         version: ^3.0.0
       - src: muqsit/InvMenu/InvMenu
-        version: ^4.3.8
+        version: ^4.4.1
         branch: "4.0"
       - src: DaPigGuy/libPiggyUpdateChecker/libPiggyUpdateChecker
         version: ^1.0.0
