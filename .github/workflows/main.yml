@@ -14,7 +14,7 @@ jobs:
       - name: Download Virion Dependencies
         run: |
           wget -O vendor/Commando.phar https://poggit.pmmp.io/r/162923/Commando_dev-30.phar
-          wget -O vendor/InvMenu.phar https://poggit.pmmp.io/r/157357/InvMenu_dev-165.phar
+          wget -O vendor/InvMenu.phar https://poggit.pmmp.io/r/186359/InvMenu_dev-179.phar
           wget -O vendor/libPiggyUpdateChecker.phar https://poggit.pmmp.io/r/163495/libPiggyUpdateChecker_dev-1.phar
       - name: Run PHPStan
         uses: paroxity/pmmp-phpstan-action@4.2.0
