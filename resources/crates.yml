@@ -1,12 +1,10 @@
 crates:
   Common:
     drops:
-      - id: 1
-        meta: 0
+      - itemName: "stone"
         amount: 16
         chance: 25
-      - id: 263
-        meta: 0
+      - itemName: "coal"
         amount: 10
         chance: 75
     amount: 1
@@ -14,16 +12,13 @@ crates:
     floating-text: "Common Crate"
   Uncommon:
     drops:
-      - id: 263
-        meta: 0
+      - itemName: "coal"
         amount: 10
         chance: 75
-      - id: 50
-        meta: 0
+      - itemName: "torch"
         amount: 16
         chance: 15
-      - id: 366
-        meta: 0
+      - itemName: "cooked_chicken"
         amount: 16
         chance: 10
     amount: 1
@@ -31,16 +26,13 @@ crates:
     floating-text: "Uncommon Crate"
   Vote:
     drops:
-      - id: 265
-        meta: 0
+      - itemName: "iron_ingot"
         amount: 10
         chance: 35
-      - id: 266
-        meta: 0
+      - itemName: "gold_ingot"
         amount: 10
         chance: 15
-      - id: 17
-        meta: 0
+      - itemName: "oak_log"
         amount: 64
         chance: 50
     amount: 1
@@ -48,16 +40,13 @@ crates:
     floating-text: "Vote Crate"
   Mythic:
     drops:
-      - id: 264
-        meta: 0
+      - itemName: "diamond"
         amount: 16
         chance: 35
-      - id: 388
-        meta: 0
+      - itemName: "emerald"
         amount: 16
         chance: 15
-      - id: 322
-        meta: 0
+      - itemName: "golden_apple"
         amount: 16
         chance: 50
     amount: 1
@@ -65,25 +54,21 @@ crates:
     floating-text: "Mythic Crate"
   Legendary:
     drops:
-      - id: 278
-        meta: 0
+      - itemName: "diamond_pickaxe"
         amount: 1
         chance: 10
-        name: "Telepathic Pickaxe"
+        customName: "Telepathic Pickaxe"
         lore: "Items mined are transported into your inventory"
         enchantments:
           - name: "telepathy"
             level: 1
-      - id: 49
-        meta: 0
+      - itemName: "obsidian"
         amount: 32
         chance: 15
-      - id: 466
-        meta: 0
+      - itemName: "enchanted_golden_apple"
         amount: 16
         chance: 70
-      - id: 7
-        meta: 0
+      - itemName: "bedrock"
         amount: 5
         chance: 5
     amount: 1

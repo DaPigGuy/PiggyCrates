@@ -6,7 +6,7 @@ namespace DaPigGuy\PiggyCrates\crates;
 
 use DaPigGuy\PiggyCrates\PiggyCrates;
 use pocketmine\item\Item;
-use pocketmine\item\ItemFactory;
+use pocketmine\item\StringToItemParser;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\player\Player;
 
@@ -72,8 +72,9 @@ class Crate
 
     public function giveKey(Player $player, int $amount): void
     {
-        $key = ItemFactory::getInstance()->get((int)$this->plugin->getConfig()->getNested("keys.id"), (int)$this->plugin->getConfig()->getNested("keys.meta"), $amount);
-        $key->setCustomName(ucfirst(str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("keys.name"))));
+        $key = StringToItemParser::getInstance()->parse((string)$this->plugin->getConfig()->getNested("keys.itemName"));
+        $key->setCount($amount);
+        $key->setCustomName(ucfirst(str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("keys.customName"))));
         $key->setLore([str_replace("{CRATE}", $this->getName(), $this->plugin->getConfig()->getNested("keys.lore"))]);
         $key->getNamedTag()->setString("KeyType", $this->getName());
         $player->getInventory()->addItem($key);
@@ -81,8 +82,8 @@ class Crate
 
     public function isValidKey(Item $item): bool
     {
-        return $item->getId() === (int)$this->plugin->getConfig()->getNested("keys.id") &&
-            $item->getMeta() === (int)$this->plugin->getConfig()->getNested("keys.meta") &&
+        $key = StringToItemParser::getInstance()->parse((string)$this->plugin->getConfig()->getNested("keys.itemName"));
+        return $item->getTypeId() === $key->getTypeId() &&
             ($keyTypeTag = $item->getNamedTag()->getTag("KeyType")) instanceof StringTag &&
             $keyTypeTag->getValue() === $this->getName();
     }

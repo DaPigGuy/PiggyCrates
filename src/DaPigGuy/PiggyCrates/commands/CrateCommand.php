@@ -14,7 +14,14 @@ use pocketmine\player\Player;
 class CrateCommand extends BaseCommand
 {
     /** @var PiggyCrates */
-    protected $plugin;
+    protected \pocketmine\plugin\Plugin $plugin;
+
+    public function __construct(PiggyCrates $plugin) {
+		parent::__construct($plugin, "crate", "Create a crate");
+        $this->plugin = $plugin;
+		$this->setPermission("piggycrates.command.crate");
+		$this->setPermissionMessage("§cYou don't have permission to us this command!");
+	}
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
     {
@@ -49,7 +56,6 @@ class CrateCommand extends BaseCommand
      */
     public function prepare(): void
     {
-        $this->setPermission("piggycrates.command.crate");
         $this->registerArgument(0, new RawStringArgument("type"));
     }
 }

@@ -22,7 +22,7 @@ use muqsit\invmenu\InvMenuHandler;
 use pocketmine\block\tile\TileFactory;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\StringToEnchantmentParser;
-use pocketmine\item\ItemFactory;
+use pocketmine\item\StringToItemParser;
 use pocketmine\nbt\JsonNbtParser;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
@@ -88,8 +88,10 @@ class PiggyCrates extends PluginBase
                         $this->getLogger()->warning("Invalid crate item NBT supplied in crate type " . $crateName . ".");
                     }
                 }
-                $item = ItemFactory::getInstance()->get($itemData["id"], $itemData["meta"], $itemData["amount"], $tags);
-                if (isset($itemData["name"])) $item->setCustomName($itemData["name"]);
+                $item = StringToItemParser::getInstance()->parse($itemData["itemName"]);
+                $item->setCount($itemData["amount"]);
+                if ($tags !== null) $item->setNamedTag($tags);
+                if (isset($itemData["customName"])) $item->setCustomName($itemData["customName"]);
                 if (isset($itemData["lore"])) $item->setLore(explode("\n", $itemData["lore"]));
                 if (isset($itemData["enchantments"])) foreach ($itemData["enchantments"] as $enchantmentData) {
                     if (!isset($enchantmentData["name"]) || !isset($enchantmentData["level"])) {
@@ -109,9 +111,11 @@ class PiggyCrates extends PluginBase
         }
 
         if (!PacketHooker::isRegistered()) PacketHooker::register($this);
-        $this->getServer()->getCommandMap()->register("piggycrates", new CrateCommand($this, "crate", "Create a crate"));
-        $this->getServer()->getCommandMap()->register("piggycrates", new KeyCommand($this, "key", "Give a crate key"));
-        $this->getServer()->getCommandMap()->register("piggycrates", new KeyAllCommand($this, "keyall", "Give all online players a crate key"));
+        $this->getServer()->getCommandMap()->registerAll("piggycrates",[
+            new CrateCommand($this),
+            new KeyCommand($this),
+            new KeyAllCommand($this)
+        ]);
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 
