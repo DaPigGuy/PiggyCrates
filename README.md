@@ -6,7 +6,7 @@ vanilla and custom enchants, such as [PiggyCustomEnchants](https://github.com/Da
 ## Prerequisites
 
 * Basic knowledge on how to install plugins from Poggit Releases and/or Poggit CI
-* PMMP 4.0.0+
+* PMMP 5.0.0+
 
 ## Installation & Setup
 
@@ -21,8 +21,7 @@ vanilla and custom enchants, such as [PiggyCustomEnchants](https://github.com/Da
     * (Optional) `commands`: Commands to be run by CONSOLE when crate type is opened. Use `{PLAYER}` as a placeholder
       for player name.
     * `drops`: Possible drops of a crate type. Items are defined with the properties:
-        * `id`: Item ID
-        * `meta`: Item Meta
+        * `itemName`: Item VanillaName
         * `amount`: Item Amount
         * (Optional) `type`: Item Type
             * (Default) `item`: Runs all crate item commands & gives the item
@@ -55,8 +54,7 @@ vanilla and custom enchants, such as [PiggyCustomEnchants](https://github.com/Da
        drops:
          # 50% chance for 1x Diamond Sword named Sharpened Diamond Sword w/ Sharpness 5 enchantment
          # Will run the command "/tell" on drop
-         - id: 276
-           meta: 0
+         - itemName: "diamond_sword"
            amount: 1
            chance: 50
            name: "Sharpened Diamond Sword"
@@ -66,8 +64,7 @@ vanilla and custom enchants, such as [PiggyCustomEnchants](https://github.com/Da
            commands:
              - "tell {PLAYER} You got a Sharpened Diamond Sword! ;o"
          # Identical to the above drop but with a 25% chance and an Iron Sword
-         - id: 267
-           meta: 0
+         - itemName: "iron_sword"
            amount: 1
            chance: 25
            name: "Sharpened Iron Sword"
@@ -77,8 +74,7 @@ vanilla and custom enchants, such as [PiggyCustomEnchants](https://github.com/Da
            commands:
              - "tell {PLAYER} You got a Sharpened Iron Sword! ;o"
          # 25% chance for player to get money
-         - id: 266
-           meta: 0
+         - itemName: "gold_ingot"
            amount: 1
            chance: 25
            name: "$2500"
