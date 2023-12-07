@@ -1,7 +1,6 @@
 keys:
-  id: 131
-  meta: 0
-  name: "{CRATE} Key"
+  itemName: "tripwire_hook"
+  customName: "{CRATE} Key"
   lore: "Claim rewards from a {CRATE} Crate"
 crates:
   # Options: instant, roulette
